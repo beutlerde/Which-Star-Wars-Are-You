@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Star Wars Reveal — Prototype Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background:
+      radial-gradient(ellipse at 50% 0%, #0a1840 0%, #050d1f 50%, #02060f 100%);
+    color: white;
+    min-height: 100vh;
+    padding: 48px 20px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    color: rgba(125, 211, 252, 0.8);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 28px;
+    text-align: center;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+    color: white;
+    text-shadow: 0 0 24px rgba(125, 211, 252, 0.4);
+  }
+  .subtitle {
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.7;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .for-line {
+    font-family: 'Cinzel', serif;
+    font-style: italic;
+    font-size: 14px;
+    text-align: center;
+    color: #FDE68A;
+    margin-bottom: 36px;
+  }
+  .card {
+    width: 100%;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    background: rgba(20, 30, 70, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(125, 211, 252, 0.2);
+    border-radius: 16px;
+    text-decoration: none;
+    color: white;
+    display: block;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  .card:active {
+    transform: scale(0.98);
+    background: rgba(20, 30, 70, 0.55);
+  }
+  .card-tag {
+    font-family: 'Inter', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+  .card-ref {
+    font-size: 13px;
+    opacity: 0.65;
+    margin-bottom: 10px;
+    font-style: italic;
+  }
+  .card-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    opacity: 0.85;
+  }
+  .card-arrow {
+    margin-top: 12px;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  /* Themed cards */
+  .card-apple {
+    border-color: rgba(91, 163, 208, 0.4);
+  }
+  .card-apple .card-tag { color: #5BA3D0; }
+  .card-apple .card-arrow { color: #5BA3D0; }
+
+  .card-cyberpunk {
+    border-color: rgba(0, 240, 255, 0.4);
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.06), rgba(255, 46, 136, 0.04));
+  }
+  .card-cyberpunk .card-tag { color: #00F0FF; }
+  .card-cyberpunk .card-arrow { color: #FF2E88; }
+
+  .card-imperial {
+    border-color: rgba(200, 32, 46, 0.5);
+    background: rgba(20, 12, 12, 0.5);
+  }
+  .card-imperial .card-tag { color: #C8202E; }
+  .card-imperial .card-arrow { color: #C8202E; }
+
+  .card-mando {
+    border-color: rgba(201, 160, 95, 0.45);
+    background: linear-gradient(135deg, rgba(46, 35, 23, 0.6), rgba(15, 11, 7, 0.4));
+  }
+  .card-mando .card-tag { color: #C9A05F; }
+  .card-mando .card-arrow { color: #D88A45; }
+
+  .footer {
+    margin-top: 32px;
+    font-size: 12px;
+    opacity: 0.5;
+    text-align: center;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <p class="eyebrow">Prototype Lab</p>
+    <h1>WHICH STAR WARS<br>ARE YOU?</h1>
+    <p class="subtitle">Four design directions. Same Yoda. Tap each one.</p>
+    <p class="for-line">— Built for Guapo —</p>
+
+    <a href="apple/index.html" class="card card-apple">
+      <div class="card-tag">Direction 01</div>
+      <div class="card-title">The Apple Reveal</div>
+      <div class="card-ref">Reference: Apple product pages</div>
+      <div class="card-desc">Huge hero. Generous space. Refined serif typography. Single accent color. Luxury through restraint.</div>
+      <div class="card-arrow">→ View prototype</div>
+    </a>
+
+    <a href="cyberpunk/index.html" class="card card-cyberpunk">
+      <div class="card-tag">Direction 02</div>
+      <div class="card-title">The Neural Scan</div>
+      <div class="card-ref">Reference: Cyberpunk 2077 UI</div>
+      <div class="card-desc">Layered HUD elements. Magenta + cyan dual color. Glitch typography. You're inside the machine.</div>
+      <div class="card-arrow">→ View prototype</div>
+    </a>
+
+    <a href="imperial/index.html" class="card card-imperial">
+      <div class="card-tag">Direction 03</div>
+      <div class="card-title">The Imperial File</div>
+      <div class="card-ref">Reference: Rogue One archive scenes</div>
+      <div class="card-desc">A classified dossier. Heavy. Official. Stamp typography. CRT monitor feel. Data feels real.</div>
+      <div class="card-arrow">→ View prototype</div>
+    </a>
+
+    <a href="mando/index.html" class="card card-mando">
+      <div class="card-tag">Direction 04</div>
+      <div class="card-title">The Bounty Puck</div>
+      <div class="card-ref">Reference: The Mandalorian</div>
+      <div class="card-desc">Warm earth tones. Engraved typography. Texture-rich. A real artifact in your hand.</div>
+      <div class="card-arrow">→ View prototype</div>
+    </a>
+
+    <p class="footer">
+      Pull down on any page to refresh and replay animations.
+    </p>
+  </div>
+</body>
+</html>
