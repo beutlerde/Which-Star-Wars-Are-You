@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Force Vision — Yoda</title>
+<title>Jedi Archive — Yoda</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   /* ================= RESET ================= */
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; overflow-x: hidden; }
+  html, body { overflow-x: hidden; scroll-behavior: smooth; }
   button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
   /* ================= ROOT THEME ================= */
@@ -19,15 +19,14 @@
     --bg-mid: #050d22;
     --bg-glow: #0a1840;
 
-    /* Hologram blues — classic Star Wars */
-    --holo-cyan: #7DD3FC;        /* main hologram body color */
-    --holo-bright: #BAE6FD;      /* highlights and edges */
-    --holo-deep: #0EA5E9;        /* shadows in the projection */
-    --holo-rim: #38BDF8;         /* outer aura */
+    --holo-cyan: #7DD3FC;
+    --holo-bright: #BAE6FD;
+    --holo-deep: #0EA5E9;
+    --holo-rim: #38BDF8;
 
-    /* Side accent (light side = warm gold rim) */
     --gold: #FDE68A;
     --gold-warm: #FBBF24;
+    --gold-deep: #B45309;
 
     --text: #FFFFFF;
     --text-muted: rgba(255,255,255,0.78);
@@ -39,13 +38,12 @@
     font-family: 'Quicksand', sans-serif;
     color: var(--text);
     background:
-      radial-gradient(ellipse at 50% 40%, var(--bg-glow) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
+      radial-gradient(ellipse at 50% 0%, var(--bg-glow) 0%, var(--bg-mid) 40%, var(--bg-deep) 100%);
     min-height: 100vh;
     position: relative;
-    overflow: hidden;
   }
 
-  /* ================= STARFIELD ================= */
+  /* ================= STARFIELD (fixed, behind everything) ================= */
   .stars, .stars2 {
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
   }
@@ -71,27 +69,13 @@
   }
   @keyframes twinkle { 0% { opacity: 0.4 } 100% { opacity: 1 } }
 
-  /* ================= LAYOUT ================= */
-  .stage {
-    position: relative;
-    z-index: 2;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px 20px 40px;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
   /* ================= MATERIALIZATION OVERLAY ================= */
-  /* Phase 1: Force gathers as a point of light */
   .materialize {
     position: fixed;
     inset: 0;
-    z-index: 10;
+    z-index: 50;
     pointer-events: none;
-    background: radial-gradient(circle at 50% 45%,
+    background: radial-gradient(circle at 50% 35%,
       rgba(125, 211, 252, 0.0) 0%,
       rgba(2, 6, 16, 0.4) 30%,
       rgba(2, 6, 16, 0.95) 60%);
@@ -100,13 +84,12 @@
   @keyframes dim-then-clear {
     0%   { opacity: 1; }
     70%  { opacity: 0.6; }
-    100% { opacity: 0; }
+    100% { opacity: 0; pointer-events: none; }
   }
 
-  /* The gathering point of light */
   .force-point {
     position: fixed;
-    left: 50%; top: 45%;
+    left: 50%; top: 35%;
     transform: translate(-50%, -50%);
     width: 8px; height: 8px;
     border-radius: 50%;
@@ -115,7 +98,7 @@
       0 0 20px var(--holo-cyan),
       0 0 40px var(--holo-cyan),
       0 0 80px var(--holo-rim);
-    z-index: 11;
+    z-index: 51;
     animation: force-gather 2.4s ease-out forwards;
   }
   @keyframes force-gather {
@@ -126,69 +109,75 @@
     100% { transform: translate(-50%, -50%) scale(15); opacity: 0; }
   }
 
-  /* Inward-spiraling particles during materialization */
   .spiral-particle {
     position: fixed;
     width: 3px; height: 3px;
     background: var(--holo-bright);
     border-radius: 50%;
     box-shadow: 0 0 8px var(--holo-cyan), 0 0 16px var(--holo-rim);
-    z-index: 11;
+    z-index: 51;
     pointer-events: none;
   }
 
-  /* ================= HEADER LABEL ================= */
-  .label {
+  /* ================= STAGE ================= */
+  .stage {
+    position: relative;
+    z-index: 2;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 0 60px;
+  }
+
+  /* ================= HERO HOLOGRAM SECTION ================= */
+  .hero {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    padding: 32px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Archive label at top */
+  .archive-crest {
     font-family: 'Cinzel', serif;
     font-weight: 700;
     font-size: 11px;
-    letter-spacing: 0.4em;
+    letter-spacing: 0.45em;
     color: var(--holo-bright);
-    text-align: center;
-    margin-top: 8px;
     text-transform: uppercase;
     text-shadow: 0 0 14px var(--holo-cyan), 0 0 28px var(--holo-deep);
+    margin-bottom: 8px;
     opacity: 0;
     animation: rise-in 0.8s ease-out 3.2s forwards;
   }
-  .label .star-icon {
+  .archive-crest .star-icon {
     display: inline-block;
     margin: 0 8px;
-    color: var(--holo-bright);
     animation: spin-slow 8s linear infinite;
   }
   @keyframes spin-slow { to { transform: rotate(360deg); } }
 
-  /* ================= CHARACTER NAME ================= */
-  .name {
-    font-family: 'Cinzel', serif;
-    font-weight: 900;
-    font-size: clamp(36px, 11vw, 52px);
-    letter-spacing: 0.08em;
-    text-align: center;
-    margin-top: 12px;
-    color: white;
-    text-shadow:
-      0 0 20px var(--holo-cyan),
-      0 0 40px var(--holo-deep),
-      0 2px 0 rgba(0,0,0,0.3);
+  .archive-sub {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 28px;
     opacity: 0;
-    animation: rise-in 0.8s ease-out 3.4s forwards, name-flicker 6s ease-in-out 4.2s infinite;
-  }
-  @keyframes name-flicker {
-    0%, 100% { opacity: 1; }
-    93% { opacity: 1; }
-    94% { opacity: 0.7; }
-    95% { opacity: 1; }
-    96% { opacity: 0.85; }
-    97% { opacity: 1; }
+    animation: rise-in 0.8s ease-out 3.3s forwards;
   }
 
-  /* ================= HOLOGRAM ================= */
-  .hologram-wrap {
+  /* The Hero Hologram — full bleed image, character is the star */
+  .hero-hologram {
     position: relative;
-    margin: 28px 0 12px;
-    width: 280px; height: 320px;
+    width: 100%;
+    max-width: 420px;
+    aspect-ratio: 3 / 4;
+    margin-bottom: 12px;
     opacity: 0;
     animation: hologram-materialize 1.4s ease-out 2.6s forwards,
                hologram-float 5s ease-in-out 4.2s infinite alternate;
@@ -203,84 +192,60 @@
 
   @keyframes hologram-float {
     0% { transform: translateY(0); }
-    100% { transform: translateY(-6px); }
+    100% { transform: translateY(-8px); }
   }
 
-  /* The emitter base — small projector at the bottom */
-  .emitter {
+  /* Outer cyan glow behind character */
+  .hero-aura {
     position: absolute;
-    left: 50%; bottom: -8px;
-    transform: translateX(-50%);
-    width: 140px; height: 18px;
-    background: linear-gradient(180deg,
-      rgba(125, 211, 252, 0.15) 0%,
-      rgba(56, 189, 248, 0.4) 40%,
-      rgba(14, 165, 233, 0.8) 100%);
-    border-radius: 50%;
-    box-shadow:
-      0 0 30px var(--holo-cyan),
-      0 0 60px var(--holo-deep),
-      inset 0 2px 4px rgba(255,255,255,0.4);
-    z-index: 1;
+    inset: -10%;
+    z-index: 0;
+    background: radial-gradient(ellipse 55% 65% at 50% 50%,
+      rgba(125, 211, 252, 0.35) 0%,
+      rgba(56, 189, 248, 0.18) 40%,
+      transparent 70%);
+    filter: blur(20px);
+    animation: aura-pulse 3.5s ease-in-out infinite alternate;
   }
-  .emitter::before {
-    content: '';
-    position: absolute;
-    inset: 4px 8px;
-    border-radius: 50%;
-    background: radial-gradient(ellipse, var(--holo-bright) 0%, var(--holo-cyan) 60%, transparent 100%);
-    opacity: 0.7;
+  @keyframes aura-pulse {
+    0%   { opacity: 0.7; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1.05); }
   }
 
-  /* The cone of projection light coming up from emitter */
-  .projection-cone {
+  /* Subtle gold rim for light side */
+  .hero-gold-rim {
     position: absolute;
-    left: 50%; bottom: 0;
-    transform: translateX(-50%);
-    width: 0; height: 0;
-    border-left: 110px solid transparent;
-    border-right: 110px solid transparent;
-    border-bottom: 320px solid rgba(125, 211, 252, 0.06);
-    filter: blur(2px);
-    z-index: 1;
-    animation: cone-flicker 3s ease-in-out infinite alternate;
-  }
-  @keyframes cone-flicker {
-    0% { opacity: 0.5; }
-    100% { opacity: 0.9; }
+    inset: -5%;
+    z-index: 0;
+    background: radial-gradient(ellipse 50% 60% at 50% 50%,
+      transparent 60%,
+      rgba(253, 230, 138, 0.12) 75%,
+      transparent 90%);
+    filter: blur(15px);
   }
 
-  /* The hologram image itself */
-  .hologram-image {
-    position: absolute;
-    inset: 0;
+  .hero-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
     z-index: 2;
     overflow: hidden;
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    /* That weird border-radius makes the hologram fade more at edges */
-    mask-image: radial-gradient(ellipse 90% 95% at 50% 45%, black 60%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 90% 95% at 50% 45%, black 60%, transparent 100%);
+    mask-image: radial-gradient(ellipse 92% 95% at 50% 45%, black 65%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 92% 95% at 50% 45%, black 65%, transparent 100%);
   }
-
-  .hologram-image img {
+  .hero-image img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: center 40%;
-
-    /* THE HOLOGRAM TREATMENT */
-    /* Convert to blue-cyan, brighten, add glow */
+    object-position: center 45%;
     filter:
       brightness(1.15)
       contrast(0.95)
       sepia(1)
       hue-rotate(160deg)
       saturate(2.4);
-
-    /* Subtle vertical floating */
     animation: image-flicker 8s ease-in-out infinite;
   }
-
   @keyframes image-flicker {
     0%, 100% { opacity: 0.95; }
     50% { opacity: 1; }
@@ -291,8 +256,8 @@
     98% { opacity: 0.95; }
   }
 
-  /* Scan lines overlay */
-  .scan-lines {
+  /* Scan lines */
+  .hero-scanlines {
     position: absolute;
     inset: 0;
     z-index: 3;
@@ -301,69 +266,138 @@
       0deg,
       rgba(125, 211, 252, 0) 0px,
       rgba(125, 211, 252, 0) 2px,
-      rgba(125, 211, 252, 0.15) 3px,
+      rgba(125, 211, 252, 0.12) 3px,
       rgba(125, 211, 252, 0) 4px
     );
     mix-blend-mode: screen;
   }
 
-  /* Slow drifting horizontal scan band — the "transmission" line */
-  .scan-band {
+  /* Drifting transmission band */
+  .hero-scanband {
     position: absolute;
     left: 0; right: 0;
-    height: 30px;
+    height: 40px;
     z-index: 4;
     pointer-events: none;
     background: linear-gradient(180deg,
       transparent 0%,
       rgba(186, 230, 253, 0.0) 30%,
-      rgba(186, 230, 253, 0.25) 50%,
+      rgba(186, 230, 253, 0.2) 50%,
       rgba(186, 230, 253, 0.0) 70%,
       transparent 100%);
     mix-blend-mode: screen;
-    animation: scan-drift 4s linear infinite;
+    animation: scan-drift 5s linear infinite;
   }
   @keyframes scan-drift {
-    0%   { top: -30px; }
+    0%   { top: -40px; }
     100% { top: 100%; }
   }
 
-  /* Outer cyan glow around the whole hologram */
-  .hologram-aura {
+  /* Emitter base */
+  .hero-emitter {
     position: absolute;
-    inset: -30px;
-    z-index: 0;
+    left: 50%; bottom: 4%;
+    transform: translateX(-50%);
+    width: 50%; height: 16px;
+    background: linear-gradient(180deg,
+      rgba(125, 211, 252, 0.15) 0%,
+      rgba(56, 189, 248, 0.4) 40%,
+      rgba(14, 165, 233, 0.85) 100%);
     border-radius: 50%;
-    background: radial-gradient(ellipse 60% 70% at 50% 50%,
-      rgba(125, 211, 252, 0.35) 0%,
-      rgba(56, 189, 248, 0.18) 40%,
-      transparent 70%);
-    filter: blur(15px);
-    animation: aura-pulse 3.5s ease-in-out infinite alternate;
-  }
-  @keyframes aura-pulse {
-    0%   { opacity: 0.7; transform: scale(0.95); }
-    100% { opacity: 1; transform: scale(1.05); }
+    box-shadow:
+      0 0 30px var(--holo-cyan),
+      0 0 60px var(--holo-deep);
+    z-index: 5;
   }
 
-  /* Light side gold rim — subtle warmth, doesn't overpower the blue */
-  .gold-rim {
-    position: absolute;
-    inset: -15px;
-    z-index: 0;
-    border-radius: 50%;
-    background: radial-gradient(ellipse 55% 65% at 50% 50%,
-      transparent 60%,
-      rgba(253, 230, 138, 0.12) 75%,
-      transparent 90%);
-    filter: blur(10px);
+  /* Character Name — large, beneath hologram */
+  .name {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: clamp(40px, 13vw, 64px);
+    letter-spacing: 0.1em;
+    color: white;
+    text-shadow:
+      0 0 20px var(--holo-cyan),
+      0 0 40px var(--holo-deep),
+      0 2px 0 rgba(0,0,0,0.3);
+    margin-top: 8px;
+    opacity: 0;
+    animation: rise-in 0.8s ease-out 3.4s forwards, name-flicker 6s ease-in-out 4.2s infinite;
+  }
+  @keyframes name-flicker {
+    0%, 100% { opacity: 1; }
+    93% { opacity: 1; }
+    94% { opacity: 0.7; }
+    95% { opacity: 1; }
+    96% { opacity: 0.85; }
+    97% { opacity: 1; }
   }
 
-  /* ================= RESULT CARD ================= */
-  .card {
+  /* Force Path Title — beneath name */
+  .path-title {
+    font-family: 'Cinzel', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    margin-top: 10px;
+    text-shadow: 0 0 14px rgba(253, 230, 138, 0.5);
+    opacity: 0;
+    animation: rise-in 0.8s ease-out 3.6s forwards;
+  }
+
+  /* Scroll cue */
+  .scroll-cue {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-muted);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: rise-in 0.8s ease-out 4.0s forwards, gentle-bounce 2s ease-in-out 5s infinite;
+  }
+  @keyframes gentle-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+  .scroll-cue-arrow {
+    font-size: 18px;
+    color: var(--holo-bright);
+  }
+
+  /* ================= TRANSMISSION DIVIDER ================= */
+  .divider {
     width: 100%;
-    margin-top: 28px;
-    padding: 24px 22px;
+    padding: 32px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--holo-cyan), transparent);
+    box-shadow: 0 0 8px var(--holo-cyan);
+  }
+  .divider-mark {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--holo-bright);
+    text-transform: uppercase;
+    text-shadow: 0 0 12px var(--holo-cyan);
+  }
+
+  /* ================= ARCHIVE CARD ================= */
+  .archive-card {
+    margin: 0 16px 16px;
+    padding: 28px 22px;
     background: var(--card-bg);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
@@ -371,113 +405,191 @@
     border-radius: 20px;
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.5),
-      0 0 50px rgba(56, 189, 248, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    opacity: 0;
-    animation: rise-in 0.9s ease-out 3.6s forwards;
+      0 0 50px rgba(56, 189, 248, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
-  .strength {
-    display: flex; flex-direction: column; gap: 4px;
-    margin-bottom: 16px;
-  }
-  .strength-label {
+  .archive-card h2 {
     font-family: 'Cinzel', serif;
+    font-weight: 700;
     font-size: 11px;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.35em;
     color: var(--holo-bright);
     text-transform: uppercase;
+    margin-bottom: 14px;
     text-shadow: 0 0 10px var(--holo-deep);
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
+  .archive-card h2::before, .archive-card h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(125,211,252,0.4), transparent);
+  }
+
+  /* Strength */
   .strength-value {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 22px;
+    font-size: 26px;
     color: white;
     letter-spacing: 0.02em;
+    text-align: center;
+    margin-bottom: 16px;
   }
 
-  .meaning {
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--text-muted);
-    margin-bottom: 20px;
+  /* Description / Force Vision body */
+  .vision-text {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text);
+    text-align: left;
+  }
+  .vision-text + .vision-text {
+    margin-top: 14px;
   }
 
+  /* Voice line — iconic quote */
+  .voice-line {
+    background: linear-gradient(135deg, rgba(125, 211, 252, 0.10), rgba(253, 230, 138, 0.06));
+    border-left: 3px solid var(--gold);
+    border-radius: 12px;
+    padding: 18px 18px 16px;
+    box-shadow: 0 0 24px rgba(56, 189, 248, 0.08);
+  }
+  .voice-line-quote {
+    font-family: 'Cinzel', serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.4;
+    color: white;
+    text-shadow: 0 0 14px rgba(125, 211, 252, 0.4);
+    margin-bottom: 8px;
+  }
+  .voice-line-attr {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  /* Power Move */
   .power-move {
-    background: linear-gradient(135deg, rgba(125, 211, 252, 0.12), rgba(253, 230, 138, 0.08));
+    background: linear-gradient(135deg, rgba(253, 230, 138, 0.1), rgba(125, 211, 252, 0.08));
     border-left: 3px solid var(--holo-bright);
     border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
-  }
-  .power-move-label {
-    font-family: 'Cinzel', serif;
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    color: var(--holo-bright);
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 4px;
+    padding: 16px 18px;
   }
   .power-move-text {
-    font-size: 14px;
+    font-size: 16px;
     color: white;
     font-weight: 500;
     font-style: italic;
+    line-height: 1.5;
   }
 
+  /* ================= TRAIT WHEEL ================= */
+  .trait-wheel-wrap {
+    text-align: center;
+  }
+  .trait-svg {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.3));
+  }
+  .trait-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .trait-pill {
+    background: rgba(125, 211, 252, 0.1);
+    border: 1px solid rgba(125, 211, 252, 0.25);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .trait-pill-name {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .trait-pill-value {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--holo-bright);
+    text-shadow: 0 0 8px rgba(125, 211, 252, 0.5);
+  }
+
+  /* Force Twin */
   .twin {
-    display: flex; align-items: center; gap: 12px;
-    padding-top: 16px;
-    border-top: 1px solid rgba(125, 211, 252, 0.15);
+    display: flex; align-items: center; gap: 14px;
   }
   .twin-avatar {
-    width: 44px; height: 44px;
+    width: 56px; height: 56px;
     border-radius: 50%;
     background:
       radial-gradient(circle at 30% 30%, rgba(186, 230, 253, 0.4), transparent 60%),
       linear-gradient(135deg, var(--bg-glow), var(--bg-mid));
     border: 2px solid var(--holo-bright);
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    box-shadow: 0 0 14px var(--holo-cyan);
+    font-size: 28px;
+    box-shadow: 0 0 16px var(--holo-cyan);
     flex-shrink: 0;
-    /* Mini hologram flicker */
     animation: image-flicker 6s ease-in-out infinite;
   }
-  .twin-text { display: flex; flex-direction: column; gap: 2px; }
-  .twin-label {
-    font-family: 'Cinzel', serif;
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    color: var(--holo-bright);
-    text-transform: uppercase;
-  }
+  .twin-text { display: flex; flex-direction: column; gap: 3px; }
   .twin-name {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 18px;
     color: white;
   }
   .twin-desc {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-muted);
     font-style: italic;
-    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  /* Closing quote */
+  .closing-quote {
+    text-align: center;
+    margin: 36px 24px 32px;
+    font-family: 'Cinzel', serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--gold);
+    text-shadow: 0 0 14px rgba(253, 230, 138, 0.3);
+  }
+  .closing-quote-sub {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--holo-bright);
+    text-shadow: 0 0 12px var(--holo-deep);
+    letter-spacing: 0.1em;
   }
 
   /* ================= ACTIONS ================= */
   .actions {
-    width: 100%;
-    margin-top: 22px;
+    margin: 0 16px;
     display: flex; flex-direction: column; gap: 10px;
-    opacity: 0;
-    animation: rise-in 0.9s ease-out 3.8s forwards;
   }
   .btn-primary {
-    padding: 16px 20px;
+    padding: 18px 20px;
     background: linear-gradient(135deg, var(--holo-bright) 0%, var(--holo-rim) 100%);
     color: #052238;
     font-family: 'Cinzel', serif;
@@ -492,15 +604,11 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.5);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
-  .btn-primary:hover, .btn-primary:active {
-    transform: translateY(-2px);
-    box-shadow:
-      0 8px 28px rgba(56, 189, 248, 0.55),
-      0 0 40px rgba(125, 211, 252, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  .btn-primary:active {
+    transform: translateY(2px);
   }
   .btn-secondary {
-    padding: 14px 20px;
+    padding: 16px 20px;
     background: transparent;
     color: var(--holo-bright);
     font-family: 'Cinzel', serif;
@@ -512,36 +620,31 @@
     border-radius: 14px;
     transition: all 0.2s ease;
   }
-  .btn-secondary:hover {
-    border-color: var(--holo-bright);
-    background: rgba(56, 189, 248, 0.08);
+  .btn-secondary:active {
+    background: rgba(56, 189, 248, 0.12);
   }
   .btn-tertiary {
-    padding: 8px;
+    padding: 14px;
     color: var(--text-muted);
     font-size: 13px;
     letter-spacing: 0.05em;
     text-decoration: underline;
     text-decoration-color: rgba(125, 211, 252, 0.3);
     text-underline-offset: 4px;
-  }
-
-  /* ================= FOOTER QUOTE ================= */
-  .quote {
-    margin-top: 28px;
-    padding: 0 16px;
-    font-family: 'Cinzel', serif;
-    font-style: italic;
-    font-size: 14px;
-    line-height: 1.5;
-    color: var(--holo-bright);
     text-align: center;
-    text-shadow: 0 0 14px var(--holo-deep);
-    opacity: 0;
-    animation: rise-in 0.9s ease-out 4.0s forwards;
   }
 
-  /* ================= ANIMATIONS ================= */
+  /* ================= RISE-IN ANIMATIONS ON SCROLL ================= */
+  .scroll-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .scroll-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   @keyframes rise-in {
     0% { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
@@ -553,103 +656,213 @@
   <div class="stars"></div>
   <div class="stars2"></div>
 
-  <!-- Phase 1: Materialization overlay (dims background as Force gathers) -->
   <div class="materialize"></div>
   <div class="force-point"></div>
   <div id="spiral-particles"></div>
 
   <main class="stage">
 
-    <div class="label">
-      <span class="star-icon">✦</span>
-      The Force Has Spoken
-      <span class="star-icon">✦</span>
-    </div>
-
-    <h1 class="name">YODA</h1>
-
-    <div class="hologram-wrap">
-      <div class="hologram-aura"></div>
-      <div class="gold-rim"></div>
-      <div class="projection-cone"></div>
-      <div class="hologram-image">
-        <img src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/yoda.png" alt="Hologram of Yoda, the wise Jedi Master">
+    <!-- ============ HERO HOLOGRAM ============ -->
+    <section class="hero">
+      <div class="archive-crest">
+        <span class="star-icon">✦</span>
+        Jedi Archive Record
+        <span class="star-icon">✦</span>
       </div>
-      <div class="scan-lines"></div>
-      <div class="scan-band"></div>
-      <div class="emitter"></div>
-    </div>
+      <div class="archive-sub">Force Vision Transmission</div>
 
-    <div class="card">
-      <div class="strength">
-        <span class="strength-label">Your Strength</span>
-        <span class="strength-value">Wisdom &amp; Patience</span>
+      <div class="hero-hologram">
+        <div class="hero-aura"></div>
+        <div class="hero-gold-rim"></div>
+        <div class="hero-image">
+          <img src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/yoda.png" alt="Hologram of Yoda, the wise Jedi Master">
+        </div>
+        <div class="hero-scanlines"></div>
+        <div class="hero-scanband"></div>
+        <div class="hero-emitter"></div>
       </div>
 
-      <p class="meaning">
-        You're the kind of person who thinks before you act. You notice things other people miss. When everyone else is rushing around, you stay calm and see the bigger picture. Like Yoda, you trust that the right answer comes to those who listen.
+      <h1 class="name">YODA</h1>
+      <p class="path-title">Master of Patience &amp; Wisdom</p>
+
+      <div class="scroll-cue">
+        <span>The Force has more to show</span>
+        <span class="scroll-cue-arrow">↓</span>
+      </div>
+    </section>
+
+    <!-- ============ THE FORCE VISION ============ -->
+    <div class="divider scroll-section">
+      <div class="divider-line"></div>
+      <div class="divider-mark">✦ Vision ✦</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <section class="archive-card scroll-section">
+      <h2>Your Strength</h2>
+      <div class="strength-value">Wisdom &amp; Patience</div>
+      <p class="vision-text">
+        You're the kind of person who thinks before you act. You notice things other people miss. When everyone else is rushing around, you stay calm and see the bigger picture.
       </p>
+      <p class="vision-text">
+        Like Yoda, you trust that the right answer comes to those who listen. Your mind is your lightsaber, and your patience is your shield.
+      </p>
+    </section>
 
-      <div class="power-move">
-        <span class="power-move-label">Your Power Move</span>
-        <span class="power-move-text">Slowing down when others speed up.</span>
+    <!-- ============ THE WORDS ============ -->
+    <section class="archive-card scroll-section">
+      <h2>Words to Remember</h2>
+      <div class="voice-line">
+        <p class="voice-line-quote">"Do or do not. There is no try."</p>
+        <div class="voice-line-attr">— Master Yoda</div>
       </div>
+    </section>
 
+    <!-- ============ POWER MOVE ============ -->
+    <section class="archive-card scroll-section">
+      <h2>Your Power Move</h2>
+      <div class="power-move">
+        <p class="power-move-text">Slowing down when others speed up.</p>
+      </div>
+    </section>
+
+    <!-- ============ TRAIT WHEEL ============ -->
+    <section class="archive-card scroll-section">
+      <h2>Force Signature</h2>
+      <div class="trait-wheel-wrap">
+        <svg class="trait-svg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background rings -->
+          <g stroke="rgba(125,211,252,0.15)" stroke-width="1" fill="none">
+            <circle cx="160" cy="160" r="40"/>
+            <circle cx="160" cy="160" r="70"/>
+            <circle cx="160" cy="160" r="100"/>
+            <circle cx="160" cy="160" r="130"/>
+          </g>
+
+          <!-- Axis lines (6 traits = hexagon) -->
+          <g stroke="rgba(125,211,252,0.2)" stroke-width="1">
+            <line x1="160" y1="30" x2="160" y2="290"/>
+            <line x1="47" y1="95" x2="273" y2="225"/>
+            <line x1="47" y1="225" x2="273" y2="95"/>
+          </g>
+
+          <!-- Filled hex (Yoda's stats: high Wisdom, high Patience, mid Courage, low Aggression, mid Loyalty, high Empathy) -->
+          <!-- Order: Wisdom (top), Empathy (top-right), Loyalty (bottom-right), Patience (bottom), Courage (bottom-left), Aggression (top-left) -->
+          <!-- Values 0-1: 0.95, 0.85, 0.7, 0.95, 0.6, 0.15 -->
+          <polygon
+            points="160,36 256,107 235,217 160,294 88,217 64,107"
+            fill="rgba(125,211,252,0.2)"
+            stroke="none"
+          />
+          <polygon
+            points="160,36 257,107 252,212 160,294 99,212 90,107"
+            fill="rgba(125,211,252,0.35)"
+            stroke="rgba(186,230,253,0.95)"
+            stroke-width="2"
+            style="filter: drop-shadow(0 0 8px rgba(125,211,252,0.7));"
+          />
+
+          <!-- Trait dots -->
+          <g fill="#BAE6FD" style="filter: drop-shadow(0 0 6px #7DD3FC);">
+            <circle cx="160" cy="36" r="4"/>
+            <circle cx="257" cy="107" r="4"/>
+            <circle cx="252" cy="212" r="4"/>
+            <circle cx="160" cy="294" r="4"/>
+            <circle cx="99" cy="212" r="4"/>
+            <circle cx="90" cy="107" r="4"/>
+          </g>
+
+          <!-- Labels -->
+          <g font-family="Cinzel, serif" font-size="11" font-weight="700" fill="#FDE68A" text-anchor="middle" letter-spacing="2">
+            <text x="160" y="20">WISDOM</text>
+            <text x="285" y="100">EMPATHY</text>
+            <text x="285" y="225">LOYALTY</text>
+            <text x="160" y="312">PATIENCE</text>
+            <text x="35" y="225">COURAGE</text>
+            <text x="35" y="100">AGGRESSION</text>
+          </g>
+        </svg>
+
+        <div class="trait-grid">
+          <div class="trait-pill">
+            <span class="trait-pill-name">Wisdom</span>
+            <span class="trait-pill-value">95</span>
+          </div>
+          <div class="trait-pill">
+            <span class="trait-pill-name">Patience</span>
+            <span class="trait-pill-value">95</span>
+          </div>
+          <div class="trait-pill">
+            <span class="trait-pill-name">Empathy</span>
+            <span class="trait-pill-value">85</span>
+          </div>
+          <div class="trait-pill">
+            <span class="trait-pill-name">Loyalty</span>
+            <span class="trait-pill-value">70</span>
+          </div>
+          <div class="trait-pill">
+            <span class="trait-pill-name">Courage</span>
+            <span class="trait-pill-value">60</span>
+          </div>
+          <div class="trait-pill">
+            <span class="trait-pill-name">Aggression</span>
+            <span class="trait-pill-value">15</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FORCE TWIN ============ -->
+    <section class="archive-card scroll-section">
+      <h2>Force Twin</h2>
       <div class="twin">
         <div class="twin-avatar">🧙</div>
         <div class="twin-text">
-          <span class="twin-label">Your Force Twin</span>
-          <span class="twin-name">Obi-Wan Kenobi</span>
-          <span class="twin-desc">A wise soul who chose the path of the teacher.</span>
+          <div class="twin-name">Obi-Wan Kenobi</div>
+          <div class="twin-desc">Another wise soul who chose the path of the teacher.</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="actions">
+    <!-- ============ CLOSING ============ -->
+    <p class="closing-quote scroll-section">
+      The Force is strong with you.
+      <span class="closing-quote-sub">May it guide you well, young one. ✦</span>
+    </p>
+
+    <!-- ============ ACTIONS ============ -->
+    <div class="actions scroll-section">
       <button class="btn-primary">✦ See Another Vision</button>
       <button class="btn-secondary">↺ Take Quiz Again</button>
-      <button class="btn-tertiary">Share my result</button>
+      <button class="btn-tertiary">Share My Result</button>
     </div>
-
-    <p class="quote">
-      "Do or do not. There is no try."<br>
-      <span style="font-size: 12px; opacity: 0.85;">The Force is strong with you. ✦</span>
-    </p>
 
   </main>
 
   <script>
-    // Spawn spiral particles during materialization phase
+    // Spawn spiral particles during materialization
     const spiralContainer = document.getElementById('spiral-particles');
 
     function spawnSpiralParticle() {
       const p = document.createElement('div');
       p.className = 'spiral-particle';
-
-      // Start at random outer position, spiral toward center
       const angle = Math.random() * Math.PI * 2;
       const startRadius = 200 + Math.random() * 150;
       const startX = window.innerWidth / 2 + Math.cos(angle) * startRadius;
-      const startY = window.innerHeight * 0.45 + Math.sin(angle) * startRadius;
-
+      const startY = window.innerHeight * 0.35 + Math.sin(angle) * startRadius;
       p.style.left = startX + 'px';
       p.style.top = startY + 'px';
       p.style.transition = 'all 1.4s cubic-bezier(0.4, 0, 0.6, 1)';
-
       spiralContainer.appendChild(p);
-
-      // After mount, animate toward center
       requestAnimationFrame(() => {
         p.style.left = (window.innerWidth / 2) + 'px';
-        p.style.top = (window.innerHeight * 0.45) + 'px';
+        p.style.top = (window.innerHeight * 0.35) + 'px';
         p.style.opacity = '0';
         p.style.transform = 'scale(0.2)';
       });
-
       setTimeout(() => p.remove(), 1500);
     }
 
-    // Burst of particles during the gathering phase (0 - 2.4s)
     let particleCount = 0;
     const particleInterval = setInterval(() => {
       spawnSpiralParticle();
@@ -657,28 +870,18 @@
       if (particleCount > 40) clearInterval(particleInterval);
     }, 60);
 
-    // Subtle ongoing flicker particles around the hologram after materialization
-    setTimeout(() => {
-      setInterval(() => {
-        // Only spawn if user hasn't scrolled away too much
-        if (window.scrollY < 200) {
-          const p = document.createElement('div');
-          p.className = 'spiral-particle';
-          const angle = Math.random() * Math.PI * 2;
-          const radius = 140 + Math.random() * 40;
-          p.style.left = (window.innerWidth / 2 + Math.cos(angle) * radius) + 'px';
-          p.style.top = (window.innerHeight * 0.36 + Math.sin(angle) * radius * 0.7) + 'px';
-          p.style.opacity = '0.6';
-          p.style.transition = 'all 2s ease-out';
-          spiralContainer.appendChild(p);
-          requestAnimationFrame(() => {
-            p.style.opacity = '0';
-            p.style.transform = `translateY(-${30 + Math.random() * 30}px)`;
-          });
-          setTimeout(() => p.remove(), 2100);
+    // Reveal sections on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
         }
-      }, 400);
-    }, 4000);
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.scroll-section').forEach(section => {
+      observer.observe(section);
+    });
   </script>
 
 </body>
