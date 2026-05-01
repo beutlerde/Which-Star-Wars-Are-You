@@ -6,73 +6,55 @@
 <title>Force Vision · Yoda</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Italianno&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 
-  /* ============================================================
-     TOKENS
-     ============================================================ */
   :root {
-    --void:        #04060D;
-    --void-1:      #080C18;
-    --void-2:      #0F1422;
-    --void-3:      #161B2E;
-
-    --paper:       #F2EEE3;
-    --paper-dim:   #C8C2B0;
-
-    --ink-1:       rgba(242,238,227,0.96);
-    --ink-2:       rgba(242,238,227,0.65);
-    --ink-3:       rgba(242,238,227,0.38);
-    --ink-4:       rgba(242,238,227,0.16);
-
-    /* Force blue — the primary accent */
-    --f1:  #C8E8F5;
-    --f2:  #7FCBED;
-    --f3:  #3FA9D8;
-    --f4:  #1B7CB8;
-    --fg:  rgba(127,203,237,0.40);
-    --fg2: rgba(127,203,237,0.15);
-
-    /* Gold — ceremonial moments only */
-    --g1:  #EDD07A;
-    --g2:  #C8983A;
-    --gg:  rgba(237,208,122,0.40);
-
-    /* Rules */
-    --hr:  rgba(242,238,227,0.10);
-    --hrf: rgba(127,203,237,0.18);
+    --void:     #04060D;
+    --void-1:   #080C18;
+    --void-2:   #0F1422;
+    --void-3:   #161B2E;
+    --paper:    #F0EDE4;
+    --paper-dim:#C0BBAD;
+    --ink-1: rgba(240,237,228,0.97);
+    --ink-2: rgba(240,237,228,0.65);
+    --ink-3: rgba(240,237,228,0.38);
+    --ink-4: rgba(240,237,228,0.16);
+    --f1: #C8E8F5;
+    --f2: #7FCBED;
+    --f3: #3FA9D8;
+    --f4: #1B7CB8;
+    --fg: rgba(127,203,237,0.42);
+    --fg2: rgba(127,203,237,0.16);
+    --g1: #EDD07A;
+    --g2: #B8923A;
+    --gg: rgba(237,208,122,0.35);
+    --hr:  rgba(240,237,228,0.10);
+    --hrf: rgba(127,203,237,0.22);
   }
 
-  /* ============================================================
-     RESET
-     ============================================================ */
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   html { scroll-behavior: smooth; }
   html, body { overflow-x: hidden; }
   body {
-    font-family: 'DM Sans', system-ui, sans-serif;
+    font-family: 'Rajdhani', sans-serif;
     background: var(--void);
     color: var(--ink-1);
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
     min-height: 100vh;
   }
   button { font: inherit; cursor: pointer; border: 0; background: 0; color: inherit; }
 
-  /* ============================================================
-     FIXED ATMOSPHERE
-     ============================================================ */
   .bg {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
-      radial-gradient(ellipse 80% 55% at 50% 0%, rgba(127,203,237,0.12), transparent 65%),
+      radial-gradient(ellipse 80% 55% at 50% 0%,  rgba(127,203,237,0.13), transparent 65%),
       radial-gradient(ellipse 60% 40% at 80% 100%, rgba(237,208,122,0.05), transparent 65%),
       var(--void-1);
   }
   .grain {
     position: fixed; inset: 0; z-index: 1; pointer-events: none;
-    opacity: 0.055; mix-blend-mode: overlay;
+    opacity: 0.05; mix-blend-mode: overlay;
     background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   .motes { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
@@ -89,499 +71,353 @@
     100% { opacity: 0; transform: translateY(-110vh); }
   }
 
-  /* ============================================================
-     HERO — full screen. Yoda IS the page on first load.
-     ============================================================ */
+  /* ══ HERO ══ */
   .hero {
-    position: relative;
-    z-index: 10;
-    /* Fill the full real viewport height — dvh handles iOS bar */
-    height: 100vh;
-    height: 100dvh;
-    width: 100%;
-    overflow: hidden;
-    /* Use grid so we can overlap image behind the text */
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    max-width: 540px;
-    margin: 0 auto;
+    position: relative; z-index: 10;
+    height: 100vh; height: 100dvh;
+    width: 100%; overflow: hidden;
+    max-width: 540px; margin: 0 auto;
   }
 
-  /* ── Top eyebrow ── */
   .hero-top {
-    position: relative; z-index: 4;
-    padding: max(18px, env(safe-area-inset-top)) 28px 0;
-    text-align: center;
+    position: absolute;
+    top: max(18px, env(safe-area-inset-top));
+    left: 0; right: 0; z-index: 4;
+    text-align: center; padding: 0 24px;
     opacity: 0;
-    animation: fade-up 1.2s ease-out 0.5s forwards;
+    animation: fade-up 1.0s ease-out 0.4s forwards;
   }
   .eyebrow {
-    display: inline-flex; align-items: center; gap: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500; font-size: 10px;
-    letter-spacing: 0.42em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.38em; text-transform: uppercase;
     color: var(--ink-3);
   }
-  .eyebrow-line {
-    width: 20px; height: 1px;
-    background: var(--g1); opacity: 0.7;
-  }
-  .eyebrow-mark { color: var(--g1); font-size: 9px; }
+  .eyebrow-line { width: 18px; height: 1px; background: var(--g1); opacity: 0.7; }
+  .eyebrow-mark { color: var(--g1); font-size: 8px; }
 
-  /* ── Full-bleed Yoda — stretched to fill hero grid row 1-3 ── */
-  .hero-img-wrap {
-    /* Overlay entire hero from behind */
-    position: absolute;
-    inset: 0; z-index: 1;
-  }
+  .hero-img-wrap { position: absolute; inset: 0; z-index: 1; }
   .hero-img-wrap img {
     width: 100%; height: 100%;
     object-fit: contain;
-    /* Push him toward the upper-center so feet don't get cut */
     object-position: center 15%;
-    display: block;
-    opacity: 0;
-    animation: hero-in 2.2s cubic-bezier(0.2,0.8,0.2,1) 0.3s forwards;
+    display: block; opacity: 0;
+    animation: hero-in 2.0s cubic-bezier(0.2,0.8,0.2,1) 0.2s forwards;
   }
   @keyframes hero-in {
-    0%   { opacity: 0; transform: scale(1.08); filter: blur(12px); }
-    60%  { opacity: 0.95; filter: blur(1px); }
-    100% { opacity: 1;  transform: scale(1);   filter: blur(0); }
+    0%   { opacity: 0; transform: scale(1.08); filter: blur(10px); }
+    65%  { opacity: 0.95; filter: blur(1px); }
+    100% { opacity: 1;   transform: scale(1); filter: blur(0); }
   }
-
-  /* Top vignette — keeps eyebrow readable */
   .hero-img-wrap::before {
     content: ''; position: absolute;
     top: 0; left: 0; right: 0; height: 22%;
     background: linear-gradient(180deg, var(--void) 0%, transparent 100%);
-    z-index: 2; pointer-events: none;
+    z-index: 2;
   }
-  /* Bottom vignette — name floats on a clean dark surface */
   .hero-img-wrap::after {
     content: ''; position: absolute;
-    bottom: 0; left: 0; right: 0; height: 52%;
+    bottom: 0; left: 0; right: 0; height: 50%;
     background: linear-gradient(180deg,
       transparent 0%,
-      rgba(4,6,13,0.55) 35%,
-      rgba(4,6,13,0.92) 70%,
+      rgba(4,6,13,0.60) 40%,
+      rgba(4,6,13,0.94) 72%,
       var(--void) 100%);
-    z-index: 2; pointer-events: none;
+    z-index: 2;
   }
-
-  /* Ambient glow behind Yoda's body */
   .hero-glow {
-    position: absolute;
-    top: 5%; left: 10%; right: 10%; height: 55%;
+    position: absolute; top: 5%; left: 5%; right: 5%; height: 60%;
     z-index: 1;
     background: radial-gradient(ellipse 70% 60% at 50% 40%,
-      rgba(127,203,237,0.14) 0%,
-      rgba(63,169,216,0.06) 50%,
-      transparent 70%);
-    filter: blur(32px);
+      rgba(127,203,237,0.16) 0%, rgba(63,169,216,0.07) 50%, transparent 70%);
+    filter: blur(30px);
     animation: glow-pulse 5s ease-in-out infinite alternate;
   }
-  @keyframes glow-pulse {
-    0%   { opacity: 0.7; }
-    100% { opacity: 1.0; }
-  }
+  @keyframes glow-pulse { 0% { opacity:.6; } 100% { opacity:1; } }
 
-  /* Spacer pushes bottom block down */
-  .hero-spacer { flex: 1; }
-
-  /* ── Bottom text — layered above image ── */
   .hero-bottom {
-    position: relative; z-index: 4;
-    padding: 0 28px max(28px, env(safe-area-inset-bottom));
-    text-align: center;
+    position: absolute;
+    bottom: max(80px, env(safe-area-inset-bottom));
+    left: 0; right: 0; z-index: 4;
+    text-align: center; padding: 0 24px;
   }
-
-  /* Script greeting — Italianno, intimate, gold */
   .greeting {
-    font-family: 'Italianno', cursive;
-    font-size: clamp(26px, 7.5vw, 34px);
-    line-height: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(11px, 3.2vw, 14px);
+    letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--g1);
-    text-shadow: 0 2px 20px rgba(237,208,122,0.4);
-    margin-bottom: 10px;
-    opacity: 0;
-    animation: fade-up 1.4s ease-out 2.2s forwards;
+    text-shadow: 0 0 18px var(--gg);
+    margin-bottom: 8px; opacity: 0;
+    animation: fade-up 1.2s ease-out 2.0s forwards;
   }
+  .greeting::before { content: '> '; color: rgba(237,208,122,0.45); }
 
-  /* THE NAME — Fraunces, optical size 144, the centerpiece */
   .name {
-    font-family: 'Fraunces', serif;
-    font-optical-sizing: auto;
-    font-weight: 600;
-    font-size: clamp(68px, 21vw, 112px);
-    line-height: 0.9;
-    letter-spacing: -0.025em;
-    color: var(--paper);
-    text-shadow: 0 4px 32px rgba(0,0,0,0.7), 0 0 60px rgba(127,203,237,0.18);
-    margin-bottom: 14px;
-    opacity: 0;
-    animation: name-in 1.8s cubic-bezier(0.2,0.8,0.2,1) 2.5s forwards;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(58px, 18vw, 96px);
+    line-height: 0.92; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--paper);
+    text-shadow:
+      0 0 24px rgba(127,203,237,0.55),
+      0 0 48px rgba(127,203,237,0.25),
+      0 3px 0 rgba(0,0,0,0.5);
+    margin-bottom: 10px;
+    position: relative; opacity: 0;
+    animation: name-in 1.6s cubic-bezier(0.2,0.8,0.2,1) 2.3s forwards;
+  }
+  .name::before {
+    content: 'YODA'; position: absolute; inset: 0;
+    color: rgba(255,60,140,0.3); transform: translate(2px,0); z-index: -1;
+  }
+  .name::after {
+    content: 'YODA'; position: absolute; inset: 0;
+    color: rgba(127,203,237,0.25); transform: translate(-2px,0); z-index: -1;
   }
   @keyframes name-in {
-    0%   { opacity:0; transform: translateY(20px) scale(0.97); filter: blur(5px); }
-    100% { opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
+    0%   { opacity:0; transform:translateY(18px) scale(0.97); filter:blur(6px); }
+    100% { opacity:1; transform:translateY(0) scale(1); filter:blur(0); }
   }
+  .designation {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(9px, 2.8vw, 11px);
+    letter-spacing: 0.26em; text-transform: uppercase;
+    color: var(--f2); text-shadow: 0 0 10px var(--fg);
+    opacity: 0; animation: fade-up 1.2s ease-out 2.8s forwards;
+  }
+  .designation::before { content: '// '; color: var(--ink-3); }
 
-  /* Subtitle */
-  .subtitle {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(14px, 4vw, 18px);
-    color: var(--ink-2);
-    letter-spacing: 0.02em;
-    margin-bottom: 24px;
-    opacity: 0;
-    animation: fade-up 1.4s ease-out 3.0s forwards;
-  }
-
-  /* Gold rule */
-  .hero-rule {
-    width: 30px; height: 1px;
-    background: var(--g1);
-    margin: 0 auto 0;
-    opacity: 0;
-    transform-origin: center;
-    animation: rule-grow 1.2s ease-out 3.3s forwards;
-  }
-  @keyframes rule-grow {
-    0%   { opacity:0; transform:scaleX(0); }
-    100% { opacity:1; transform:scaleX(1); }
-  }
-
-  /* Scroll cue */
   .hero-cue {
     position: absolute;
-    bottom: max(28px, env(safe-area-inset-bottom));
+    bottom: max(20px, env(safe-area-inset-bottom));
     left: 50%; transform: translateX(-50%);
     z-index: 4;
     display: flex; flex-direction: column; align-items: center; gap: 8px;
-    opacity: 0;
-    animation: fade-up 1.2s ease-out 4.0s forwards;
+    opacity: 0; animation: fade-up 1.2s ease-out 3.6s forwards;
   }
-  .hero-cue-label {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 9px; font-weight: 500;
-    letter-spacing: 0.42em; text-transform: uppercase;
-    color: var(--ink-3);
+  .cue-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; letter-spacing: 0.38em;
+    text-transform: uppercase; color: var(--ink-3);
   }
-  .hero-cue-line {
-    width: 1px; height: 26px;
+  .cue-line {
+    width: 1px; height: 24px;
     background: linear-gradient(180deg, var(--f2), transparent);
     animation: cue-pulse 2.4s ease-in-out infinite;
   }
   @keyframes cue-pulse {
-    0%,100% { opacity:0.3; transform:scaleY(0.6); }
-    50%     { opacity:1;   transform:scaleY(1); }
+    0%,100% { opacity:.3; transform:scaleY(.6); }
+    50%     { opacity:1; transform:scaleY(1); }
   }
 
-  /* ============================================================
-     SCROLL SECTIONS — premium editorial feel
-     All sections start off-screen and animate into view
-     ============================================================ */
+  /* ══ SECTIONS ══ */
   .section {
-    max-width: 540px;
-    margin: 0 auto;
-    padding: 80px 32px 0;
-    opacity: 0;
-    transform: translateY(36px);
-    transition: opacity 1.2s cubic-bezier(0.2,0.8,0.2,1),
-                transform 1.2s cubic-bezier(0.2,0.8,0.2,1);
+    max-width: 540px; margin: 0 auto;
+    padding: 80px 28px 0;
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 1.1s cubic-bezier(0.2,0.8,0.2,1),
+                transform 1.1s cubic-bezier(0.2,0.8,0.2,1);
   }
   .section.visible { opacity:1; transform:translateY(0); }
 
-  /* Section eyebrow — Force-blue monospace */
-  .sec-eyebrow {
-    display: flex; align-items: center; gap: 10px;
+  .sec-head {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--hrf);
+  }
+  .sec-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; font-weight: 400;
-    letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--f2);
+    font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--f2); text-shadow: 0 0 8px var(--fg);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sec-label::before {
+    content: ''; width: 12px; height: 1px;
+    background: var(--f2); box-shadow: 0 0 6px var(--fg);
+  }
+  .sec-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px; color: var(--ink-3); letter-spacing: 0.14em;
+  }
+  .sec-title {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: clamp(24px, 6.5vw, 34px);
+    line-height: 1.1; letter-spacing: 0.02em;
+    text-transform: uppercase; color: var(--paper);
+    text-shadow: 0 0 16px rgba(127,203,237,0.2);
     margin-bottom: 20px;
   }
-  .sec-eyebrow::before {
-    content: '';
-    width: 16px; height: 1px;
-    background: var(--f2);
-    box-shadow: 0 0 6px var(--fg);
-  }
-  .sec-eyebrow-id {
-    color: var(--ink-3);
-    font-size: 9px;
-  }
-
-  /* Display headline */
-  .sec-title {
-    font-family: 'Fraunces', serif;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-size: clamp(34px, 9vw, 50px);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
-    color: var(--paper);
-    margin-bottom: 26px;
-  }
   .sec-title em {
-    font-style: italic; font-weight: 400;
-    color: var(--f1);
+    font-style: normal; color: var(--f2);
+    text-shadow: 0 0 20px var(--fg);
   }
-
-  /* Body copy */
   .sec-body {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    font-size: 17px;
-    line-height: 1.65;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 400; font-size: 18px; line-height: 1.6;
     color: var(--ink-1);
   }
-  .sec-body + .sec-body { margin-top: 16px; }
+  .sec-body + .sec-body { margin-top: 14px; }
 
-  /* Drop cap on first paragraph */
-  .sec-body.drop::first-letter {
-    font-family: 'Fraunces', serif;
-    font-optical-sizing: auto;
-    font-weight: 600;
-    font-size: 56px;
-    line-height: 0.82;
-    float: left;
-    margin: 6px 10px 0 0;
-    color: var(--f2);
-  }
-
-  /* ============================================================
-     QUOTE — editorial pullquote, museum-wall scale
-     ============================================================ */
+  /* ══ QUOTE ══ */
   .quote-wrap {
-    padding: 80px 32px;
-    max-width: 540px;
-    margin: 0 auto;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(36px);
-    transition: opacity 1.2s cubic-bezier(0.2,0.8,0.2,1),
-                transform 1.2s cubic-bezier(0.2,0.8,0.2,1);
+    max-width: 540px; margin: 0 auto;
+    padding: 72px 28px; text-align: center;
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 1.1s cubic-bezier(0.2,0.8,0.2,1),
+                transform 1.1s cubic-bezier(0.2,0.8,0.2,1);
   }
   .quote-wrap.visible { opacity:1; transform:translateY(0); }
-
-  .quote-mark {
-    font-family: 'Fraunces', serif;
-    font-optical-sizing: auto;
-    font-weight: 600;
-    font-size: 80px;
-    line-height: 0.4;
-    color: var(--f2);
-    display: block;
-    margin-bottom: 24px;
-    text-shadow: 0 0 24px var(--fg);
+  .quote-glyph {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 56px; line-height: 0.5;
+    color: var(--f2); text-shadow: 0 0 24px var(--fg);
+    display: block; margin-bottom: 28px;
   }
   .quote-text {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(26px, 7vw, 38px);
-    line-height: 1.2;
-    letter-spacing: -0.015em;
-    color: var(--paper);
-    margin-bottom: 28px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: clamp(22px, 6.5vw, 32px);
+    line-height: 1.25; color: var(--paper);
+    margin-bottom: 24px; letter-spacing: 0.02em;
   }
   .quote-attr {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; font-weight: 400;
-    letter-spacing: 0.32em; text-transform: uppercase;
-    color: var(--ink-3);
+    font-size: 10px; letter-spacing: 0.32em;
+    text-transform: uppercase; color: var(--ink-3);
   }
   .quote-attr::before { content: '— '; color: var(--f2); }
 
-  /* ============================================================
-     POWER MOVE — single statement, maximum weight
-     ============================================================ */
+  /* ══ POWER MOVE ══ */
   .power-text {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(26px, 7vw, 38px);
-    line-height: 1.2;
-    letter-spacing: -0.015em;
-    color: var(--paper);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500;
+    font-size: clamp(19px, 5.5vw, 26px);
+    line-height: 1.3; letter-spacing: 0.03em;
+    text-transform: uppercase; color: var(--paper);
+    text-shadow: 0 0 16px rgba(127,203,237,0.2);
   }
 
-  /* ============================================================
-     FORCE SIGNATURE — cyberpunk data telemetry,
-     executed with editorial restraint
-     ============================================================ */
-  .telemetry {
-    margin-top: 8px;
-    border-top: 1px solid var(--hrf);
-  }
+  /* ══ TELEMETRY ══ */
+  .telemetry { margin-top: 8px; }
   .tel-row {
     display: grid;
     grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 0;
-    border-bottom: 1px solid var(--hr);
-    position: relative;
+    grid-template-rows: auto auto;
+    gap: 0 12px; align-items: center;
+    padding: 16px 0; border-bottom: 1px solid var(--hr);
   }
   .tel-name {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; font-weight: 400;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--ink-2);
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink-2); grid-row: 1;
   }
-  .tel-value {
-    font-family: 'Fraunces', serif;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-size: 28px;
-    line-height: 1;
-    color: var(--f1);
-    text-shadow: 0 0 12px var(--fg);
+  .tel-val {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700; font-size: 22px; line-height: 1;
+    color: var(--f1); text-shadow: 0 0 14px var(--fg);
     font-feature-settings: "tnum";
-    min-width: 44px;
-    text-align: right;
+    text-align: right; grid-row: 1;
   }
-  /* Bar lives below both columns, spanning full width */
   .tel-track {
-    grid-column: 1 / -1;
-    height: 2px;
-    background: var(--hr);
-    position: relative;
-    overflow: visible;
-    margin-top: 4px;
+    grid-column: 1 / -1; grid-row: 2;
+    height: 2px; background: rgba(127,203,237,0.12);
+    margin-top: 10px; position: relative; overflow: visible;
   }
   .tel-fill {
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
+    position: absolute; left:0; top:0; bottom:0;
     background: linear-gradient(90deg, var(--f4), var(--f2));
     box-shadow: 0 0 8px var(--fg), 0 0 16px var(--fg2);
     width: 0;
-    transition: width 1.6s cubic-bezier(0.2,0.8,0.2,1) 0.1s;
+    transition: width 1.5s cubic-bezier(0.2,0.8,0.2,1) 0.15s;
   }
-  /* Dot at end of bar */
   .tel-fill::after {
-    content: '';
-    position: absolute;
-    right: -3px; top: 50%;
+    content: ''; position: absolute; right:-3px; top:50%;
     transform: translateY(-50%);
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--f1);
-    box-shadow: 0 0 8px var(--fg);
+    width:6px; height:6px; border-radius:50%;
+    background: var(--f1); box-shadow: 0 0 8px var(--fg);
   }
   .section.visible .tel-fill { width: var(--w); }
 
-  /* ============================================================
-     FORCE TWIN
-     ============================================================ */
+  /* ══ TWIN ══ */
   .twin {
-    display: flex; align-items: center; gap: 18px;
-    padding: 22px 0;
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px 0;
     border-top: 1px solid var(--hrf);
     border-bottom: 1px solid var(--hrf);
   }
   .twin-orb {
-    width: 58px; height: 58px; flex-shrink: 0;
+    width: 56px; height: 56px; flex-shrink: 0;
     border-radius: 50%;
     background: radial-gradient(circle at 35% 35%,
-      rgba(127,203,237,0.25), transparent 60%),
-      var(--void-2);
+      rgba(127,203,237,0.22), transparent 60%), var(--void-2);
     border: 1px solid var(--f3);
     display: flex; align-items: center; justify-content: center;
-    font-size: 28px;
-    box-shadow: 0 0 20px var(--fg2), inset 0 1px 0 rgba(255,255,255,0.05);
+    font-size: 26px;
+    box-shadow: 0 0 18px var(--fg2);
   }
-  .twin-text { flex: 1; }
   .twin-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9px; letter-spacing: 0.28em;
-    text-transform: uppercase; color: var(--ink-3);
-    margin-bottom: 5px;
+    font-size: 9px; letter-spacing: 0.26em;
+    text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px;
   }
   .twin-name {
-    font-family: 'Fraunces', serif;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-size: 22px;
-    color: var(--paper);
-    letter-spacing: -0.01em;
-    line-height: 1.1;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700; font-size: 14px;
+    text-transform: uppercase; color: var(--paper); letter-spacing: 0.04em;
   }
   .twin-desc {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 14px;
-    color: var(--ink-2);
-    margin-top: 4px;
-    line-height: 1.4;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px; color: var(--ink-2); margin-top: 3px; line-height: 1.4;
   }
 
-  /* ============================================================
-     ACTIONS
-     ============================================================ */
+  /* ══ ACTIONS ══ */
   .actions {
-    max-width: 540px;
-    margin: 0 auto;
-    padding: 48px 32px max(64px, env(safe-area-inset-bottom));
+    max-width: 540px; margin: 0 auto;
+    padding: 48px 28px max(64px, env(safe-area-inset-bottom));
     display: flex; flex-direction: column; gap: 12px;
-    opacity: 0;
-    transform: translateY(36px);
-    transition: opacity 1.2s cubic-bezier(0.2,0.8,0.2,1),
-                transform 1.2s cubic-bezier(0.2,0.8,0.2,1);
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 1.1s cubic-bezier(0.2,0.8,0.2,1),
+                transform 1.1s cubic-bezier(0.2,0.8,0.2,1);
   }
   .actions.visible { opacity:1; transform:translateY(0); }
-
   .btn {
-    padding: 20px 24px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600; font-size: 12px;
-    letter-spacing: 0.28em; text-transform: uppercase;
+    padding: 18px 24px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700; font-size: 11px;
+    letter-spacing: 0.22em; text-transform: uppercase;
     text-align: center;
-    transition: all 0.35s cubic-bezier(0.2,0.8,0.2,1);
+    transition: all 0.3s cubic-bezier(0.2,0.8,0.2,1);
     -webkit-tap-highlight-color: transparent;
   }
   .btn-primary {
-    background: var(--paper); color: var(--void);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    background: var(--f2); color: var(--void);
+    box-shadow: 0 0 24px var(--fg), 0 6px 20px rgba(0,0,0,0.4);
   }
-  .btn-primary:active { transform: scale(0.99); background: var(--paper-dim); }
+  .btn-primary:active { transform:scale(0.99); }
   .btn-secondary {
-    background: transparent; color: var(--ink-1);
-    border: 1px solid var(--hair-strong);
+    background: transparent; color: var(--f2);
+    border: 1px solid rgba(127,203,237,0.35);
   }
-  .btn-secondary:active { background: var(--void-2); }
+  .btn-secondary:active { background: rgba(127,203,237,0.08); }
   .btn-ghost {
     background: transparent; color: var(--ink-3);
-    font-size: 11px; padding: 14px;
+    font-size: 10px; padding: 14px; letter-spacing: 0.28em;
   }
 
-  /* Closing mark */
   .closing {
-    text-align: center;
-    padding: 0 32px 60px;
+    text-align: center; padding: 0 28px 60px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: 0.32em;
+    font-size: 9px; letter-spacing: 0.38em;
     text-transform: uppercase; color: var(--ink-3);
-    border-top: 1px solid var(--hr);
-    padding-top: 32px;
   }
-  .closing em {
-    color: var(--f2);
-    font-style: normal;
-    text-shadow: 0 0 8px var(--fg);
-  }
+  .closing em { color: var(--f2); font-style: normal; text-shadow: 0 0 8px var(--fg); }
 
-  /* ============================================================
-     ANIMATIONS
-     ============================================================ */
   @keyframes fade-up {
-    from { opacity:0; transform:translateY(14px); }
+    from { opacity:0; transform:translateY(12px); }
     to   { opacity:1; transform:translateY(0); }
   }
-
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -598,25 +434,20 @@
 
 <main>
 
-  <!-- ══════════════════════════════════════════════
-       HERO — FULL SCREEN. YODA OWNS IT.
-       ══════════════════════════════════════════════ -->
+  <!-- HERO -->
   <section class="hero">
-
     <div class="hero-top">
       <div class="eyebrow">
         <span class="eyebrow-line"></span>
         <span class="eyebrow-mark">✦</span>
-        The Force Has Spoken
+        THE FORCE HAS SPOKEN
         <span class="eyebrow-mark">✦</span>
         <span class="eyebrow-line"></span>
       </div>
     </div>
 
-    <!-- Full-bleed Yoda — sits behind everything -->
     <div class="hero-img-wrap">
       <div class="hero-glow"></div>
-      <!-- HARDCODED: yoda.PNG (capital PNG — confirmed working) -->
       <img
         src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/yoda.PNG"
         alt="Yoda, Jedi Master"
@@ -625,140 +456,109 @@
       >
     </div>
 
-    <!-- Bottom text overlays the image gradient -->
     <div class="hero-bottom">
-      <p class="greeting">Guapo, the Force shows you…</p>
-      <h1 class="name">Yoda</h1>
-      <p class="subtitle">Master of patience &amp; wisdom</p>
-      <div class="hero-rule"></div>
+      <p class="greeting">PROFILE.SCAN: GUAPO_001</p>
+      <h1 class="name">YODA</h1>
+      <p class="designation">CLASS: MASTER / PATH: WISDOM</p>
     </div>
 
-    <!-- Scroll nudge -->
     <div class="hero-cue">
-      <span class="hero-cue-label">Scroll</span>
-      <span class="hero-cue-line"></span>
+      <span class="cue-label">Scroll</span>
+      <span class="cue-line"></span>
     </div>
-
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       I — YOUR STRENGTH
-       ══════════════════════════════════════════════ -->
-  <section class="section stage">
-    <div class="sec-eyebrow">
-      I · Your Strength
-      <span class="sec-eyebrow-id">// FORCE.PROFILE</span>
+  <!-- I — STRENGTH -->
+  <section class="section">
+    <div class="sec-head">
+      <div class="sec-label">I · Core Signature</div>
+      <span class="sec-id">// FORCE.PROFILE</span>
     </div>
     <h2 class="sec-title">Wisdom &amp;<br><em>Patience</em></h2>
-    <p class="sec-body drop">
-      You think before you act. You notice things others miss. When everyone else is rushing around, you stay calm and see the bigger picture.
-    </p>
-    <p class="sec-body">
-      Like Yoda, you trust that the right answer comes to those who listen. Your mind is your lightsaber. Your patience is your shield.
-    </p>
+    <p class="sec-body">You think before you act. You notice things others miss. When everyone else is rushing around, you stay calm and see the bigger picture.</p>
+    <p class="sec-body">Like Yoda, you trust that the right answer comes to those who listen. Your mind is your lightsaber. Your patience is your shield.</p>
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       QUOTE
-       ══════════════════════════════════════════════ -->
-  <div class="quote-wrap stage">
-    <span class="quote-mark">"</span>
+  <!-- QUOTE -->
+  <div class="quote-wrap">
+    <span class="quote-glyph">"</span>
     <p class="quote-text">Do or do not.<br>There is no try.</p>
     <p class="quote-attr">Master Yoda</p>
   </div>
 
-  <!-- ══════════════════════════════════════════════
-       II — POWER MOVE
-       ══════════════════════════════════════════════ -->
-  <section class="section stage">
-    <div class="sec-eyebrow">
-      II · Power Move
-      <span class="sec-eyebrow-id">// TACTICAL.EDGE</span>
+  <!-- II — POWER MOVE -->
+  <section class="section">
+    <div class="sec-head">
+      <div class="sec-label">II · Tactical Edge</div>
+      <span class="sec-id">// COMBAT.DOCTRINE</span>
     </div>
-    <p class="power-text">
-      Slowing down<br>when others speed up.
-    </p>
+    <p class="power-text">Slowing down<br>when others<br>speed up.</p>
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       III — FORCE SIGNATURE (TELEMETRY)
-       ══════════════════════════════════════════════ -->
-  <section class="section stage">
-    <div class="sec-eyebrow">
-      III · Force Signature
-      <span class="sec-eyebrow-id">// TELEMETRY.SCAN</span>
+  <!-- III — TELEMETRY -->
+  <section class="section">
+    <div class="sec-head">
+      <div class="sec-label">III · Force Telemetry</div>
+      <span class="sec-id">// SCAN.COMPLETE</span>
     </div>
-    <h2 class="sec-title">A measured<br><em>spirit.</em></h2>
-
     <div class="telemetry">
       <div class="tel-row">
-        <span class="tel-name">Wisdom</span>
-        <span class="tel-value">95</span>
+        <span class="tel-name">Wisdom</span><span class="tel-val">95</span>
         <div class="tel-track"><div class="tel-fill" style="--w:95%"></div></div>
       </div>
       <div class="tel-row">
-        <span class="tel-name">Patience</span>
-        <span class="tel-value">95</span>
+        <span class="tel-name">Patience</span><span class="tel-val">95</span>
         <div class="tel-track"><div class="tel-fill" style="--w:95%"></div></div>
       </div>
       <div class="tel-row">
-        <span class="tel-name">Empathy</span>
-        <span class="tel-value">85</span>
+        <span class="tel-name">Empathy</span><span class="tel-val">85</span>
         <div class="tel-track"><div class="tel-fill" style="--w:85%"></div></div>
       </div>
       <div class="tel-row">
-        <span class="tel-name">Loyalty</span>
-        <span class="tel-value">70</span>
+        <span class="tel-name">Loyalty</span><span class="tel-val">70</span>
         <div class="tel-track"><div class="tel-fill" style="--w:70%"></div></div>
       </div>
       <div class="tel-row">
-        <span class="tel-name">Courage</span>
-        <span class="tel-value">60</span>
+        <span class="tel-name">Courage</span><span class="tel-val">60</span>
         <div class="tel-track"><div class="tel-fill" style="--w:60%"></div></div>
       </div>
       <div class="tel-row">
-        <span class="tel-name">Aggression</span>
-        <span class="tel-value">15</span>
+        <span class="tel-name">Aggression</span><span class="tel-val">15</span>
         <div class="tel-track"><div class="tel-fill" style="--w:15%"></div></div>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       IV — FORCE TWIN
-       ══════════════════════════════════════════════ -->
-  <section class="section stage">
-    <div class="sec-eyebrow">
-      IV · Force Twin
-      <span class="sec-eyebrow-id">// LINKED.PROFILE</span>
+  <!-- IV — TWIN -->
+  <section class="section">
+    <div class="sec-head">
+      <div class="sec-label">IV · Linked Profile</div>
+      <span class="sec-id">// CROSS.REF</span>
     </div>
     <div class="twin">
       <div class="twin-orb">🧙</div>
-      <div class="twin-text">
-        <div class="twin-label">Walks beside you</div>
+      <div>
+        <div class="twin-label">Force Twin</div>
         <div class="twin-name">Obi-Wan Kenobi</div>
         <div class="twin-desc">A wise soul who chose the path of the teacher.</div>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════
-       ACTIONS
-       ══════════════════════════════════════════════ -->
-  <div class="actions stage">
-    <button class="btn btn-primary">See Another Vision</button>
-    <button class="btn btn-secondary">Take The Quiz Again</button>
-    <button class="btn btn-ghost">Share this result</button>
+  <!-- ACTIONS -->
+  <div class="actions">
+    <button class="btn btn-primary">▶ See Another Vision</button>
+    <button class="btn btn-secondary">↺ Take Quiz Again</button>
+    <button class="btn btn-ghost">// Share This Result</button>
   </div>
 
-  <div class="closing stage">
+  <div class="closing">
     <em>MAY THE FORCE</em> &nbsp;·&nbsp; BE WITH YOU &nbsp;·&nbsp; <em>GUAPO</em>
   </div>
 
 </main>
 
 <script>
-  // ── Motes ──
   const motesEl = document.getElementById('motes');
   function spawnMote() {
     const m = document.createElement('div');
@@ -771,8 +571,7 @@
     const size = 1 + Math.random() * 2;
     m.style.width = size + 'px';
     m.style.height = size + 'px';
-    // Occasional gold mote
-    if (Math.random() > 0.75) {
+    if (Math.random() > 0.78) {
       m.style.background = 'var(--g1)';
       m.style.boxShadow = '0 0 6px rgba(237,208,122,0.5)';
     }
@@ -782,13 +581,10 @@
   for (let k = 0; k < 5; k++) setTimeout(spawnMote, k * 1400);
   setInterval(spawnMote, 1800);
 
-  // ── Scroll reveal ──
   const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) e.target.classList.add('visible');
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-  document.querySelectorAll('.stage').forEach(el => io.observe(el));
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.section, .quote-wrap, .actions').forEach(el => io.observe(el));
 </script>
 
 </body>
