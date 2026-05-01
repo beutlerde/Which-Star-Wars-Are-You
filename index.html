@@ -43,7 +43,7 @@
     position: relative;
   }
 
-  /* ================= STARFIELD (fixed, behind everything) ================= */
+  /* ================= STARFIELD ================= */
   .stars, .stars2 {
     position: fixed; inset: 0; pointer-events: none; z-index: 0;
   }
@@ -69,7 +69,7 @@
   }
   @keyframes twinkle { 0% { opacity: 0.4 } 100% { opacity: 1 } }
 
-  /* ================= MATERIALIZATION OVERLAY ================= */
+  /* ================= MATERIALIZATION ================= */
   .materialize {
     position: fixed;
     inset: 0;
@@ -128,7 +128,7 @@
     padding: 0 0 60px;
   }
 
-  /* ================= HERO HOLOGRAM SECTION ================= */
+  /* ================= HERO ================= */
   .hero {
     position: relative;
     width: 100%;
@@ -140,7 +140,6 @@
     text-align: center;
   }
 
-  /* Archive label at top */
   .archive-crest {
     font-family: 'Cinzel', serif;
     font-weight: 700;
@@ -171,7 +170,6 @@
     animation: rise-in 0.8s ease-out 3.3s forwards;
   }
 
-  /* The Hero Hologram — full bleed image, character is the star */
   .hero-hologram {
     position: relative;
     width: 100%;
@@ -195,7 +193,6 @@
     100% { transform: translateY(-8px); }
   }
 
-  /* Outer cyan glow behind character */
   .hero-aura {
     position: absolute;
     inset: -10%;
@@ -212,7 +209,6 @@
     100% { opacity: 1; transform: scale(1.05); }
   }
 
-  /* Subtle gold rim for light side */
   .hero-gold-rim {
     position: absolute;
     inset: -5%;
@@ -246,6 +242,11 @@
       saturate(2.4);
     animation: image-flicker 8s ease-in-out infinite;
   }
+  /* If the image hasn't loaded yet, hide it cleanly */
+  .hero-image img:not([src]), .hero-image img[src=""] {
+    visibility: hidden;
+  }
+
   @keyframes image-flicker {
     0%, 100% { opacity: 0.95; }
     50% { opacity: 1; }
@@ -256,7 +257,6 @@
     98% { opacity: 0.95; }
   }
 
-  /* Scan lines */
   .hero-scanlines {
     position: absolute;
     inset: 0;
@@ -272,7 +272,6 @@
     mix-blend-mode: screen;
   }
 
-  /* Drifting transmission band */
   .hero-scanband {
     position: absolute;
     left: 0; right: 0;
@@ -293,7 +292,6 @@
     100% { top: 100%; }
   }
 
-  /* Emitter base */
   .hero-emitter {
     position: absolute;
     left: 50%; bottom: 4%;
@@ -310,7 +308,6 @@
     z-index: 5;
   }
 
-  /* Character Name — large, beneath hologram */
   .name {
     font-family: 'Cinzel', serif;
     font-weight: 900;
@@ -334,7 +331,6 @@
     97% { opacity: 1; }
   }
 
-  /* Force Path Title — beneath name */
   .path-title {
     font-family: 'Cinzel', serif;
     font-style: italic;
@@ -348,7 +344,6 @@
     animation: rise-in 0.8s ease-out 3.6s forwards;
   }
 
-  /* Scroll cue */
   .scroll-cue {
     margin-top: 36px;
     display: flex;
@@ -371,7 +366,7 @@
     color: var(--holo-bright);
   }
 
-  /* ================= TRANSMISSION DIVIDER ================= */
+  /* ================= DIVIDER ================= */
   .divider {
     width: 100%;
     padding: 32px 20px 16px;
@@ -429,7 +424,6 @@
     background: linear-gradient(90deg, transparent, rgba(125,211,252,0.4), transparent);
   }
 
-  /* Strength */
   .strength-value {
     font-family: 'Cinzel', serif;
     font-weight: 700;
@@ -440,7 +434,6 @@
     margin-bottom: 16px;
   }
 
-  /* Description / Force Vision body */
   .vision-text {
     font-size: 16px;
     line-height: 1.65;
@@ -451,7 +444,6 @@
     margin-top: 14px;
   }
 
-  /* Voice line — iconic quote */
   .voice-line {
     background: linear-gradient(135deg, rgba(125, 211, 252, 0.10), rgba(253, 230, 138, 0.06));
     border-left: 3px solid var(--gold);
@@ -475,7 +467,6 @@
     text-transform: uppercase;
   }
 
-  /* Power Move */
   .power-move {
     background: linear-gradient(135deg, rgba(253, 230, 138, 0.1), rgba(125, 211, 252, 0.08));
     border-left: 3px solid var(--holo-bright);
@@ -532,7 +523,6 @@
     text-shadow: 0 0 8px rgba(125, 211, 252, 0.5);
   }
 
-  /* Force Twin */
   .twin {
     display: flex; align-items: center; gap: 14px;
   }
@@ -563,7 +553,6 @@
     line-height: 1.4;
   }
 
-  /* Closing quote */
   .closing-quote {
     text-align: center;
     margin: 36px 24px 32px;
@@ -634,7 +623,7 @@
     text-align: center;
   }
 
-  /* ================= RISE-IN ANIMATIONS ON SCROLL ================= */
+  /* ================= SCROLL REVEAL ================= */
   .scroll-section {
     opacity: 0;
     transform: translateY(30px);
@@ -649,6 +638,25 @@
     0% { opacity: 0; transform: translateY(20px); }
     100% { opacity: 1; transform: translateY(0); }
   }
+
+  /* Tiny status indicator while image loads (only shows briefly) */
+  .image-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    color: var(--holo-bright);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    opacity: 0.5;
+    text-transform: uppercase;
+  }
+  .image-loading.hidden {
+    display: none;
+  }
 </style>
 </head>
 <body>
@@ -662,7 +670,7 @@
 
   <main class="stage">
 
-    <!-- ============ HERO HOLOGRAM ============ -->
+    <!-- ============ HERO ============ -->
     <section class="hero">
       <div class="archive-crest">
         <span class="star-icon">✦</span>
@@ -675,7 +683,9 @@
         <div class="hero-aura"></div>
         <div class="hero-gold-rim"></div>
         <div class="hero-image">
-          <img src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/yoda.png" alt="Hologram of Yoda, the wise Jedi Master">
+          <div class="image-loading" id="image-loading">Receiving transmission...</div>
+          <!-- Note: src is intentionally empty. JS loads the right one. -->
+          <img id="hero-img" alt="Hologram of Yoda, the wise Jedi Master" />
         </div>
         <div class="hero-scanlines"></div>
         <div class="hero-scanband"></div>
@@ -691,7 +701,7 @@
       </div>
     </section>
 
-    <!-- ============ THE FORCE VISION ============ -->
+    <!-- ============ FORCE VISION ============ -->
     <div class="divider scroll-section">
       <div class="divider-line"></div>
       <div class="divider-mark">✦ Vision ✦</div>
@@ -709,7 +719,6 @@
       </p>
     </section>
 
-    <!-- ============ THE WORDS ============ -->
     <section class="archive-card scroll-section">
       <h2>Words to Remember</h2>
       <div class="voice-line">
@@ -718,7 +727,6 @@
       </div>
     </section>
 
-    <!-- ============ POWER MOVE ============ -->
     <section class="archive-card scroll-section">
       <h2>Your Power Move</h2>
       <div class="power-move">
@@ -726,29 +734,21 @@
       </div>
     </section>
 
-    <!-- ============ TRAIT WHEEL ============ -->
     <section class="archive-card scroll-section">
       <h2>Force Signature</h2>
       <div class="trait-wheel-wrap">
         <svg class="trait-svg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
-          <!-- Background rings -->
           <g stroke="rgba(125,211,252,0.15)" stroke-width="1" fill="none">
             <circle cx="160" cy="160" r="40"/>
             <circle cx="160" cy="160" r="70"/>
             <circle cx="160" cy="160" r="100"/>
             <circle cx="160" cy="160" r="130"/>
           </g>
-
-          <!-- Axis lines (6 traits = hexagon) -->
           <g stroke="rgba(125,211,252,0.2)" stroke-width="1">
             <line x1="160" y1="30" x2="160" y2="290"/>
             <line x1="47" y1="95" x2="273" y2="225"/>
             <line x1="47" y1="225" x2="273" y2="95"/>
           </g>
-
-          <!-- Filled hex (Yoda's stats: high Wisdom, high Patience, mid Courage, low Aggression, mid Loyalty, high Empathy) -->
-          <!-- Order: Wisdom (top), Empathy (top-right), Loyalty (bottom-right), Patience (bottom), Courage (bottom-left), Aggression (top-left) -->
-          <!-- Values 0-1: 0.95, 0.85, 0.7, 0.95, 0.6, 0.15 -->
           <polygon
             points="160,36 256,107 235,217 160,294 88,217 64,107"
             fill="rgba(125,211,252,0.2)"
@@ -761,8 +761,6 @@
             stroke-width="2"
             style="filter: drop-shadow(0 0 8px rgba(125,211,252,0.7));"
           />
-
-          <!-- Trait dots -->
           <g fill="#BAE6FD" style="filter: drop-shadow(0 0 6px #7DD3FC);">
             <circle cx="160" cy="36" r="4"/>
             <circle cx="257" cy="107" r="4"/>
@@ -771,8 +769,6 @@
             <circle cx="99" cy="212" r="4"/>
             <circle cx="90" cy="107" r="4"/>
           </g>
-
-          <!-- Labels -->
           <g font-family="Cinzel, serif" font-size="11" font-weight="700" fill="#FDE68A" text-anchor="middle" letter-spacing="2">
             <text x="160" y="20">WISDOM</text>
             <text x="285" y="100">EMPATHY</text>
@@ -784,35 +780,16 @@
         </svg>
 
         <div class="trait-grid">
-          <div class="trait-pill">
-            <span class="trait-pill-name">Wisdom</span>
-            <span class="trait-pill-value">95</span>
-          </div>
-          <div class="trait-pill">
-            <span class="trait-pill-name">Patience</span>
-            <span class="trait-pill-value">95</span>
-          </div>
-          <div class="trait-pill">
-            <span class="trait-pill-name">Empathy</span>
-            <span class="trait-pill-value">85</span>
-          </div>
-          <div class="trait-pill">
-            <span class="trait-pill-name">Loyalty</span>
-            <span class="trait-pill-value">70</span>
-          </div>
-          <div class="trait-pill">
-            <span class="trait-pill-name">Courage</span>
-            <span class="trait-pill-value">60</span>
-          </div>
-          <div class="trait-pill">
-            <span class="trait-pill-name">Aggression</span>
-            <span class="trait-pill-value">15</span>
-          </div>
+          <div class="trait-pill"><span class="trait-pill-name">Wisdom</span><span class="trait-pill-value">95</span></div>
+          <div class="trait-pill"><span class="trait-pill-name">Patience</span><span class="trait-pill-value">95</span></div>
+          <div class="trait-pill"><span class="trait-pill-name">Empathy</span><span class="trait-pill-value">85</span></div>
+          <div class="trait-pill"><span class="trait-pill-name">Loyalty</span><span class="trait-pill-value">70</span></div>
+          <div class="trait-pill"><span class="trait-pill-name">Courage</span><span class="trait-pill-value">60</span></div>
+          <div class="trait-pill"><span class="trait-pill-name">Aggression</span><span class="trait-pill-value">15</span></div>
         </div>
       </div>
     </section>
 
-    <!-- ============ FORCE TWIN ============ -->
     <section class="archive-card scroll-section">
       <h2>Force Twin</h2>
       <div class="twin">
@@ -824,13 +801,11 @@
       </div>
     </section>
 
-    <!-- ============ CLOSING ============ -->
     <p class="closing-quote scroll-section">
       The Force is strong with you.
       <span class="closing-quote-sub">May it guide you well, young one. ✦</span>
     </p>
 
-    <!-- ============ ACTIONS ============ -->
     <div class="actions scroll-section">
       <button class="btn-primary">✦ See Another Vision</button>
       <button class="btn-secondary">↺ Take Quiz Again</button>
@@ -840,9 +815,73 @@
   </main>
 
   <script>
-    // Spawn spiral particles during materialization
-    const spiralContainer = document.getElementById('spiral-particles');
+    // ============ SMART IMAGE LOADER ============
+    // Tries every plausible filename / extension / case combination.
+    // Whichever one loads first, that's what gets shown.
+    // This means filenames in the repo can be ANY of:
+    //   yoda.png, yoda.PNG, yoda.jpg, yoda.JPG, yoda.jpeg, yoda.webp,
+    //   Yoda.png, YODA.png, etc. — the page will find it.
 
+    const REPO_BASE = 'https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+    const CHARACTER = 'yoda';  // change this for each character page
+
+    // All combinations to try, in order of preference
+    const BASE_NAMES = [
+      CHARACTER,                              // yoda
+      CHARACTER.charAt(0).toUpperCase() + CHARACTER.slice(1),  // Yoda
+      CHARACTER.toUpperCase(),                // YODA
+    ];
+    const EXTENSIONS = [
+      'png', 'PNG',
+      'jpg', 'JPG',
+      'jpeg', 'JPEG',
+      'webp', 'WEBP'
+    ];
+
+    function buildCandidates() {
+      const list = [];
+      for (const name of BASE_NAMES) {
+        for (const ext of EXTENSIONS) {
+          list.push(REPO_BASE + name + '.' + ext);
+        }
+      }
+      return list;
+    }
+
+    function tryLoadImage(urls, onSuccess, onAllFail) {
+      let index = 0;
+      function attempt() {
+        if (index >= urls.length) {
+          onAllFail();
+          return;
+        }
+        const url = urls[index++];
+        const test = new Image();
+        test.onload = () => onSuccess(url);
+        test.onerror = () => attempt();
+        test.src = url;
+      }
+      attempt();
+    }
+
+    const imgEl = document.getElementById('hero-img');
+    const loadingEl = document.getElementById('image-loading');
+
+    tryLoadImage(
+      buildCandidates(),
+      (url) => {
+        imgEl.src = url;
+        loadingEl.classList.add('hidden');
+        console.log('[archive] Image loaded from:', url);
+      },
+      () => {
+        loadingEl.textContent = '⚠ Image not found';
+        console.error('[archive] No image found. Tried:', buildCandidates());
+      }
+    );
+
+    // ============ MATERIALIZATION PARTICLES ============
+    const spiralContainer = document.getElementById('spiral-particles');
     function spawnSpiralParticle() {
       const p = document.createElement('div');
       p.className = 'spiral-particle';
@@ -862,7 +901,6 @@
       });
       setTimeout(() => p.remove(), 1500);
     }
-
     let particleCount = 0;
     const particleInterval = setInterval(() => {
       spawnSpiralParticle();
@@ -870,7 +908,7 @@
       if (particleCount > 40) clearInterval(particleInterval);
     }, 60);
 
-    // Reveal sections on scroll
+    // ============ SCROLL REVEAL ============
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
