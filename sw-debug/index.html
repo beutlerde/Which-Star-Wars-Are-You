@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Debug</title>
+<style>
+  body { background: #111; color: white; font-family: sans-serif; padding: 20px; margin: 0; }
+  h1 { font-size: 18px; margin-bottom: 16px; }
+  .label { color: #FBBF24; font-size: 12px; margin: 16px 0 8px; }
+  .result { background: #222; padding: 8px 12px; border-radius: 4px; margin-bottom: 8px; font-family: monospace; font-size: 11px; }
+  .ok { color: #34D399; }
+  .fail { color: #F87171; }
+  img.test { display: block; max-width: 100%; height: auto; border: 2px solid #555; margin: 12px 0; }
+</style>
+</head>
+<body>
+  <h1>Image Loading Debug</h1>
+
+  <div class="label">TEST 1: Hardcoded URL with capital PNG</div>
+  <div class="result" id="test1">testing...</div>
+  <img class="test" id="img1" src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/yoda.PNG" alt="Yoda test 1">
+
+  <div class="label">TEST 2: Hardcoded URL with lowercase png</div>
+  <div class="result" id="test2">testing...</div>
+  <img class="test" id="img2" src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/yoda.png" alt="Yoda test 2">
+
+  <div class="label">TEST 3: Smart loader (programmatic)</div>
+  <div class="result" id="test3">testing...</div>
+  <img class="test" id="img3" alt="Yoda test 3">
+
+  <script>
+    const img1 = document.getElementById('img1');
+    const t1 = document.getElementById('test1');
+    img1.onload = () => t1.innerHTML = '<span class="ok">✓ LOADED</span> ' + img1.naturalWidth + '×' + img1.naturalHeight + 'px';
+    img1.onerror = () => t1.innerHTML = '<span class="fail">✗ FAILED</span> yoda.PNG (capital)';
+
+    const img2 = document.getElementById('img2');
+    const t2 = document.getElementById('test2');
+    img2.onload = () => t2.innerHTML = '<span class="ok">✓ LOADED</span> ' + img2.naturalWidth + '×' + img2.naturalHeight + 'px';
+    img2.onerror = () => t2.innerHTML = '<span class="fail">✗ FAILED</span> yoda.png (lowercase)';
+
+    // Smart loader test
+    const t3 = document.getElementById('test3');
+    const img3 = document.getElementById('img3');
+    const REPO_BASE = 'https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+    const candidates = [
+      'yoda.png', 'yoda.PNG', 'yoda.jpg', 'yoda.JPG',
+      'Yoda.png', 'Yoda.PNG', 'YODA.png', 'YODA.PNG'
+    ];
+    let attempts = [];
+    let i = 0;
+    function tryNext() {
+      if (i >= candidates.length) {
+        t3.innerHTML = '<span class="fail">✗ FAILED ALL</span><br>' + attempts.join('<br>');
+        return;
+      }
+      const url = REPO_BASE + candidates[i];
+      const test = new Image();
+      test.onload = () => {
+        attempts.push('<span class="ok">✓ ' + candidates[i] + '</span>');
+        img3.src = url;
+        t3.innerHTML = '<span class="ok">✓ FOUND</span> ' + candidates[i] + ' → ' + test.naturalWidth + '×' + test.naturalHeight + 'px<br>' + attempts.join('<br>');
+      };
+      test.onerror = () => {
+        attempts.push('<span class="fail">✗ ' + candidates[i] + '</span>');
+        i++;
+        tryNext();
+      };
+      test.src = url;
+    }
+    tryNext();
+  </script>
+</body>
+</html>
