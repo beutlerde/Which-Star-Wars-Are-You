@@ -2,112 +2,684 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yoda Reveal — Prototype Test</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Force Vision — Yoda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* ================= RESET ================= */
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow-x: hidden; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+  /* ================= ROOT THEME ================= */
+  :root {
+    --bg-deep: #020610;
+    --bg-mid: #050d22;
+    --bg-glow: #0a1840;
+
+    /* Hologram blues — classic Star Wars */
+    --holo-cyan: #7DD3FC;        /* main hologram body color */
+    --holo-bright: #BAE6FD;      /* highlights and edges */
+    --holo-deep: #0EA5E9;        /* shadows in the projection */
+    --holo-rim: #38BDF8;         /* outer aura */
+
+    /* Side accent (light side = warm gold rim) */
+    --gold: #FDE68A;
+    --gold-warm: #FBBF24;
+
+    --text: #FFFFFF;
+    --text-muted: rgba(255,255,255,0.78);
+    --card-bg: rgba(8, 18, 45, 0.65);
+    --card-border: rgba(125, 211, 252, 0.4);
+  }
+
   body {
     font-family: 'Quicksand', sans-serif;
-    background: radial-gradient(ellipse at center, #0a1233 0%, #050818 100%);
-    color: white;
+    color: var(--text);
+    background:
+      radial-gradient(ellipse at 50% 40%, var(--bg-glow) 0%, var(--bg-mid) 45%, var(--bg-deep) 100%);
     min-height: 100vh;
-    padding: 32px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ================= STARFIELD ================= */
+  .stars, .stars2 {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  }
+  .stars {
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, white, transparent),
+      radial-gradient(1px 1px at 60% 70%, white, transparent),
+      radial-gradient(1px 1px at 80% 20%, white, transparent),
+      radial-gradient(1px 1px at 40% 85%, white, transparent),
+      radial-gradient(1.5px 1.5px at 90% 50%, white, transparent),
+      radial-gradient(1px 1px at 10% 60%, white, transparent),
+      radial-gradient(1px 1px at 50% 10%, white, transparent),
+      radial-gradient(1px 1px at 75% 90%, white, transparent);
+    animation: twinkle 5s ease-in-out infinite alternate;
+  }
+  .stars2 {
+    background-image:
+      radial-gradient(1px 1px at 15% 45%, var(--holo-bright), transparent),
+      radial-gradient(1px 1px at 70% 25%, white, transparent),
+      radial-gradient(1px 1px at 35% 75%, var(--holo-rim), transparent),
+      radial-gradient(1px 1px at 25% 15%, var(--holo-bright), transparent);
+    animation: twinkle 7s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes twinkle { 0% { opacity: 0.4 } 100% { opacity: 1 } }
+
+  /* ================= LAYOUT ================= */
+  .stage {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    padding: 24px 20px 40px;
+    max-width: 480px;
+    margin: 0 auto;
   }
-  h1 {
+
+  /* ================= MATERIALIZATION OVERLAY ================= */
+  /* Phase 1: Force gathers as a point of light */
+  .materialize {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 45%,
+      rgba(125, 211, 252, 0.0) 0%,
+      rgba(2, 6, 16, 0.4) 30%,
+      rgba(2, 6, 16, 0.95) 60%);
+    animation: dim-then-clear 3.0s ease-out forwards;
+  }
+  @keyframes dim-then-clear {
+    0%   { opacity: 1; }
+    70%  { opacity: 0.6; }
+    100% { opacity: 0; }
+  }
+
+  /* The gathering point of light */
+  .force-point {
+    position: fixed;
+    left: 50%; top: 45%;
+    transform: translate(-50%, -50%);
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--holo-bright);
+    box-shadow:
+      0 0 20px var(--holo-cyan),
+      0 0 40px var(--holo-cyan),
+      0 0 80px var(--holo-rim);
+    z-index: 11;
+    animation: force-gather 2.4s ease-out forwards;
+  }
+  @keyframes force-gather {
+    0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    20%  { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+    60%  { transform: translate(-50%, -50%) scale(2); opacity: 1; }
+    85%  { transform: translate(-50%, -50%) scale(8); opacity: 0.6; }
+    100% { transform: translate(-50%, -50%) scale(15); opacity: 0; }
+  }
+
+  /* Inward-spiraling particles during materialization */
+  .spiral-particle {
+    position: fixed;
+    width: 3px; height: 3px;
+    background: var(--holo-bright);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--holo-cyan), 0 0 16px var(--holo-rim);
+    z-index: 11;
+    pointer-events: none;
+  }
+
+  /* ================= HEADER LABEL ================= */
+  .label {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--holo-bright);
     text-align: center;
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
-    background: linear-gradient(180deg, #FFFFFF 0%, #80DEEA 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    margin-top: 8px;
+    text-transform: uppercase;
+    text-shadow: 0 0 14px var(--holo-cyan), 0 0 28px var(--holo-deep);
+    opacity: 0;
+    animation: rise-in 0.8s ease-out 3.2s forwards;
   }
-  .subtitle {
-    font-size: 13px;
+  .label .star-icon {
+    display: inline-block;
+    margin: 0 8px;
+    color: var(--holo-bright);
+    animation: spin-slow 8s linear infinite;
+  }
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+
+  /* ================= CHARACTER NAME ================= */
+  .name {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: clamp(36px, 11vw, 52px);
+    letter-spacing: 0.08em;
+    text-align: center;
+    margin-top: 12px;
+    color: white;
+    text-shadow:
+      0 0 20px var(--holo-cyan),
+      0 0 40px var(--holo-deep),
+      0 2px 0 rgba(0,0,0,0.3);
+    opacity: 0;
+    animation: rise-in 0.8s ease-out 3.4s forwards, name-flicker 6s ease-in-out 4.2s infinite;
+  }
+  @keyframes name-flicker {
+    0%, 100% { opacity: 1; }
+    93% { opacity: 1; }
+    94% { opacity: 0.7; }
+    95% { opacity: 1; }
+    96% { opacity: 0.85; }
+    97% { opacity: 1; }
+  }
+
+  /* ================= HOLOGRAM ================= */
+  .hologram-wrap {
+    position: relative;
+    margin: 28px 0 12px;
+    width: 280px; height: 320px;
+    opacity: 0;
+    animation: hologram-materialize 1.4s ease-out 2.6s forwards,
+               hologram-float 5s ease-in-out 4.2s infinite alternate;
+  }
+
+  @keyframes hologram-materialize {
+    0%   { opacity: 0; transform: scale(0.4); filter: blur(20px) brightness(3); }
+    40%  { opacity: 0.5; transform: scale(0.9); filter: blur(8px) brightness(2); }
+    70%  { opacity: 0.85; transform: scale(1.05); filter: blur(2px) brightness(1.4); }
+    100% { opacity: 1; transform: scale(1); filter: blur(0) brightness(1); }
+  }
+
+  @keyframes hologram-float {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-6px); }
+  }
+
+  /* The emitter base — small projector at the bottom */
+  .emitter {
+    position: absolute;
+    left: 50%; bottom: -8px;
+    transform: translateX(-50%);
+    width: 140px; height: 18px;
+    background: linear-gradient(180deg,
+      rgba(125, 211, 252, 0.15) 0%,
+      rgba(56, 189, 248, 0.4) 40%,
+      rgba(14, 165, 233, 0.8) 100%);
+    border-radius: 50%;
+    box-shadow:
+      0 0 30px var(--holo-cyan),
+      0 0 60px var(--holo-deep),
+      inset 0 2px 4px rgba(255,255,255,0.4);
+    z-index: 1;
+  }
+  .emitter::before {
+    content: '';
+    position: absolute;
+    inset: 4px 8px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, var(--holo-bright) 0%, var(--holo-cyan) 60%, transparent 100%);
     opacity: 0.7;
-    text-align: center;
-    margin-bottom: 32px;
-    letter-spacing: 0.05em;
   }
+
+  /* The cone of projection light coming up from emitter */
+  .projection-cone {
+    position: absolute;
+    left: 50%; bottom: 0;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 110px solid transparent;
+    border-right: 110px solid transparent;
+    border-bottom: 320px solid rgba(125, 211, 252, 0.06);
+    filter: blur(2px);
+    z-index: 1;
+    animation: cone-flicker 3s ease-in-out infinite alternate;
+  }
+  @keyframes cone-flicker {
+    0% { opacity: 0.5; }
+    100% { opacity: 0.9; }
+  }
+
+  /* The hologram image itself */
+  .hologram-image {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    /* That weird border-radius makes the hologram fade more at edges */
+    mask-image: radial-gradient(ellipse 90% 95% at 50% 45%, black 60%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 95% at 50% 45%, black 60%, transparent 100%);
+  }
+
+  .hologram-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center 40%;
+
+    /* THE HOLOGRAM TREATMENT */
+    /* Convert to blue-cyan, brighten, add glow */
+    filter:
+      brightness(1.15)
+      contrast(0.95)
+      sepia(1)
+      hue-rotate(160deg)
+      saturate(2.4);
+
+    /* Subtle vertical floating */
+    animation: image-flicker 8s ease-in-out infinite;
+  }
+
+  @keyframes image-flicker {
+    0%, 100% { opacity: 0.95; }
+    50% { opacity: 1; }
+    93% { opacity: 0.95; }
+    94% { opacity: 0.6; }
+    95% { opacity: 0.95; }
+    97% { opacity: 0.8; }
+    98% { opacity: 0.95; }
+  }
+
+  /* Scan lines overlay */
+  .scan-lines {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(125, 211, 252, 0) 0px,
+      rgba(125, 211, 252, 0) 2px,
+      rgba(125, 211, 252, 0.15) 3px,
+      rgba(125, 211, 252, 0) 4px
+    );
+    mix-blend-mode: screen;
+  }
+
+  /* Slow drifting horizontal scan band — the "transmission" line */
+  .scan-band {
+    position: absolute;
+    left: 0; right: 0;
+    height: 30px;
+    z-index: 4;
+    pointer-events: none;
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(186, 230, 253, 0.0) 30%,
+      rgba(186, 230, 253, 0.25) 50%,
+      rgba(186, 230, 253, 0.0) 70%,
+      transparent 100%);
+    mix-blend-mode: screen;
+    animation: scan-drift 4s linear infinite;
+  }
+  @keyframes scan-drift {
+    0%   { top: -30px; }
+    100% { top: 100%; }
+  }
+
+  /* Outer cyan glow around the whole hologram */
+  .hologram-aura {
+    position: absolute;
+    inset: -30px;
+    z-index: 0;
+    border-radius: 50%;
+    background: radial-gradient(ellipse 60% 70% at 50% 50%,
+      rgba(125, 211, 252, 0.35) 0%,
+      rgba(56, 189, 248, 0.18) 40%,
+      transparent 70%);
+    filter: blur(15px);
+    animation: aura-pulse 3.5s ease-in-out infinite alternate;
+  }
+  @keyframes aura-pulse {
+    0%   { opacity: 0.7; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1.05); }
+  }
+
+  /* Light side gold rim — subtle warmth, doesn't overpower the blue */
+  .gold-rim {
+    position: absolute;
+    inset: -15px;
+    z-index: 0;
+    border-radius: 50%;
+    background: radial-gradient(ellipse 55% 65% at 50% 50%,
+      transparent 60%,
+      rgba(253, 230, 138, 0.12) 75%,
+      transparent 90%);
+    filter: blur(10px);
+  }
+
+  /* ================= RESULT CARD ================= */
   .card {
     width: 100%;
-    max-width: 360px;
-    padding: 24px;
+    margin-top: 28px;
+    padding: 24px 22px;
+    background: var(--card-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      0 0 50px rgba(56, 189, 248, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    animation: rise-in 0.9s ease-out 3.6s forwards;
+  }
+
+  .strength {
+    display: flex; flex-direction: column; gap: 4px;
     margin-bottom: 16px;
-    background: rgba(20, 30, 70, 0.5);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(127, 200, 255, 0.3);
-    border-radius: 16px;
-    text-decoration: none;
-    color: white;
-    display: block;
-    transition: transform 0.2s ease, border-color 0.2s ease;
   }
-  .card:active { transform: scale(0.98); }
-  .card.gold { border-color: rgba(255, 213, 79, 0.5); }
-  .card.cyan { border-color: rgba(125, 211, 252, 0.5); }
-  .card-label {
+  .strength-label {
     font-family: 'Cinzel', serif;
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.3em;
+    color: var(--holo-bright);
     text-transform: uppercase;
-    margin-bottom: 6px;
+    text-shadow: 0 0 10px var(--holo-deep);
   }
-  .card.gold .card-label { color: #FFD54F; }
-  .card.cyan .card-label { color: #7DD3FC; }
-  .card-title {
+  .strength-value {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 20px;
-    margin-bottom: 8px;
+    font-size: 22px;
+    color: white;
+    letter-spacing: 0.02em;
   }
-  .card-desc {
+
+  .meaning {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  .power-move {
+    background: linear-gradient(135deg, rgba(125, 211, 252, 0.12), rgba(253, 230, 138, 0.08));
+    border-left: 3px solid var(--holo-bright);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
+  }
+  .power-move-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--holo-bright);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .power-move-text {
+    font-size: 14px;
+    color: white;
+    font-weight: 500;
+    font-style: italic;
+  }
+
+  .twin {
+    display: flex; align-items: center; gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(125, 211, 252, 0.15);
+  }
+  .twin-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(186, 230, 253, 0.4), transparent 60%),
+      linear-gradient(135deg, var(--bg-glow), var(--bg-mid));
+    border: 2px solid var(--holo-bright);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 14px var(--holo-cyan);
+    flex-shrink: 0;
+    /* Mini hologram flicker */
+    animation: image-flicker 6s ease-in-out infinite;
+  }
+  .twin-text { display: flex; flex-direction: column; gap: 2px; }
+  .twin-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--holo-bright);
+    text-transform: uppercase;
+  }
+  .twin-name {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+  }
+  .twin-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  /* ================= ACTIONS ================= */
+  .actions {
+    width: 100%;
+    margin-top: 22px;
+    display: flex; flex-direction: column; gap: 10px;
+    opacity: 0;
+    animation: rise-in 0.9s ease-out 3.8s forwards;
+  }
+  .btn-primary {
+    padding: 16px 20px;
+    background: linear-gradient(135deg, var(--holo-bright) 0%, var(--holo-rim) 100%);
+    color: #052238;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: 14px;
+    box-shadow:
+      0 6px 20px rgba(56, 189, 248, 0.45),
+      0 0 30px rgba(125, 211, 252, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .btn-primary:hover, .btn-primary:active {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 28px rgba(56, 189, 248, 0.55),
+      0 0 40px rgba(125, 211, 252, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+  .btn-secondary {
+    padding: 14px 20px;
+    background: transparent;
+    color: var(--holo-bright);
+    font-family: 'Cinzel', serif;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1.5px solid rgba(125, 211, 252, 0.4);
+    border-radius: 14px;
+    transition: all 0.2s ease;
+  }
+  .btn-secondary:hover {
+    border-color: var(--holo-bright);
+    background: rgba(56, 189, 248, 0.08);
+  }
+  .btn-tertiary {
+    padding: 8px;
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    text-decoration: underline;
+    text-decoration-color: rgba(125, 211, 252, 0.3);
+    text-underline-offset: 4px;
+  }
+
+  /* ================= FOOTER QUOTE ================= */
+  .quote {
+    margin-top: 28px;
+    padding: 0 16px;
+    font-family: 'Cinzel', serif;
+    font-style: italic;
     font-size: 14px;
     line-height: 1.5;
-    opacity: 0.8;
-  }
-  .arrow {
-    margin-top: 12px;
-    font-size: 14px;
-    opacity: 0.6;
-  }
-  .footer {
-    margin-top: 24px;
-    font-size: 12px;
-    opacity: 0.5;
+    color: var(--holo-bright);
     text-align: center;
-    line-height: 1.6;
+    text-shadow: 0 0 14px var(--holo-deep);
+    opacity: 0;
+    animation: rise-in 0.9s ease-out 4.0s forwards;
+  }
+
+  /* ================= ANIMATIONS ================= */
+  @keyframes rise-in {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
 </style>
 </head>
 <body>
-  <h1>YODA REVEAL TEST</h1>
-  <p class="subtitle">Tap each option to compare</p>
 
-  <a href="holocron/index.html" class="card gold">
-    <div class="card-label">Option A</div>
-    <div class="card-title">Holocron Reveal</div>
-    <div class="card-desc">A glowing Jedi cube spins, cracks open, and reveals Yoda. Treasure-chest energy.</div>
-    <div class="arrow">→ Tap to view</div>
-  </a>
+  <div class="stars"></div>
+  <div class="stars2"></div>
 
-  <a href="hologram/index.html" class="card cyan">
-    <div class="card-label">Option B</div>
-    <div class="card-title">Hologram Reveal</div>
-    <div class="card-desc">The Force gathers, particles spiral inward, and Yoda materializes as a flickering blue hologram.</div>
-    <div class="arrow">→ Tap to view</div>
-  </a>
+  <!-- Phase 1: Materialization overlay (dims background as Force gathers) -->
+  <div class="materialize"></div>
+  <div class="force-point"></div>
+  <div id="spiral-particles"></div>
 
-  <p class="footer">
-    Refresh the page (pull down) to replay each animation.
-  </p>
+  <main class="stage">
+
+    <div class="label">
+      <span class="star-icon">✦</span>
+      The Force Has Spoken
+      <span class="star-icon">✦</span>
+    </div>
+
+    <h1 class="name">YODA</h1>
+
+    <div class="hologram-wrap">
+      <div class="hologram-aura"></div>
+      <div class="gold-rim"></div>
+      <div class="projection-cone"></div>
+      <div class="hologram-image">
+        <img src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/yoda.png" alt="Hologram of Yoda, the wise Jedi Master">
+      </div>
+      <div class="scan-lines"></div>
+      <div class="scan-band"></div>
+      <div class="emitter"></div>
+    </div>
+
+    <div class="card">
+      <div class="strength">
+        <span class="strength-label">Your Strength</span>
+        <span class="strength-value">Wisdom &amp; Patience</span>
+      </div>
+
+      <p class="meaning">
+        You're the kind of person who thinks before you act. You notice things other people miss. When everyone else is rushing around, you stay calm and see the bigger picture. Like Yoda, you trust that the right answer comes to those who listen.
+      </p>
+
+      <div class="power-move">
+        <span class="power-move-label">Your Power Move</span>
+        <span class="power-move-text">Slowing down when others speed up.</span>
+      </div>
+
+      <div class="twin">
+        <div class="twin-avatar">🧙</div>
+        <div class="twin-text">
+          <span class="twin-label">Your Force Twin</span>
+          <span class="twin-name">Obi-Wan Kenobi</span>
+          <span class="twin-desc">A wise soul who chose the path of the teacher.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary">✦ See Another Vision</button>
+      <button class="btn-secondary">↺ Take Quiz Again</button>
+      <button class="btn-tertiary">Share my result</button>
+    </div>
+
+    <p class="quote">
+      "Do or do not. There is no try."<br>
+      <span style="font-size: 12px; opacity: 0.85;">The Force is strong with you. ✦</span>
+    </p>
+
+  </main>
+
+  <script>
+    // Spawn spiral particles during materialization phase
+    const spiralContainer = document.getElementById('spiral-particles');
+
+    function spawnSpiralParticle() {
+      const p = document.createElement('div');
+      p.className = 'spiral-particle';
+
+      // Start at random outer position, spiral toward center
+      const angle = Math.random() * Math.PI * 2;
+      const startRadius = 200 + Math.random() * 150;
+      const startX = window.innerWidth / 2 + Math.cos(angle) * startRadius;
+      const startY = window.innerHeight * 0.45 + Math.sin(angle) * startRadius;
+
+      p.style.left = startX + 'px';
+      p.style.top = startY + 'px';
+      p.style.transition = 'all 1.4s cubic-bezier(0.4, 0, 0.6, 1)';
+
+      spiralContainer.appendChild(p);
+
+      // After mount, animate toward center
+      requestAnimationFrame(() => {
+        p.style.left = (window.innerWidth / 2) + 'px';
+        p.style.top = (window.innerHeight * 0.45) + 'px';
+        p.style.opacity = '0';
+        p.style.transform = 'scale(0.2)';
+      });
+
+      setTimeout(() => p.remove(), 1500);
+    }
+
+    // Burst of particles during the gathering phase (0 - 2.4s)
+    let particleCount = 0;
+    const particleInterval = setInterval(() => {
+      spawnSpiralParticle();
+      particleCount++;
+      if (particleCount > 40) clearInterval(particleInterval);
+    }, 60);
+
+    // Subtle ongoing flicker particles around the hologram after materialization
+    setTimeout(() => {
+      setInterval(() => {
+        // Only spawn if user hasn't scrolled away too much
+        if (window.scrollY < 200) {
+          const p = document.createElement('div');
+          p.className = 'spiral-particle';
+          const angle = Math.random() * Math.PI * 2;
+          const radius = 140 + Math.random() * 40;
+          p.style.left = (window.innerWidth / 2 + Math.cos(angle) * radius) + 'px';
+          p.style.top = (window.innerHeight * 0.36 + Math.sin(angle) * radius * 0.7) + 'px';
+          p.style.opacity = '0.6';
+          p.style.transition = 'all 2s ease-out';
+          spiralContainer.appendChild(p);
+          requestAnimationFrame(() => {
+            p.style.opacity = '0';
+            p.style.transform = `translateY(-${30 + Math.random() * 30}px)`;
+          });
+          setTimeout(() => p.remove(), 2100);
+        }
+      }, 400);
+    }, 4000);
+  </script>
+
 </body>
 </html>
