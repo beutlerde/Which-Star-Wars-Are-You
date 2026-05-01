@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoda Reveal — Prototype Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: radial-gradient(ellipse at center, #0a1233 0%, #050818 100%);
+    color: white;
+    min-height: 100vh;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #80DEEA 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    font-size: 13px;
+    opacity: 0.7;
+    text-align: center;
+    margin-bottom: 32px;
+    letter-spacing: 0.05em;
+  }
+  .card {
+    width: 100%;
+    max-width: 360px;
+    padding: 24px;
+    margin-bottom: 16px;
+    background: rgba(20, 30, 70, 0.5);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(127, 200, 255, 0.3);
+    border-radius: 16px;
+    text-decoration: none;
+    color: white;
+    display: block;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .card:active { transform: scale(0.98); }
+  .card.gold { border-color: rgba(255, 213, 79, 0.5); }
+  .card.cyan { border-color: rgba(125, 211, 252, 0.5); }
+  .card-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .card.gold .card-label { color: #FFD54F; }
+  .card.cyan .card-label { color: #7DD3FC; }
+  .card-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+  .card-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    opacity: 0.8;
+  }
+  .arrow {
+    margin-top: 12px;
+    font-size: 14px;
+    opacity: 0.6;
+  }
+  .footer {
+    margin-top: 24px;
+    font-size: 12px;
+    opacity: 0.5;
+    text-align: center;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+  <h1>YODA REVEAL TEST</h1>
+  <p class="subtitle">Tap each option to compare</p>
+
+  <a href="holocron/index.html" class="card gold">
+    <div class="card-label">Option A</div>
+    <div class="card-title">Holocron Reveal</div>
+    <div class="card-desc">A glowing Jedi cube spins, cracks open, and reveals Yoda. Treasure-chest energy.</div>
+    <div class="arrow">→ Tap to view</div>
+  </a>
+
+  <a href="hologram/index.html" class="card cyan">
+    <div class="card-label">Option B</div>
+    <div class="card-title">Hologram Reveal</div>
+    <div class="card-desc">The Force gathers, particles spiral inward, and Yoda materializes as a flickering blue hologram.</div>
+    <div class="arrow">→ Tap to view</div>
+  </a>
+
+  <p class="footer">
+    Refresh the page (pull down) to replay each animation.
+  </p>
+</body>
+</html>
