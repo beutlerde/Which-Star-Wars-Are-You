@@ -182,7 +182,7 @@
 
     <div class="hero-img">
       <div class="hero-glow"></div>
-      <img src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/yoda.PNG" alt="Yoda">
+      <img id="hero-img" alt="Yoda">
     </div>
 
     <div class="hero-spacer"></div>
@@ -246,7 +246,19 @@
   <div class="footer">May the Force be with you · Guapo</div>
 </main>
 <script>
-  const io = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }), {threshold:0.1});
+  
+    // Smart loader
+    (function(){
+      const base='https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+      const names=['yoda','Yoda','YODA'];
+      const exts=['png','PNG','jpg','JPG'];
+      const c=[];
+      for(const n of names) for(const e of exts) c.push(base+n+'.'+e);
+      let i=0;
+      function t(){if(i>=c.length)return;const x=new Image();x.onload=()=>document.getElementById('hero-img').src=c[i-1];x.onerror=()=>{i++;t();};x.src=c[i++];}
+      t();
+    })();
+    const io = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }), {threshold:0.1});
   document.querySelectorAll('.section,.quote-wrap,.actions').forEach(el => io.observe(el));
 </script>
 </body>
