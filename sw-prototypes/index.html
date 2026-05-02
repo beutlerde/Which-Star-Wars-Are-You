@@ -6,69 +6,68 @@
 <title>Star Wars Reveal — Prototype Lab</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Inter',sans-serif; background:radial-gradient(ellipse at 50% 0%, #0a1840 0%, #050d1f 50%, #02060f 100%); color:white; min-height:100vh; padding:48px 20px; -webkit-font-smoothing:antialiased; }
-  .wrap { max-width:480px; margin:0 auto; }
-  .eye { font-size:11px; font-weight:500; letter-spacing:0.32em; color:rgba(125,211,252,0.8); text-transform:uppercase; text-align:center; margin-bottom:12px; }
-  h1 { font-family:'Cinzel',serif; font-weight:900; font-size:26px; text-align:center; letter-spacing:0.04em; margin-bottom:8px; text-shadow:0 0 24px rgba(125,211,252,0.4); }
-  .sub { font-size:13px; opacity:.65; text-align:center; margin-bottom:10px; }
-  .for { font-family:'Cinzel',serif; font-style:italic; font-size:14px; text-align:center; color:#FDE68A; margin-bottom:32px; }
-  a.card { display:block; width:100%; padding:20px 22px; margin-bottom:14px; background:rgba(20,30,70,0.4); backdrop-filter:blur(12px); border:1px solid rgba(125,211,252,0.2); border-radius:16px; text-decoration:none; color:white; transition:transform .2s ease,background .2s ease; }
-  a.card:active { transform:scale(0.98); background:rgba(20,30,70,0.55); }
-  .card-tag { font-size:10px; font-weight:600; letter-spacing:0.32em; text-transform:uppercase; margin-bottom:8px; }
-  .card-title { font-family:'Cinzel',serif; font-weight:700; font-size:20px; margin-bottom:6px; }
-  .card-ref { font-size:12px; opacity:.55; margin-bottom:8px; font-style:italic; }
-  .card-desc { font-size:13px; line-height:1.5; opacity:.85; }
-  .card-arrow { margin-top:10px; font-size:11px; letter-spacing:0.12em; opacity:.6; }
-
-  .c1 { border-color:rgba(91,163,208,0.45); } .c1 .card-tag,.c1 .card-arrow { color:#5BA3D0; }
-  .c2 { border-color:rgba(0,240,255,0.45); background:linear-gradient(135deg,rgba(0,240,255,0.06),rgba(255,46,136,0.04)); } .c2 .card-tag,.c2 .card-arrow { color:#00F0FF; }
-  .c3 { border-color:rgba(200,32,46,0.5); background:rgba(20,8,8,0.5); } .c3 .card-tag,.c3 .card-arrow { color:#C8202E; }
-  .c4 { border-color:rgba(201,160,95,0.45); background:linear-gradient(135deg,rgba(46,35,23,0.6),rgba(15,11,7,0.4)); } .c4 .card-tag,.c4 .card-arrow { color:#C9A05F; }
-
-  .foot { margin-top:24px; font-size:11px; opacity:.45; text-align:center; line-height:1.6; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:radial-gradient(ellipse at 50% 0%,#0a1840 0%,#050d1f 50%,#02060f 100%);color:white;min-height:100vh;padding:48px 20px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:480px;margin:0 auto;}
+  .eye{font-size:11px;font-weight:500;letter-spacing:0.32em;color:rgba(125,211,252,0.8);text-transform:uppercase;text-align:center;margin-bottom:12px;}
+  h1{font-family:'Cinzel',serif;font-weight:900;font-size:24px;text-align:center;letter-spacing:0.04em;margin-bottom:8px;text-shadow:0 0 24px rgba(125,211,252,0.4);}
+  .sub{font-size:13px;opacity:.65;text-align:center;margin-bottom:10px;}
+  .for{font-family:'Cinzel',serif;font-style:italic;font-size:14px;text-align:center;color:#FDE68A;margin-bottom:36px;}
+  a.card{display:block;width:100%;padding:18px 20px;margin-bottom:14px;background:rgba(20,30,70,0.4);backdrop-filter:blur(12px);border:1px solid rgba(125,211,252,0.2);border-radius:16px;text-decoration:none;color:white;transition:transform .2s ease;}
+  a.card:active{transform:scale(0.98);}
+  .card-tag{font-size:10px;font-weight:600;letter-spacing:0.32em;text-transform:uppercase;margin-bottom:6px;}
+  .card-char{font-family:'Cinzel',serif;font-weight:900;font-size:22px;margin-bottom:3px;}
+  .card-type{font-size:12px;opacity:.55;margin-bottom:8px;font-style:italic;}
+  .card-desc{font-size:13px;line-height:1.5;opacity:.85;}
+  .card-arrow{margin-top:10px;font-size:11px;letter-spacing:0.12em;opacity:.6;}
+  .c-jedi{border-color:rgba(0,229,255,0.45);} .c-jedi .card-tag,.c-jedi .card-arrow{color:#00E5FF;}
+  .c-mando{border-color:rgba(201,160,95,0.45);background:linear-gradient(135deg,rgba(46,35,23,0.5),rgba(15,11,7,0.3));} .c-mando .card-tag,.c-mando .card-arrow{color:#C9A05F;}
+  .c-sith{border-color:rgba(155,77,202,0.45);background:rgba(20,8,25,0.5);} .c-sith .card-tag,.c-sith .card-arrow{color:#C084FC;}
+  .c-apple{border-color:rgba(91,163,208,0.45);} .c-apple .card-tag,.c-apple .card-arrow{color:#5BA3D0;}
+  .c-grogu{border-color:rgba(245,158,11,0.45);background:linear-gradient(135deg,rgba(30,20,5,0.6),rgba(6,5,4,0.4));} .c-grogu .card-tag,.c-grogu .card-arrow{color:#FCD34D;}
+  .foot{margin-top:28px;font-size:11px;opacity:.4;text-align:center;line-height:1.6;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <p class="eye">Prototype Lab</p>
   <h1>WHICH STAR WARS<br>ARE YOU?</h1>
-  <p class="sub">Four designs. Same Yoda. Tap each one.</p>
+  <p class="sub">Five screen types. Five characters. Tap each.</p>
   <p class="for">— Built for Guapo —</p>
 
-  <a href="apple/" class="card c1">
-    <div class="card-tag">Direction 01</div>
-    <div class="card-title">The Apple Reveal</div>
-    <div class="card-ref">Reference: Apple product pages</div>
+  <a href="cyberpunk/" class="card c-jedi">
+    <div class="card-tag">Screen Type 01 · Jedi / Light Side</div>
+    <div class="card-char">YODA</div>
+    <div class="card-type">Rebel Archive // Hologram Reveal</div>
+    <div class="card-desc">Rebel Alliance HUD, cyan hologram with cinematic flicker, Force telemetry scan.</div>
+    <div class="card-arrow">→ View prototype</div>
+  </a>
+
+  <a href="mando/" class="card c-mando">
+    <div class="card-tag">Screen Type 02 · Bounty Hunter</div>
+    <div class="card-char">MANDO</div>
+    <div class="card-type">Bounty Puck // Warm Artifact</div>
+    <div class="card-desc">Warm brass and leather. Engraved Cinzel typography. "This Is The Way."</div>
+    <div class="card-arrow">→ View prototype</div>
+  </a>
+
+  <a href="imperial/" class="card c-sith">
+    <div class="card-tag">Screen Type 03 · Dark Side</div>
+    <div class="card-char">VADER</div>
+    <div class="card-type">Imperial Intelligence // Classified File</div>
+    <div class="card-desc">Deep purple aura. Imperial HUD. Heavy and ominous — with the redemption arc baked in.</div>
+    <div class="card-arrow">→ View prototype</div>
+  </a>
+
+  <a href="apple/" class="card c-apple">
+    <div class="card-tag">Screen Type 04 · Refined / Hero</div>
+    <div class="card-char">YODA</div>
+    <div class="card-type">Apple-Style // Luxury Reveal</div>
     <div class="card-desc">Huge hero. Generous space. Refined serif typography. Luxury through restraint.</div>
     <div class="card-arrow">→ View prototype</div>
   </a>
 
-  <a href="cyberpunk/" class="card c2">
-    <div class="card-tag">Direction 02</div>
-    <div class="card-title">The Neural Scan</div>
-    <div class="card-ref">Reference: Cyberpunk 2077 UI</div>
-    <div class="card-desc">Layered HUD. Magenta + cyan. Glitch text. You're inside the machine.</div>
-    <div class="card-arrow">→ View prototype</div>
-  </a>
-
-  <a href="imperial/" class="card c3">
-    <div class="card-tag">Direction 03</div>
-    <div class="card-title">The Imperial File</div>
-    <div class="card-ref">Reference: Rogue One archive scenes</div>
-    <div class="card-desc">Classified dossier. Heavy. Official. CRT monitor feel. Data feels real.</div>
-    <div class="card-arrow">→ View prototype</div>
-  </a>
-
-  <a href="mando/" class="card c4">
-    <div class="card-tag">Direction 04</div>
-    <div class="card-title">The Bounty Puck</div>
-    <div class="card-ref">Reference: The Mandalorian</div>
-    <div class="card-desc">Warm earth tones. Engraved typography. Texture-rich. A real artifact in your hand.</div>
-    <div class="card-arrow">→ View prototype</div>
-  </a>
-
-  <p class="foot">Pull down on any page to refresh and replay animations.</p>
+  <p class="foot">Upload mando.PNG and vader.PNG to assets/characters/ to see the new characters.</p>
 </div>
 </body>
 </html>
