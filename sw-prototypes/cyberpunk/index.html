@@ -120,13 +120,42 @@
 100%{ opacity:1.0; }
   }
 
-  .hero-bottom{position:absolute;bottom:80px;left:0;right:0;z-index:6;text-align:center;padding:0 20px;}
-  .greeting{font-family:'JetBrains Mono',monospace;font-size:clamp(11px,3.2vw,14px);letter-spacing:0.14em;text-transform:uppercase;color:var(--rebel);text-shadow:0 0 16px var(--rebel-g);margin-bottom:8px;opacity:0;animation:fi 1.2s ease-out 1.8s forwards;}
+  .hero-bottom{
+    position:absolute;
+    bottom:60px;
+    left:0;right:0;
+    z-index:7;
+    text-align:center;
+    padding:0 20px;
+  }
+  .greeting{
+    font-family:'JetBrains Mono',monospace;
+    font-size:clamp(10px,2.8vw,13px);
+    letter-spacing:0.14em;text-transform:uppercase;
+    color:var(--rebel);text-shadow:0 0 16px var(--rebel-g);
+    margin-bottom:6px;
+    opacity:0;animation:fi 1.2s ease-out 1.8s forwards;
+  }
   .greeting::before{content:'> ';color:rgba(255,107,43,0.45);}
-  .name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(58px,18vw,96px);line-height:.92;letter-spacing:0.04em;text-transform:uppercase;color:white;text-shadow:0 0 24px rgba(0,229,255,0.60),0 0 48px rgba(0,229,255,0.28),0 3px 0 rgba(0,0,0,0.6);margin-bottom:10px;position:relative;opacity:0;animation:gi .6s steps(3) 2.1s forwards;}
+  .name{
+    font-family:'Orbitron',sans-serif;font-weight:900;
+    font-size:clamp(52px,15vw,80px);
+    line-height:1;
+    letter-spacing:0.04em;text-transform:uppercase;color:white;
+    text-shadow:0 0 24px rgba(0,229,255,0.60),0 0 48px rgba(0,229,255,0.28),0 3px 0 rgba(0,0,0,0.6);
+    margin-bottom:8px;
+    position:relative;
+    opacity:0;animation:gi .6s steps(3) 2.1s forwards;
+  }
   .name::before{content:'YODA';position:absolute;inset:0;color:rgba(255,107,43,0.35);transform:translate(2px,0);z-index:-1;}
   .name::after{content:'YODA';position:absolute;inset:0;color:rgba(0,229,255,0.28);transform:translate(-2px,0);z-index:-1;}
-  .desig{font-family:'JetBrains Mono',monospace;font-size:clamp(9px,2.8vw,11px);letter-spacing:0.26em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 10px var(--cyan-g);opacity:0;animation:fi 1.2s ease-out 2.6s forwards;}
+  .desig{
+    font-family:'JetBrains Mono',monospace;
+    font-size:clamp(8px,2.4vw,10px);
+    letter-spacing:0.22em;text-transform:uppercase;
+    color:var(--cyan);text-shadow:0 0 10px var(--cyan-g);
+    opacity:0;animation:fi 1.2s ease-out 2.6s forwards;
+  }
   .desig::before{content:'// ';color:var(--ink-3);}
 
   .scroll-cue{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:7px;opacity:0;animation:fi 1s ease-out 3.4s forwards;}
@@ -210,9 +239,9 @@
     <span class="corner tl"></span><span class="corner tr"></span>
     <span class="corner bl"></span><span class="corner br"></span>
 
-    <div class="tx-src">RX: DAGOBAH OUTPOST 7 // R2-SERIES ASTROMECH</div>
+    <div class="tx-src" style="top:78px;">RX: DAGOBAH OUTPOST 7 // R2-SERIES ASTROMECH</div>
 
-    <div class="status">
+    <div class="status" style="top:96px;">
       <span class="tag tag-c">FORCE ALIGNMENT CONFIRMED</span>
       <span class="tag tag-r">MID-CHLORIAN INDEX: 17,450</span>
     </div>
