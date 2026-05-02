@@ -108,7 +108,7 @@
     <div class="hero-top"><div class="puck-mark"><span class="puck-dot"></span>Bounty Acquired</div></div>
     <div class="hero-img">
       <div class="hero-glow"></div>
-      <img src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/mando2.PNG" alt="The Mandalorian" loading="eager" decoding="async">
+      <img id="hero-img" alt="The Mandalorian" loading="eager" decoding="async">
     </div>
     <div class="hero-bottom">
       <p class="greeting">Guapo, your match is…</p>
@@ -167,6 +167,24 @@
   <div class="footer">This Is The Way</div>
 </main>
 <script>
+  
+  // Smart loader for mando2
+  (function(){
+    const base = 'https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+    const names = ['mando2', 'mando2'.charAt(0).toUpperCase() + 'mando2'.slice(1), 'mando2'.toUpperCase()];
+    const exts = ['png','PNG','jpg','JPG'];
+    const candidates = [];
+    for(const n of names) for(const e of exts) candidates.push(base+n+'.'+e);
+    let i=0;
+    function tryNext(){
+      if(i>=candidates.length) return;
+      const t=new Image();
+      t.onload=()=>document.getElementById('hero-img').src=candidates[i-1];
+      t.onerror=()=>{i++;tryNext();};
+      t.src=candidates[i++];
+    }
+    tryNext();
+  })();
   const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:0.1});
   document.querySelectorAll('.chapter,.actions').forEach(el=>io.observe(el));
 </script>
