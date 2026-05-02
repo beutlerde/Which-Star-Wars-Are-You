@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>The Force · Grogu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Italianno&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:    #060504;
+    --bg-1:  #0D0A06;
+    --bg-2:  #17120A;
+
+    --gold:   #F59E0B;
+    --gold-l: #FCD34D;
+    --gold-w: #FEF9EE;
+    --gold-g: rgba(245,158,11,0.55);
+    --gold-g2:rgba(245,158,11,0.18);
+
+    --green:  #6EE7B7;
+    --green-d:#059669;
+    --green-g:rgba(110,231,183,0.28);
+
+    --ink-1: rgba(255,248,232,0.97);
+    --ink-2: rgba(255,248,232,0.68);
+    --ink-3: rgba(255,248,232,0.42);
+
+    --hr:   rgba(255,248,232,0.10);
+    --hr-g: rgba(245,158,11,0.22);
+  }
+
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;} html,body{overflow-x:hidden;}
+  body{font-family:'Cormorant Garamond',serif;background:var(--bg);color:var(--ink-1);-webkit-font-smoothing:antialiased;min-height:100vh;}
+  button{font:inherit;cursor:pointer;border:0;background:0;color:inherit;}
+
+  /* ── ATMOSPHERE — warm golden campfire glow ── */
+  .atmo{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%,  rgba(245,158,11,0.24),transparent 65%),
+      radial-gradient(ellipse 50% 40% at 25% 100%, rgba(110,231,183,0.10),transparent 65%),
+      radial-gradient(ellipse 50% 40% at 75% 80%,  rgba(245,158,11,0.08),transparent 65%),
+      var(--bg-1);}
+
+  /* Warm grain texture */
+  .grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0.07;mix-blend-mode:overlay;
+    background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  /* Floating Force motes */
+  .motes{position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;}
+  .mote{position:absolute;border-radius:50%;opacity:0;animation:mote-float linear infinite;}
+  @keyframes mote-float{
+    0%  {opacity:0;transform:translateY(0) scale(0) rotate(0deg);}
+    15% {opacity:1;}
+    85% {opacity:0.7;}
+    100%{opacity:0;transform:translateY(-110vh) scale(0.4) rotate(180deg);}
+  }
+
+  /* ── HERO ── */
+  .hero{position:relative;z-index:10;height:100vh;height:100dvh;overflow:hidden;}
+
+  /* Top mark */
+  .hero-top{position:absolute;top:max(18px,env(safe-area-inset-top));left:0;right:0;z-index:4;text-align:center;padding:0 24px;opacity:0;animation:fu 1.2s ease-out 0.4s forwards;}
+  .force-mark{display:inline-flex;align-items:center;gap:12px;
+    font-family:'Cinzel',serif;font-size:10px;font-weight:600;
+    letter-spacing:0.38em;text-transform:uppercase;color:var(--gold-l);}
+  .force-mark::before,.force-mark::after{content:'✦';color:var(--gold);font-size:9px;animation:twinkle 3s ease-in-out infinite alternate;}
+  @keyframes twinkle{0%{opacity:0.4;transform:scale(0.8);}100%{opacity:1;transform:scale(1.1);}}
+
+  /* Grogu image — full bleed */
+  .hero-img{position:absolute;inset:0;z-index:1;}
+  .hero-img::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:20%;
+    background:linear-gradient(180deg,var(--bg) 0%,transparent 100%);
+    z-index:2;}
+  .hero-img::after{
+    content:'';position:absolute;bottom:0;left:0;right:0;height:50%;
+    background:linear-gradient(180deg,transparent 0%,rgba(6,5,4,0.72) 42%,var(--bg) 100%);
+    z-index:2;}
+  .hero-img img{
+    width:100%;height:100%;
+    object-fit:contain;object-position:center 25%;
+    display:block;
+    animation:grogu-appear 2.4s cubic-bezier(0.2,0.8,0.2,1) 0.3s both;}
+  @keyframes grogu-appear{
+    0%  {opacity:0;transform:scale(0.88);filter:blur(16px) brightness(2);}
+    60% {opacity:0.9;filter:blur(3px) brightness(1.3);}
+    100%{opacity:1;transform:scale(1);filter:blur(0) brightness(1);}
+  }
+
+  /* Warm golden glow behind Grogu */
+  .hero-glow{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(ellipse 55% 60% at 50% 38%,rgba(245,158,11,0.28) 0%,rgba(252,211,77,0.10) 40%,transparent 70%);
+    filter:blur(28px);animation:glow-b 4s ease-in-out infinite alternate;}
+  @keyframes glow-b{0%{opacity:0.6;}100%{opacity:1;}}
+
+  /* Soft green Force ring */
+  .hero-force{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(ellipse 45% 50% at 55% 45%,rgba(110,231,183,0.12),transparent 60%);
+    filter:blur(20px);animation:force-b 3s ease-in-out infinite alternate-reverse;}
+  @keyframes force-b{0%{opacity:0.4;}100%{opacity:0.9;}}
+
+  /* Bottom text */
+  .hero-bottom{position:absolute;bottom:80px;left:0;right:0;z-index:4;text-align:center;padding:0 28px;}
+
+  /* Script greeting — Italianno, warm and intimate */
+  .greeting{
+    font-family:'Italianno',cursive;
+    font-size:clamp(28px,8.5vw,38px);
+    line-height:1;
+    color:var(--gold-l);
+    text-shadow:0 2px 24px var(--gold-g);
+    margin-bottom:10px;
+    opacity:0;animation:fu 1.4s ease-out 2.2s forwards;}
+
+  /* Name — Cinzel, warm gold gradient */
+  .name{
+    font-family:'Cinzel',serif;font-weight:900;
+    font-size:clamp(64px,19vw,100px);
+    line-height:1;letter-spacing:0.06em;text-transform:uppercase;
+    background:linear-gradient(180deg, var(--gold-w) 0%, var(--gold-l) 40%, var(--gold) 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 24px rgba(245,158,11,0.55));
+    margin-bottom:12px;
+    opacity:0;animation:name-glow 1.8s ease-out 2.5s forwards;}
+  @keyframes name-glow{
+    0%  {opacity:0;filter:drop-shadow(0 0 24px rgba(245,158,11,0.55)) blur(8px);}
+    60% {opacity:0.8;}
+    100%{opacity:1;filter:drop-shadow(0 0 24px rgba(245,158,11,0.55)) blur(0);}}
+
+  /* Flourish */
+  .flourish{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px;opacity:0;animation:fi 1.2s ease-out 3.0s forwards;}
+  .fl-line{width:48px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+  .fl-gem{width:8px;height:8px;background:var(--gold-l);transform:rotate(45deg);box-shadow:0 0 12px var(--gold-g),0 0 24px var(--gold-g2);}
+
+  /* Subtitle */
+  .desig{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(16px,4.5vw,21px);color:var(--ink-2);letter-spacing:0.02em;opacity:0;animation:fi 1.2s ease-out 3.2s forwards;}
+
+  /* Scroll cue */
+  .scroll-cue{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:0;animation:fi 1s ease-out 4.0s forwards;}
+  .cue-text{font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ink-3);}
+  .cue-line{width:1px;height:26px;background:linear-gradient(180deg,var(--gold),transparent);animation:cp 2.4s ease-in-out infinite;}
+  @keyframes cp{0%,100%{opacity:.3;transform:scaleY(.6);}50%{opacity:1;transform:scaleY(1);}}
+
+  /* ── SCROLL SECTIONS ── */
+  .section{padding:64px 28px 0;opacity:0;transform:translateY(28px);transition:opacity 1s ease,transform 1s ease;}
+  .section.visible{opacity:1;transform:translateY(0);}
+
+  .sec-mark{display:flex;align-items:center;gap:14px;margin-bottom:24px;}
+  .sec-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--hr-g),transparent);}
+  .sec-gem{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);box-shadow:0 0 8px var(--gold-g);flex-shrink:0;}
+  .sec-label{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.38em;text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+
+  .sec-title{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(26px,7vw,36px);line-height:1.1;letter-spacing:0.04em;text-transform:uppercase;color:var(--gold-w);text-shadow:0 2px 16px rgba(245,158,11,0.2);margin-bottom:18px;}
+  .sec-body{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:20px;line-height:1.55;color:var(--ink-1);}
+  .sec-body+.sec-body{margin-top:14px;}
+
+  /* Quote — softer, like a whispered wisdom */
+  .whisper{
+    background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(252,211,77,0.04));
+    border:1px solid var(--hr-g);border-radius:12px;
+    padding:28px 24px 22px;text-align:center;
+    box-shadow:inset 0 1px 0 rgba(255,248,232,0.04),0 4px 24px rgba(0,0,0,0.5);
+  }
+  .whisper-mark{font-family:'Cormorant Garamond',serif;font-size:52px;line-height:.4;color:var(--gold);display:block;margin-bottom:20px;text-shadow:0 0 16px var(--gold-g);}
+  .whisper-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:clamp(20px,6vw,28px);line-height:1.35;color:var(--gold-w);margin-bottom:10px;}
+  .whisper-attr{font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold);}
+
+  /* Stat list — engraved, warm */
+  .stat-list{border-top:1px solid var(--hr-g);}
+  .stat-row{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px dashed rgba(245,158,11,0.12);}
+  .stat-row:last-child{border-bottom:none;}
+  .stat-n{font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-l);}
+  .stat-v{font-family:'Cinzel',serif;font-weight:700;font-size:26px;color:var(--gold-w);text-shadow:0 0 12px var(--gold-g2);}
+
+  /* Force Twin */
+  .twin-card{background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(6,5,4,0.4));border:1px solid var(--hr-g);border-radius:8px;padding:18px;display:flex;align-items:center;gap:16px;box-shadow:0 0 24px rgba(245,158,11,0.08);}
+  .twin-orb{width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(245,158,11,0.4),rgba(6,5,4,0.6));border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;box-shadow:0 0 16px var(--gold-g2);}
+  .twin-label{font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:0.28em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+  .twin-name{font-family:'Cinzel',serif;font-weight:700;font-size:19px;text-transform:uppercase;color:var(--gold-w);letter-spacing:0.04em;}
+  .twin-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:14px;color:var(--ink-2);margin-top:2px;line-height:1.4;}
+
+  /* Actions */
+  .actions{padding:48px 28px max(64px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;opacity:0;transform:translateY(28px);transition:opacity 1s ease,transform 1s ease;}
+  .actions.visible{opacity:1;transform:translateY(0);}
+  .btn{padding:20px 24px;font-family:'Cinzel',serif;font-weight:700;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;text-align:center;border-radius:6px;transition:all .3s ease;-webkit-tap-highlight-color:transparent;}
+  .btn-p{background:linear-gradient(180deg,var(--gold-l),var(--gold));color:var(--bg);box-shadow:0 4px 20px var(--gold-g),inset 0 1px 0 rgba(255,255,255,0.3);}
+  .btn-p:active{transform:scale(0.99);}
+  .btn-s{background:transparent;color:var(--gold-l);border:1px solid var(--hr-g);}
+  .btn-g{background:transparent;color:var(--ink-3);font-size:11px;padding:12px;}
+
+  /* Closing mark — very special for Grogu */
+  .footer{text-align:center;padding:32px 28px 56px;font-family:'Italianno',cursive;font-size:22px;color:var(--gold);text-shadow:0 0 16px var(--gold-g2);}
+
+  @keyframes fi{from{opacity:0;}to{opacity:1;}}
+  @keyframes fu{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+</style>
+</head>
+<body>
+<div class="atmo"></div>
+<div class="grain"></div>
+<div class="motes" id="motes"></div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="hero-top">
+      <div class="force-mark">The Force Has Chosen</div>
+    </div>
+
+    <div class="hero-img">
+      <div class="hero-glow"></div>
+      <div class="hero-force"></div>
+      <img id="hero-img" alt="Grogu" loading="eager" decoding="async">
+    </div>
+
+    <div class="hero-bottom">
+      <p class="greeting">Guapo, the Force shows you…</p>
+      <h1 class="name">GROGU</h1>
+      <div class="flourish">
+        <span class="fl-line"></span>
+        <span class="fl-gem"></span>
+        <span class="fl-line"></span>
+      </div>
+      <p class="desig">The Curious Innocent</p>
+    </div>
+
+    <div class="scroll-cue">
+      <span class="cue-text">The Force has more to show</span>
+      <span class="cue-line"></span>
+    </div>
+  </section>
+
+  <!-- STRENGTH -->
+  <section class="section">
+    <div class="sec-mark"><span class="sec-line"></span><span class="sec-gem"></span><span class="sec-label">Your Strength</span><span class="sec-gem"></span><span class="sec-line"></span></div>
+    <h2 class="sec-title">Curiosity &amp; A Pure Heart</h2>
+    <p class="sec-body">You see wonder in everything. You ask the best questions. You experience the world with open eyes and an open heart — and that is a rare and powerful gift.</p>
+    <p class="sec-body">Like Grogu, you have a quiet kind of power that surprises everyone. Your kindness and curiosity might just be your greatest strength of all.</p>
+  </section>
+
+  <!-- QUOTE -->
+  <section class="section">
+    <div class="sec-mark"><span class="sec-line"></span><span class="sec-gem"></span><span class="sec-label">The Force Speaks</span><span class="sec-gem"></span><span class="sec-line"></span></div>
+    <div class="whisper">
+      <span class="whisper-mark">"</span>
+      <p class="whisper-text">The Force is strong in this one.<br>Very strong.</p>
+      <div class="whisper-attr">— The Armorer</div>
+    </div>
+  </section>
+
+  <!-- POWER MOVE -->
+  <section class="section">
+    <div class="sec-mark"><span class="sec-line"></span><span class="sec-gem"></span><span class="sec-label">Your Power Move</span><span class="sec-gem"></span><span class="sec-line"></span></div>
+    <h2 class="sec-title">Loving big and staying curious.</h2>
+  </section>
+
+  <!-- FORCE SIGNATURE -->
+  <section class="section">
+    <div class="sec-mark"><span class="sec-line"></span><span class="sec-gem"></span><span class="sec-label">Force Signature</span><span class="sec-gem"></span><span class="sec-line"></span></div>
+    <div class="stat-list">
+      <div class="stat-row"><span class="stat-n">Empathy</span><span class="stat-v">99</span></div>
+      <div class="stat-row"><span class="stat-n">Curiosity</span><span class="stat-v">98</span></div>
+      <div class="stat-row"><span class="stat-n">Force Sense</span><span class="stat-v">97</span></div>
+      <div class="stat-row"><span class="stat-n">Loyalty</span><span class="stat-v">95</span></div>
+      <div class="stat-row"><span class="stat-n">Courage</span><span class="stat-v">72</span></div>
+      <div class="stat-row"><span class="stat-n">Aggression</span><span class="stat-v">02</span></div>
+    </div>
+  </section>
+
+  <!-- FORCE TWIN -->
+  <section class="section">
+    <div class="sec-mark"><span class="sec-line"></span><span class="sec-gem"></span><span class="sec-label">Force Twin</span><span class="sec-gem"></span><span class="sec-line"></span></div>
+    <div class="twin-card">
+      <div class="twin-orb">🪖</div>
+      <div>
+        <div class="twin-label">Walks Beside You</div>
+        <div class="twin-name">Din Djarin</div>
+        <div class="twin-desc">The one who crossed the galaxy just for you.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <button class="btn btn-p">✦ See Another Vision</button>
+    <button class="btn btn-s">Take The Quiz Again</button>
+    <button class="btn btn-g">Share This Result</button>
+  </div>
+
+  <div class="footer">The Force is strong with you, Guapo ✦</div>
+</main>
+
+<script>
+  // Smart loader — tries all filename/extension combinations
+  (function(){
+    const base='https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+    const names=['grogu','Grogu','GROGU'];
+    const exts=['png','PNG','jpg','JPG'];
+    const c=[];
+    for(const n of names) for(const e of exts) c.push(base+n+'.'+e);
+    let i=0;
+    function t(){
+      if(i>=c.length) return;
+      const x=new Image();
+      x.onload=()=>document.getElementById('hero-img').src=c[i-1];
+      x.onerror=()=>{i++;t();};
+      x.src=c[i++];
+    }
+    t();
+  })();
+
+  // Floating Force motes — warm golden, soft and slow
+  const motesEl = document.getElementById('motes');
+  function spawnMote(){
+    const m = document.createElement('div');
+    m.className = 'mote';
+    m.style.left = Math.random() * 100 + '%';
+    m.style.bottom = '0';
+    const dur = 18 + Math.random() * 20;
+    m.style.animationDuration = dur + 's';
+    m.style.animationDelay = Math.random() * 3 + 's';
+    const size = 2 + Math.random() * 3;
+    m.style.width = size + 'px';
+    m.style.height = size + 'px';
+    // Mix of gold and soft green
+    const isGreen = Math.random() > 0.65;
+    if(isGreen){
+      m.style.background = '#6EE7B7';
+      m.style.boxShadow = '0 0 8px rgba(110,231,183,0.6)';
+    } else {
+      m.style.background = '#FCD34D';
+      m.style.boxShadow = '0 0 10px rgba(245,158,11,0.7)';
+    }
+    motesEl.appendChild(m);
+    setTimeout(() => m.remove(), (dur + 3) * 1000);
+  }
+
+  // Start gently — fewer motes than other screens, slower
+  for(let k=0; k<4; k++) setTimeout(spawnMote, k * 2000);
+  setInterval(spawnMote, 2200);
+
+  // Scroll reveal
+  const io = new IntersectionObserver(
+    e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }),
+    { threshold: 0.1 }
+  );
+  document.querySelectorAll('.section,.actions').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
