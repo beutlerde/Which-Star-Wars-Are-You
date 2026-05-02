@@ -140,7 +140,7 @@
     </div>
     <div class="hero-img">
       <div class="hero-glow"></div><div class="hero-red"></div>
-      <img src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/vader2.PNG" alt="Darth Vader" loading="eager" decoding="async">
+      <img id="hero-img" alt="Darth Vader" loading="eager" decoding="async">
     </div>
     <div class="hero-bottom">
       <p class="greeting">SUBJECT IDENTIFIED: GUAPO_001</p>
@@ -202,6 +202,24 @@
   <div class="footer">IMPERIAL INTELLIGENCE // CLASSIFIED FILE<br><em>CHOOSE YOUR PATH</em> // THE FORCE IS WITH YOU // GUAPO</div>
 </main>
 <script>
+  
+  // Smart loader for vader2
+  (function(){
+    const base = 'https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+    const names = ['vader2', 'vader2'.charAt(0).toUpperCase() + 'vader2'.slice(1), 'vader2'.toUpperCase()];
+    const exts = ['png','PNG','jpg','JPG'];
+    const candidates = [];
+    for(const n of names) for(const e of exts) candidates.push(base+n+'.'+e);
+    let i=0;
+    function tryNext(){
+      if(i>=candidates.length) return;
+      const t=new Image();
+      t.onload=()=>document.getElementById('hero-img').src=candidates[i-1];
+      t.onerror=()=>{i++;tryNext();};
+      t.src=candidates[i++];
+    }
+    tryNext();
+  })();
   const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),{threshold:0.1});
   document.querySelectorAll('.panel,.actions').forEach(el=>io.observe(el));
 </script>
