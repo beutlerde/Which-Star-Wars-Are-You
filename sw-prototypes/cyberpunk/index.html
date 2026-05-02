@@ -71,7 +71,7 @@
   /* HOLOGRAM */
   .hero-img{position:absolute;inset:0;z-index:1;}
   .hero-img::before{content:'';position:absolute;top:0;left:0;right:0;height:22%;background:linear-gradient(180deg,var(--bg) 0%,transparent 100%);z-index:6;pointer-events:none;}
-  .hero-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(180deg,transparent 0%,rgba(4,6,11,0.78) 45%,var(--bg) 100%);z-index:6;pointer-events:none;}
+  .hero-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:38%;background:linear-gradient(180deg,transparent 0%,rgba(4,6,11,0.65) 50%,var(--bg) 100%);z-index:6;pointer-events:none;}
 
   .holo-glow{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 55% 65% at 50% 38%,rgba(0,229,255,0.22) 0%,rgba(0,180,220,0.10) 40%,transparent 70%);filter:blur(28px);animation:gb 3s ease-in-out infinite alternate;}
   @keyframes gb{0%{opacity:.55;}100%{opacity:1;}}
@@ -117,7 +117,46 @@
   }
 
   /* Hero bottom */
-  .hero-bottom{position:absolute;bottom:80px;left:0;right:0;z-index:6;text-align:center;padding:0 20px;}
+
+  /* ── HOLOGRAM PROJECTOR BASE ── */
+  .projector-wrap {
+    position:absolute;
+    bottom:100px;
+    left:50%; transform:translateX(-50%);
+    z-index:8;
+    width:220px;
+    display:flex; flex-direction:column; align-items:center;
+    opacity:0; animation:fi 1s ease-out 1.6s forwards;
+  }
+  .projector-img {
+    width:220px; height:auto;
+    filter:drop-shadow(0 0 18px rgba(0,229,255,0.9)) drop-shadow(0 0 36px rgba(0,229,255,0.5)) brightness(1.1);
+    animation:proj-pulse 3s ease-in-out infinite alternate;
+  }
+  @keyframes proj-pulse {
+    0%  { filter:drop-shadow(0 0 10px rgba(0,229,255,0.5)) drop-shadow(0 0 20px rgba(0,229,255,0.25)); }
+    100%{ filter:drop-shadow(0 0 16px rgba(0,229,255,0.8)) drop-shadow(0 0 32px rgba(0,229,255,0.45)); }
+  }
+  /* Beam connecting projector to Yoda */
+  .projector-beam {
+    position:absolute;
+    bottom:175px;
+    left:50%; transform:translateX(-50%);
+    width:100px; height:260px;
+    z-index:3; pointer-events:none;
+    background:linear-gradient(180deg,
+      transparent 0%,
+      rgba(0,229,255,0.08) 40%,
+      rgba(0,229,255,0.18) 100%);
+    clip-path:polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+    animation:beam-pulse 3s ease-in-out infinite alternate;
+  }
+  @keyframes beam-pulse {
+    0%  { opacity:0.5; }
+    100%{ opacity:1.0; }
+  }
+
+  .hero-bottom{position:absolute;bottom:340px;left:0;right:0;z-index:6;text-align:center;padding:0 20px;}
   .greeting{font-family:'JetBrains Mono',monospace;font-size:clamp(11px,3.2vw,14px);letter-spacing:0.14em;text-transform:uppercase;color:var(--rebel);text-shadow:0 0 16px var(--rebel-g);margin-bottom:8px;opacity:0;animation:fi 1.2s ease-out 1.8s forwards;}
   .greeting::before{content:'> ';color:rgba(255,107,43,0.45);}
   .name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(58px,18vw,96px);line-height:.92;letter-spacing:0.04em;text-transform:uppercase;color:white;text-shadow:0 0 24px rgba(0,229,255,0.60),0 0 48px rgba(0,229,255,0.28),0 3px 0 rgba(0,0,0,0.6);margin-bottom:10px;position:relative;opacity:0;animation:gi .6s steps(3) 2.1s forwards;}
@@ -126,7 +165,7 @@
   .desig{font-family:'JetBrains Mono',monospace;font-size:clamp(9px,2.8vw,11px);letter-spacing:0.26em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 10px var(--cyan-g);opacity:0;animation:fi 1.2s ease-out 2.6s forwards;}
   .desig::before{content:'// ';color:var(--ink-3);}
 
-  .scroll-cue{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:7px;opacity:0;animation:fi 1s ease-out 3.4s forwards;}
+  .scroll-cue{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:7px;opacity:0;animation:fi 1s ease-out 3.4s forwards;}
   .cue-t{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:0.38em;text-transform:uppercase;color:var(--ink-3);}
   .cue-l{width:1px;height:22px;background:linear-gradient(180deg,var(--cyan),transparent);animation:cp 2.4s ease-in-out infinite;}
   @keyframes cp{0%,100%{opacity:.3;transform:scaleY(.6);}50%{opacity:1;transform:scaleY(1);}}
@@ -229,6 +268,13 @@
       <p class="greeting">SUBJECT IDENTIFIED: GUAPO_001</p>
       <h1 class="name">YODA</h1>
       <p class="desig">JEDI ORDER REG: 7726 // GRAND MASTER</p>
+    </div>
+
+    <div class="projector-beam"></div>
+    <div class="projector-wrap">
+      <img class="projector-img"
+        src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/ui/projector.png"
+        alt="Hologram projector">
     </div>
 
     <div class="scroll-cue"><span class="cue-t">Scroll</span><span class="cue-l"></span></div>
