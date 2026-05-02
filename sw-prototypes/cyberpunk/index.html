@@ -256,7 +256,7 @@
     <div class="hero-img">
       <div class="holo-glow"></div>
       <div class="holo-figure">
-        <img src="https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/yoda.PNG" alt="Yoda" loading="eager" decoding="async">
+        <img id="hero-img" alt="Yoda" loading="eager" decoding="async">
       </div>
       <div class="holo-scan"></div>
       <div class="holo-sweep"></div>
@@ -342,6 +342,24 @@
 </main>
 
 <script>
+  
+  // Smart loader for yoda
+  (function(){
+    const base = 'https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+    const names = ['yoda','Yoda','YODA'];
+    const exts = ['png','PNG','jpg','JPG'];
+    const candidates = [];
+    for(const n of names) for(const e of exts) candidates.push(base+n+'.'+e);
+    let i=0;
+    function tryNext(){
+      if(i>=candidates.length) return;
+      const t=new Image();
+      t.onload=()=>document.getElementById('hero-img').src=candidates[i-1];
+      t.onerror=()=>{i++;tryNext();};
+      t.src=candidates[i++];
+    }
+    tryNext();
+  })();
   const io = new IntersectionObserver(
     e => e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible');}),
     {threshold:0.1}
