@@ -328,7 +328,14 @@ button{font:inherit;cursor:pointer;border:0;background:0;color:inherit;}
 }
 .q-answer.dimmed{
   opacity:0.45;
+  cursor:pointer;
 }
+.q-answer.dimmed:active,.q-answer.dimmed:hover{
+  opacity:0.75;
+  border-color:rgba(0,229,255,0.25);
+  background:rgba(0,229,255,0.05);
+}
+.q-answer *{pointer-events:none;}
 .q-answer-inner{
   display:flex;align-items:flex-start;gap:12px;
 }
@@ -1144,17 +1151,25 @@ function renderQuestion() {
    FLOW — SELECT ANSWER
    ============================================================ */
 function selectAnswer(index) {
-  if (selectedAnswer !== null) return; // already answered
+  const q = sessionQuestions[currentIndex];
+
+  // If already answered, reverse the previous score first
+  if (selectedAnswer !== null) {
+    const prevScores = q.answers[selectedAnswer].scores;
+    Object.entries(prevScores).forEach(([charId, delta]) => {
+      if (scores.hasOwnProperty(charId)) scores[charId] -= delta;
+    });
+  }
+
   selectedAnswer = index;
 
-  // Apply scores
-  const q = sessionQuestions[currentIndex];
+  // Apply new scores
   applyScores(q.answers[index].scores);
-  answers.push({ question: q, selectedIndex: index });
 
-  // Update UI
+  // Update UI — clear all, mark new selection
   const answerBtns = document.querySelectorAll('.q-answer');
   answerBtns.forEach((btn, i) => {
+    btn.classList.remove('selected', 'dimmed');
     if (i === index) {
       btn.classList.add('selected');
     } else {
@@ -1163,9 +1178,7 @@ function selectAnswer(index) {
   });
 
   // Show next button
-  setTimeout(() => {
-    document.getElementById('q-next').classList.add('visible');
-  }, 300);
+  document.getElementById('q-next').classList.add('visible');
 }
 
 /* ============================================================
