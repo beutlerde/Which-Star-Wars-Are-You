@@ -220,8 +220,8 @@
     position:relative;
     opacity:0;animation:gi .6s steps(3) 2.1s forwards;
   }
-  .name::before{content:'YODA';position:absolute;inset:0;color:rgba(255,107,43,0.35);transform:translate(2px,0);z-index:-1;}
-  .name::after{content:'YODA';position:absolute;inset:0;color:rgba(0,229,255,0.28);transform:translate(-2px,0);z-index:-1;}
+  .name::before{content:attr(data-name);position:absolute;inset:0;color:rgba(255,107,43,0.35);transform:translate(2px,0);z-index:-1;}
+  .name::after{content:attr(data-name);position:absolute;inset:0;color:rgba(0,229,255,0.28);transform:translate(-2px,0);z-index:-1;}
 
   .desig{
     font-family:'JetBrains Mono',monospace;
@@ -357,9 +357,9 @@
 
     <!-- Bottom text — anchored to bottom -->
     <div class="hero-bottom">
-      <p class="greeting">SUBJECT IDENTIFIED: GUAPO_001</p>
-      <h1 class="name">YODA</h1>
-      <p class="desig">JEDI ORDER REG: 7726 // GRAND MASTER</p>
+      <p class="greeting" id="q-greeting">SUBJECT IDENTIFIED: GUAPO_001</p>
+      <h1 class="name" id="q-name">YODA</h1>
+      <p class="desig" id="q-desig">JEDI ORDER REG: 7726 // GRAND MASTER</p>
     </div>
 
     <!-- Scroll cue -->
@@ -374,31 +374,31 @@
   <div class="panel">
     <div class="p-tl"></div>
     <div class="ph"><span class="pt">FORCE PROFILE</span><span class="pi">HOLOCRON.001</span></div>
-    <div class="p-str">Wisdom &amp; Patience</div>
-    <p class="p-body">You think before you act. You notice things others miss. When everyone else is rushing around, you stay calm and see the bigger picture.</p>
-    <p class="p-body">Like Yoda, you trust that the right answer comes to those who listen. Your mind is your lightsaber. Your patience is your shield.</p>
+    <div class="p-str" id="p-strength">Wisdom &amp; Patience</div>
+    <p class="p-body" id="p-body1">You think before you act. You notice things others miss. When everyone else is rushing around, you stay calm and see the bigger picture.</p>
+    <p class="p-body" id="p-body2">Like Yoda, you trust that the right answer comes to those who listen. Your mind is your lightsaber. Your patience is your shield.</p>
   </div>
 
   <!-- RECORDED TRANSMISSION -->
   <div class="panel qp">
     <div class="p-tl"></div>
     <div class="ph"><span class="pt">RECORDED TRANSMISSION</span><span class="pi">HOLOCRON.002</span></div>
-    <p class="q-text">"Do or do not.<br>There is no try."</p>
-    <p class="q-attr">— MASTER YODA // DAGOBAH SYSTEM</p>
+    <p class="q-text" id="q-text">"Do or do not.<br>There is no try."</p>
+    <p class="q-attr" id="q-attr">— MASTER YODA // DAGOBAH SYSTEM</p>
   </div>
 
   <!-- JEDI DOCTRINE -->
   <div class="panel">
     <div class="p-tl"></div>
     <div class="ph"><span class="pt">JEDI DOCTRINE</span><span class="pi">HOLOCRON.003</span></div>
-    <div class="p-str" style="font-size:17px;margin:0;">Slowing down when others speed up.</div>
+    <div class="p-str" id="p-doctrine" style="font-size:17px;margin:0;">Slowing down when others speed up.</div>
   </div>
 
   <!-- FORCE SENSITIVITY SCAN -->
   <div class="panel">
     <div class="p-tl"></div>
     <div class="ph"><span class="pt">FORCE SENSITIVITY SCAN</span><span class="pi">HOLOCRON.004</span></div>
-    <div class="bars">
+    <div class="bars" id="stats-bars">
       <div class="bar"><span class="bar-n">WISDOM</span><div class="bar-track"><div class="bar-fill" style="--w:95%"></div></div><span class="bar-v">095</span></div>
       <div class="bar"><span class="bar-n">PATIENCE</span><div class="bar-track"><div class="bar-fill" style="--w:95%"></div></div><span class="bar-v">095</span></div>
       <div class="bar"><span class="bar-n">EMPATHY</span><div class="bar-track"><div class="bar-fill" style="--w:85%"></div></div><span class="bar-v">085</span></div>
@@ -413,8 +413,8 @@
     <div class="p-tl"></div>
     <div class="ph"><span class="pt">FORCE BOND DETECTED</span><span class="pi">HOLOCRON.005</span></div>
     <div class="twin">
-      <div class="twin-icon">🧙</div>
-      <div><div class="twin-lbl">LINKED PROFILE // LIGHT SIDE</div><div class="twin-name">OBI-WAN KENOBI</div></div>
+      <div class="twin-icon" id="twin-icon">🧙</div>
+      <div><div class="twin-lbl" id="twin-lbl">LINKED PROFILE // LIGHT SIDE</div><div class="twin-name" id="twin-name">OBI-WAN KENOBI</div></div>
     </div>
   </div>
 
@@ -433,27 +433,7 @@
 </main>
 
 <script>
-  // Smart loader — tries all filename/extension combos
-  (function(){
-    const base='https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
-    const names=['yoda','Yoda','YODA'];
-    const exts=['png','PNG','jpg','JPG'];
-    const c=[];
-    for(const n of names) for(const e of exts) c.push(base+n+'.'+e);
-    let i=0;
-    function t(){
-      if(i>=c.length) return;
-      const x=new Image();
-      x.onload=()=>{
-        const img=document.getElementById('hero-img');
-        img.src=c[i-1];
-        img.style.opacity='1';
-      };
-      x.onerror=()=>{i++;t();};
-      x.src=c[i++];
-    }
-    t();
-  })();
+  // Image loaded by char-router
 
   // Scroll reveal
   const io=new IntersectionObserver(
@@ -463,5 +443,146 @@
   document.querySelectorAll('.panel,.actions').forEach(el=>io.observe(el));
 </script>
 
+
+<script id="char-router">
+const CYBERPUNK_CHARS = {"yoda": {"name": "YODA", "img": "yoda", "title": "JEDI ORDER REG: 7726 // GRAND MASTER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength": "Wisdom & Patience", "body1": "You think before you act. You notice things others miss. When everyone else is rushing around, you stay calm and see the bigger picture.", "body2": "Like Yoda, you trust that the right answer comes to those who listen. Your mind is your lightsaber. Your patience is your shield.", "quote": "\"Do or do not. There is no try.\"", "quote_attr": "— MASTER YODA // DAGOBAH SYSTEM", "doctrine": "Slowing down when others speed up.", "stats": [["WISDOM", 95], ["PATIENCE", 95], ["EMPATHY", 85], ["LOYALTY", 70], ["COURAGE", 60], ["AGGRESSION", 15]], "twin_icon": "🧙", "twin_name": "OBI-WAN KENOBI", "twin_label": "LINKED PROFILE // LIGHT SIDE"}, "obiwan": {"name": "OBI-WAN", "img": "obiwan", "title": "JEDI KNIGHT // GUARDIAN OF PEACE", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength": "Wisdom & Calm", "body1": "You are the steady hand in the storm. When everything falls apart, you are the one people look to.", "body2": "Like Obi-Wan, you combine deep wisdom with genuine warmth. Teacher, protector, and friend — all at once.", "quote": "\"Hello there.\"", "quote_attr": "— OBI-WAN KENOBI // FIELD TRANSMISSION", "doctrine": "Being the calm that others need.", "stats": [["WISDOM", 92], ["PATIENCE", 90], ["EMPATHY", 88], ["LOYALTY", 95], ["COURAGE", 85], ["AGGRESSION", 20]], "twin_icon": "🌟", "twin_name": "LUKE SKYWALKER", "twin_label": "LINKED PROFILE // LIGHT SIDE"}, "luke": {"name": "LUKE", "img": "luke", "title": "JEDI KNIGHT // LAST HOPE", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength": "Courage & Heart", "body1": "You believe in people even when they have stopped believing in themselves. Your hope is the most powerful force in the galaxy.", "body2": "Like Luke, you face impossible odds and find a way. Not because you are the strongest — but because you refuse to give up.", "quote": "\"I am a Jedi, like my father before me.\"", "quote_attr": "— LUKE SKYWALKER // DEATH STAR II", "doctrine": "Believing in people when no one else will.", "stats": [["COURAGE", 95], ["HOPE", 95], ["EMPATHY", 88], ["WISDOM", 75], ["LOYALTY", 90], ["AGGRESSION", 30]], "twin_icon": "⚡", "twin_name": "DARTH VADER", "twin_label": "FORCE BOND // FATHER"}, "mace": {"name": "MACE WINDU", "img": "mace", "title": "JEDI MASTER // COUNCIL MEMBER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength": "Discipline & Power", "body1": "You are direct, precise, and utterly unafraid. You call things as you see them — and you are almost always right.", "body2": "Like Mace Windu, you combine raw power with iron discipline. The person everyone wants on their side.", "quote": "\"I will deal with this Sith Lord myself.\"", "quote_attr": "— MACE WINDU // CORUSCANT", "doctrine": "Acting with total conviction.", "stats": [["DISCIPLINE", 98], ["POWER", 95], ["COURAGE", 92], ["WISDOM", 85], ["LOYALTY", 80], ["AGGRESSION", 55]], "twin_icon": "💜", "twin_name": "OBI-WAN KENOBI", "twin_label": "LINKED PROFILE // COUNCIL"}, "poe": {"name": "POE DAMERON", "img": "poe", "title": "RESISTANCE PILOT // BLACK LEADER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength": "Speed & Heart", "body1": "You are the best pilot in the Resistance — and you know it. But what makes you truly special is that you fly for something bigger.", "body2": "Like Poe, you bring energy and joy to everything. You make hard things look easy and impossible things look fun.", "quote": "\"That's one hell of a pilot.\"", "quote_attr": "— POE DAMERON // AJAN KLOSS", "doctrine": "Going all in and making it look easy.", "stats": [["SPEED", 98], ["COURAGE", 94], ["LOYALTY", 90], ["CHARISMA", 95], ["WISDOM", 65], ["AGGRESSION", 40]], "twin_icon": "🚀", "twin_name": "FINN", "twin_label": "LINKED PROFILE // RESISTANCE"}, "finn": {"name": "FINN", "img": "finn", "title": "RESISTANCE HERO // FORMER STORMTROOPER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength": "Bravery & Heart", "body1": "You chose to be a hero. Not because it was easy — but because you knew it was right.", "body2": "Like Finn, your greatest power is your heart. You fight for the people next to you. That is what makes you unstoppable.", "quote": "\"I was raised to do one thing. But I'm done with that.\"", "quote_attr": "— FINN // JAKKU", "doctrine": "Choosing to do the right thing, every time.", "stats": [["COURAGE", 92], ["EMPATHY", 95], ["LOYALTY", 94], ["HEART", 98], ["WISDOM", 68], ["AGGRESSION", 35]], "twin_icon": "🧡", "twin_name": "POE DAMERON", "twin_label": "LINKED PROFILE // RESISTANCE"}, "quigon": {"name": "QUI-GON JINN", "img": "quigon", "title": "JEDI MASTER // LIVING FORCE", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength": "Trust & Serenity", "body1": "You feel the flow of life around you. You trust the process even when others panic. You see what things could become.", "body2": "Like Qui-Gon, you follow the living Force wherever it leads. Your instincts are rarely wrong — and your calm is contagious.", "quote": "\"Feel, don't think. Trust your instincts.\"", "quote_attr": "— QUI-GON JINN // TATOOINE", "doctrine": "Trusting the flow of life completely.", "stats": [["SERENITY", 98], ["WISDOM", 92], ["INTUITION", 97], ["COURAGE", 82], ["LOYALTY", 85], ["AGGRESSION", 18]], "twin_icon": "🌿", "twin_name": "OBI-WAN KENOBI", "twin_label": "LINKED PROFILE // MASTER"}};
+(function(){
+  const p=new URLSearchParams(window.location.search);
+  const id=p.get('character')||'yoda';
+  const d=CYBERPUNK_CHARS[id]||CYBERPUNK_CHARS.yoda;
+  const repo='https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+  const names=[d.img,d.img[0].toUpperCase()+d.img.slice(1),d.img.toUpperCase()];
+  const exts=['png','PNG'];
+  const cands=[];
+  for(const n of names) for(const e of exts) cands.push(repo+n+'.'+e);
+  let i=0;
+  function tryNext(){
+    if(i>=cands.length)return;
+    const t=new Image();
+    t.onload=()=>{const img=document.getElementById('hero-img');img.src=cands[i-1];img.style.opacity='1';};
+    t.onerror=()=>{i++;tryNext();};
+    t.src=cands[i++];
+  }
+  tryNext();
+  const set=(id,val)=>{const el=document.getElementById(id);if(el)el.innerHTML=val;};
+  set('q-greeting','> '+d.greeting);
+  set('q-name',d.name);
+  set('q-desig','// '+d.title);
+  set('p-strength',d.strength);
+  set('p-body1',d.body1);
+  set('p-body2',d.body2);
+  set('q-text',d.quote);
+  set('q-attr',d.quote_attr);
+  set('p-doctrine',d.doctrine);
+  set('twin-icon',d.twin_icon);
+  set('twin-name',d.twin_name);
+  set('twin-lbl',d.twin_label);
+  const sb=document.getElementById('stats-bars');
+  if(sb){
+    sb.innerHTML='';
+    d.stats.forEach(([lbl,val])=>{
+      sb.innerHTML+=`<div class="bar"><span class="bar-n">${lbl}</span><div class="bar-track"><div class="bar-fill" style="--w:${val}%"></div></div><span class="bar-v">${String(val).padStart(3,'0')}</span></div>`;
+    });
+  }
+})();
+
+  
+
+  /* ============================================================
+     CHARACTER LOADER — reads ?character= param, updates screen
+     Screen type: cyberpunk
+     ============================================================ */
+  const CHAR_DATA = {"yoda": {"name": "YODA", "desig": "JEDI ORDER REG: 7726 // GRAND MASTER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Wisdom &amp; Patience", "strength_body": "You think before you act. You notice things others miss. When everyone else is rushing around, you stay calm and see the bigger picture.", "strength_body2": "Like Yoda, you trust that the right answer comes to those who listen. Your mind is your lightsaber. Your patience is your shield.", "quote": "\"Do or do not.<br>There is no try.\"", "quote_attr": "— MASTER YODA // DAGOBAH SYSTEM", "doctrine": "Slowing down when others speed up.", "twin_emoji": "🧙", "twin_name": "OBI-WAN KENOBI", "twin_desc": "A wise soul who chose the path of the teacher.", "bars": [95, 95, 85, 70, 60, 15], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"]}, "obiwan": {"name": "OBI-WAN", "desig": "JEDI ORDER REG: 7725 // JEDI MASTER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Wisdom &amp; Calm", "strength_body": "You are the steady hand when everything is chaos. You think clearly under pressure and always find the right words at the right moment.", "strength_body2": "Like Obi-Wan, you are the person others turn to when they need grounding. Your calm is your greatest power.", "quote": "\"Hello there.\"", "quote_attr": "— OBI-WAN KENOBI // FIRST CONTACT", "doctrine": "Being the calm in someone else's storm.", "twin_emoji": "⭐", "twin_name": "LUKE SKYWALKER", "twin_desc": "The student who became the legend.", "bars": [92, 90, 88, 85, 75, 20], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"]}, "luke": {"name": "LUKE", "desig": "JEDI ORDER REG: 7730 // JEDI KNIGHT", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Hope &amp; Courage", "strength_body": "You believe in people even when they stop believing in themselves. You see potential where others see failure, and you act on it.", "strength_body2": "Like Luke, you have faced fear and chosen hope anyway. That is the rarest kind of strength in the galaxy.", "quote": "\"I am a Jedi, like my father before me.\"", "quote_attr": "— LUKE SKYWALKER // DEATH STAR II", "doctrine": "Believing in people who have given up on themselves.", "twin_emoji": "🌟", "twin_name": "LEIA ORGANA", "twin_desc": "The other half of the galaxy's hope.", "bars": [80, 72, 90, 88, 92, 35], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"]}, "mace": {"name": "MACE WINDU", "desig": "JEDI ORDER REG: 7720 // JEDI MASTER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Discipline &amp; Power", "strength_body": "You have standards, and you hold them — for yourself above all. When you commit to something, it's done. No excuses, no shortcuts.", "strength_body2": "Like Mace Windu, your strength comes from discipline so deep it becomes second nature. You are the person the room notices when they walk in.", "quote": "\"I sense a plot to destroy the Jedi.\"", "quote_attr": "— MACE WINDU // JEDI COUNCIL", "doctrine": "Holding the line when everyone else flinches.", "twin_emoji": "🔮", "twin_name": "YODA", "twin_desc": "The master who saw what no one else could.", "bars": [85, 78, 70, 88, 95, 65], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"]}, "poe": {"name": "POE DAMERON", "desig": "RESISTANCE REG: R-7742 // COMMANDER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Boldness &amp; Heart", "strength_body": "You fly toward the problem, not away from it. You inspire everyone around you just by showing up — the energy you bring changes the room.", "strength_body2": "Like Poe, you were born to lead from the front. Your confidence is not arrogance — it's the certainty that things can be better, and you are going to make them that way.", "quote": "\"That's one hell of a pilot.\"", "quote_attr": "— POE DAMERON // T-70 X-WING", "doctrine": "Flying into the impossible with a smile.", "twin_emoji": "🚀", "twin_name": "FINN", "twin_desc": "The partner who matched your heart.", "bars": [70, 55, 80, 85, 97, 45], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"]}, "finn": {"name": "FINN", "desig": "RESISTANCE REG: R-7743 // SOLDIER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Bravery &amp; Heart", "strength_body": "You chose to be a hero when no one expected it of you. You were told who you were supposed to be — and you decided differently.", "strength_body2": "Like Finn, your courage is not the absence of fear. It is doing the right thing anyway, even when everything inside you says run.", "quote": "\"I was raised to fight. But I'll die as a free man.\"", "quote_attr": "— FINN // RESISTANCE FIGHTER", "doctrine": "Choosing who you are instead of who you were told to be.", "twin_emoji": "🚀", "twin_name": "POE DAMERON", "twin_desc": "The pilot who became your best friend.", "bars": [65, 60, 92, 88, 90, 40], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"]}, "quigon": {"name": "QUI-GON JINN", "desig": "JEDI ORDER REG: 7715 // JEDI MASTER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Trust &amp; Serenity", "strength_body": "You trust the flow of things. You do not force outcomes — you listen for what the moment needs and meet it with complete presence.", "strength_body2": "Like Qui-Gon, you have a deeper calm than most people ever find. The Force works through those who are still enough to hear it.", "quote": "\"Feel, don't think. Trust your instincts.\"", "quote_attr": "— QUI-GON JINN // JEDI MASTER", "doctrine": "Being still enough to hear what the universe is saying.", "twin_emoji": "🌱", "twin_name": "OBI-WAN KENOBI", "twin_desc": "The student who carried your legacy forward.", "bars": [95, 97, 85, 80, 78, 15], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"]}, "mando": {"name": "MANDO", "desig": "GUILD REG: MND-7741 // MANDALORIAN", "greeting": "BOUNTY SCAN: GUAPO_001", "strength_title": "Independence &amp; Honor", "strength_body": "You walk your own path. You don't need anyone's approval to know who you are. You have your own code — and you keep it, no matter what.", "strength_body2": "Like Mando, your loyalty runs deep once it's earned. Quiet on the outside, fierce on the inside. You protect what matters to you with everything you have.", "quote": "\"I can bring you in warm, or I can bring you in cold.\"", "quote_attr": "— DIN DJARIN // THE MANDALORIAN", "doctrine": "Walking your own path when others follow the crowd.", "twin_emoji": "🐣", "twin_name": "GROGU", "twin_desc": "The one you'd cross the galaxy to protect.", "bars": [72, 80, 70, 95, 92, 45], "bar_labels": ["LOYALTY", "HONOR", "COURAGE", "INDEPENDENCE", "WISDOM", "AGGRESSION"]}, "boba": {"name": "BOBA FETT", "desig": "GUILD REG: BF-4477 // MASTER HUNTER", "greeting": "BOUNTY SCAN: GUAPO_001", "strength_title": "Precision &amp; Self-Reliance", "strength_body": "You don't need a crowd. You don't need applause. You know what you're worth, and you prove it through results — not words.", "strength_body2": "Like Boba Fett, your power comes from complete self-reliance. You are the most dangerous thing in the room, and everyone can feel it without you saying a word.", "quote": "\"He's no good to me dead.\"", "quote_attr": "— BOBA FETT // CLOUD CITY", "doctrine": "Proving your worth through results, not words.", "twin_emoji": "🪖", "twin_name": "THE MANDALORIAN", "twin_desc": "Another warrior who walks alone.", "bars": [75, 85, 40, 65, 88, 70], "bar_labels": ["PRECISION", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"]}, "han": {"name": "HAN SOLO", "desig": "REBEL REG: HS-7739 // GENERAL", "greeting": "BOUNTY SCAN: GUAPO_001", "strength_title": "Instinct &amp; Charm", "strength_body": "You trust your gut, and your gut is usually right. You talk your way in, fly your way out, and make it look effortless.", "strength_body2": "Like Han, you act like you don't care about anything — then you show up at exactly the right moment for the people who matter to you.", "quote": "\"Never tell me the odds.\"", "quote_attr": "— HAN SOLO // ASTEROID FIELD", "doctrine": "Showing up when it matters most — even when you pretended you wouldn't.", "twin_emoji": "🐻", "twin_name": "CHEWBACCA", "twin_desc": "The partner who never doubted you.", "bars": [65, 50, 75, 80, 88, 55], "bar_labels": ["INSTINCT", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"]}, "chewie": {"name": "CHEWBACCA", "desig": "REBEL REG: CW-7738 // CO-PILOT", "greeting": "BOUNTY SCAN: GUAPO_001", "strength_title": "Loyalty &amp; Strength", "strength_body": "You are the most reliable person in any room. When you commit to someone, it's forever. Your strength is not just physical — it's the kind of loyalty that never breaks.", "strength_body2": "Like Chewie, you are a gentle giant. Enormous heart, fierce protector, devoted friend. The people around you are lucky to have you.", "quote": "\"RRRAAARRGH!\"", "quote_attr": "— CHEWBACCA // ALWAYS", "doctrine": "Being the one person everyone can count on, no matter what.", "twin_emoji": "🎯", "twin_name": "HAN SOLO", "twin_desc": "The pilot who needed you more than he'll ever admit.", "bars": [60, 70, 85, 97, 88, 55], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "STRENGTH", "AGGRESSION"]}, "vader": {"name": "VADER", "desig": "THE FALLEN KNIGHT // REDEEMED", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Focus &amp; Discipline", "strength_body": "When you decide to do something, nothing can stop you. You have incredible discipline and focus — the kind that gets things done. You finish what you start.", "strength_body2": "Like Vader, you carry great power. And like Vader, in the very end, that power was used for love. Your strength is only as great as what you choose to use it for.", "quote": "\"I find your lack of faith disturbing.\"", "quote_attr": "— DARTH VADER // IMPERIAL COMMAND", "doctrine": "Channeling your focus toward what — and who — you love.", "twin_emoji": "⭐", "twin_name": "LUKE SKYWALKER", "twin_desc": "The light that brought you back.", "bars": [88, 70, 55, 85, 90, 80], "bar_labels": ["FOCUS", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "DISCIPLINE"]}, "palpatine": {"name": "PALPATINE", "desig": "FILE: DARTH SIDIOUS // CLASSIFIED", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Strategy &amp; Vision", "strength_body": "You see moves others cannot imagine. You think in systems, in long arcs, in outcomes that take years to unfold. No one outplans you.", "strength_body2": "Like Palpatine, your greatest power is your mind. The question — and it is the most important question — is what you choose to use that power for.", "quote": "\"Everything is proceeding as I have foreseen.\"", "quote_attr": "— EMPEROR PALPATINE // DEATH STAR II", "doctrine": "Using your vision to build something — not to control it.", "twin_emoji": "🌩️", "twin_name": "DARTH VADER", "twin_desc": "Power without wisdom is just destruction.", "bars": [97, 90, 30, 50, 75, 85], "bar_labels": ["STRATEGY", "PATIENCE", "EMPATHY", "LOYALTY", "POWER", "AGGRESSION"]}, "kylo": {"name": "KYLO REN", "desig": "FILE: BEN SOLO // PATH-WALKER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Intensity &amp; Passion", "strength_body": "You feel everything deeply. You don't do things halfway. When you care about something, you care about it completely — and that intensity is a superpower.", "strength_body2": "Like Kylo Ren — like Ben Solo — your greatest battle is with yourself. And the fact that you keep fighting it means the good side is winning.", "quote": "\"I know what I have to do. I don't know if I have the strength to do it.\"", "quote_attr": "— KYLO REN // STARKILLER BASE", "doctrine": "Letting the people who love you reach through the darkness.", "twin_emoji": "⭐", "twin_name": "REY", "twin_desc": "The one who saw who you really were.", "bars": [65, 45, 62, 70, 88, 80], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "INTENSITY"]}, "maul": {"name": "DARTH MAUL", "desig": "FILE: MAUL // FORMER SITH LORD", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Intensity &amp; Endurance", "strength_body": "You are relentless. When you commit to something, you see it through to the end — no matter what it costs. You have survived things that would have broken anyone else.", "strength_body2": "Like Maul, your greatest strength is your refusal to quit. That same fire, pointed at something worth fighting for, makes you unstoppable.", "quote": "\"At last we will reveal ourselves to the Jedi.\"", "quote_attr": "— DARTH MAUL // NABOO", "doctrine": "Pointing your relentlessness toward something worthy of it.", "twin_emoji": "🔥", "twin_name": "SAVAGE OPRESS", "twin_desc": "The one who stood beside you.", "bars": [55, 50, 35, 60, 95, 90], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "ENDURANCE", "AGGRESSION"]}, "grogu": {"name": "GROGU", "desig": "THE CURIOUS INNOCENT // FORCE ADEPT", "greeting": "THE FORCE SHOWS YOU…", "strength_title": "Curiosity &amp; A Pure Heart", "strength_body": "You see wonder in everything. You ask the best questions. You experience the world with open eyes and an open heart — and that is a rare and powerful gift.", "strength_body2": "Like Grogu, you have a quiet kind of power that surprises everyone. Your kindness and curiosity might just be your greatest strength of all.", "quote": "\"The Force is strong in this one. Very strong.\"", "quote_attr": "— THE ARMORER", "doctrine": "Loving big and staying curious.", "twin_emoji": "🪖", "twin_name": "DIN DJARIN", "twin_desc": "The one who crossed the galaxy just for you.", "bars": [99, 98, 97, 95, 72, 2], "bar_labels": ["EMPATHY", "CURIOSITY", "FORCE SENSE", "LOYALTY", "COURAGE", "AGGRESSION"]}};
+
+  function loadCharacter() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('character') || 'yoda';
+    const c = CHAR_DATA[id];
+    if (!c) return;
+
+    // Name
+    const nameEl = document.querySelector('.name');
+    if (nameEl) {
+      nameEl.textContent = c.name;
+      nameEl.setAttribute('data-name', c.name);
+    }
+
+    // Greeting
+    const greetEl = document.querySelector('.greeting');
+    if (greetEl) greetEl.setAttribute('data-text', c.greeting);
+
+    // Designation
+    const desigEl = document.querySelector('.desig');
+    if (desigEl) desigEl.textContent = c.desig;
+
+    // Strength title (first heading)
+    const titles = document.querySelectorAll('.p-str');
+    if (titles[0]) titles[0].innerHTML = c.strength_title;
+
+    // Strength body paragraphs
+    const bodies = document.querySelectorAll('.p-body');
+    if (bodies[0]) bodies[0].textContent = c.strength_body;
+    if (bodies[1]) bodies[1].textContent = c.strength_body2;
+
+    // Quote
+    const qt = document.querySelector('.q-text');
+    if (qt) qt.innerHTML = c.quote;
+    const qa = document.querySelector('.q-attr');
+    if (qa) qa.textContent = c.quote_attr;
+
+    // Doctrine (second heading of same type)
+    if (titles[1]) titles[1].textContent = c.doctrine;
+    else if (titles[2]) titles[2].textContent = c.doctrine;
+
+    // Force twin
+    const twinName = document.querySelector('.twin-name');
+    if (twinName) twinName.textContent = c.twin_name;
+    
+    const twinIcon = document.querySelector('.twin-icon');
+    if (twinIcon) twinIcon.textContent = c.twin_emoji;
+    const twinLbl = document.querySelector('.twin-lbl');
+    if (twinLbl) twinLbl.textContent = 'FORCE BOND DETECTED';
+
+    // Stats / bars
+    const bNames = document.querySelectorAll('.bar-n');
+    const bVals  = document.querySelectorAll('.bar-v');
+    const bFills = document.querySelectorAll(".bar-fill");
+    c.bar_labels.forEach((label, i) => {
+      if (bNames[i]) bNames[i].textContent = label;
+      if (bVals[i])  bVals[i].textContent  = String(c.bars[i]).padStart(2,'0');
+      if (bFills[i]) {
+        bFills[i].style.setProperty('--w', c.bars[i] + '%');
+        // If already visible, animate immediately
+        if (bFills[i].parentElement.closest('.panel.visible, .section.visible, .chapter.visible')) {
+          bFills[i].style.width = c.bars[i] + '%';
+        }
+      }
+    });
+
+    // Image — smart loader
+    const img = document.getElementById('hero-img');
+    if (img) {
+      const base = 'https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+      const names = [id, id.charAt(0).toUpperCase()+id.slice(1), id.toUpperCase()];
+      const exts  = ['png','PNG','jpg','JPG'];
+      const cands = [];
+      for (const n of names) for (const e of exts) cands.push(base+n+'.'+e);
+      let ci = 0;
+      function tryNext() {
+        if (ci >= cands.length) return;
+        const t = new Image();
+        t.onload = () => { img.src = cands[ci-1]; img.style.opacity = '1'; };
+        t.onerror = () => { ci++; tryNext(); };
+        t.src = cands[ci++];
+      }
+      tryNext();
+    }
+
+    // Page title
+    document.title = 'Force Vision · ' + c.name;
+  }
+
+  loadCharacter();
+</script>
 </body>
 </html>
