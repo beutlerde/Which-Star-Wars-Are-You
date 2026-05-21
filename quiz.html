@@ -726,19 +726,20 @@ function qXWing(opts) {
   }, opts.delay||0);
 }
 
-/* Falcon L→R — image engines LEFT, nose UPPER-RIGHT, naturally faces right, NO flip */
+/* Falcon — top-right to bottom-left, no flip, natural orientation */
 function qFalcon(opts) {
   opts=opts||{};
   var vw=window.innerWidth,vh=window.innerHeight;
   var sz=Math.round(Math.min(vw,vh)*(opts.scale||(0.20+Math.random()*0.06)));
   var img=qMakeShip('./falcon.png',sz);
-  var sy=vh*(opts.topFrac!==undefined?opts.topFrac:(0.15+Math.random()*0.32));
-  var sx=-sz-10,ex=vw+sz+10,arcH=vh*(0.04+Math.random()*0.04),dur=opts.dur||(5000+Math.random()*4000);
-  img.style.top=sy+'px';img.style.left='0px';
+  var sx=vw+sz, sy=-sz, ex=-sz, ey=vh+sz;
+  var dur=opts.dur||(6000+Math.random()*4000);
+  img.style.left=sx+'px'; img.style.top=sy+'px';
   var t0=null;
   function f(ts){if(!t0)t0=ts;var t=Math.min((ts-t0)/dur,1),e=qEio(t);
+    var x=sx+(ex-sx)*e, y=sy+(ey-sy)*e;
     img.style.opacity=(qFd(t,0.06)*0.70).toFixed(3);
-    img.style.transform='translate('+(sx+(ex-sx)*e).toFixed(1)+'px,'+(-arcH*Math.sin(t*Math.PI)).toFixed(1)+'px)';
+    img.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)';
     if(t<1)requestAnimationFrame(f);else qClean(img);}requestAnimationFrame(f);
 }
 

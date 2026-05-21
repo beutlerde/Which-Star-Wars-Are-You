@@ -1042,13 +1042,9 @@ function animXWing(opts) {
   }, delay);
 }
 
-/* ============================================================
-   FALCON
-   Image: engines on LEFT (rear), nose/cockpit arm points
-   UPPER-RIGHT. The ship naturally faces RIGHT.
-   To fly LEFT→RIGHT: NO flip needed (already faces right).
-   Diagonal: slight upward drift (matches the upper-right angle).
-   Speed: 5–9s. Large, beautiful.
+/* FALCON — enters top-right, exits bottom-left
+   Image nose points lower-right, engines upper-left.
+   This IS the natural flight path — no flip needed.
    ============================================================ */
 function animFalcon(opts) {
   opts = opts || {};
@@ -1057,16 +1053,15 @@ function animFalcon(opts) {
   var sz  = Math.round(Math.min(vw,vh) * (opts.scale || (0.22 + Math.random()*0.06)));
   var img = makeShip('./falcon.png', sz);
 
-  var topY = vh * (opts.topFrac !== undefined ? opts.topFrac : (0.18 + Math.random()*0.32));
-  /* Enters from LEFT, exits RIGHT — matches natural image direction */
-  var sx   = -sz - 10;
-  var ex   = vw + sz + 10;
-  /* Slight upward arc — matches the upper-right diagonal of the image */
-  var arcH = vh * (0.04 + Math.random()*0.04);
-  var dur  = opts.dur || (5000 + Math.random() * 4000);
+  /* Start: off-screen top-right. End: off-screen bottom-left */
+  var sx = vw + sz;
+  var sy = -sz;
+  var ex = -sz;
+  var ey = vh + sz;
+  var dur = opts.dur || (6000 + Math.random() * 4000);
 
-  img.style.top  = topY + 'px';
-  img.style.left = '0px';
+  img.style.left = sx + 'px';
+  img.style.top  = sy + 'px';
 
   var t0 = null;
   function frame(ts) {
@@ -1074,12 +1069,10 @@ function animFalcon(opts) {
     var t  = Math.min((ts-t0)/dur, 1);
     var e  = eio(t);
     var x  = sx + (ex-sx)*e;
-    /* Rises slightly in middle — like it's banking upward */
-    var dy = -arcH * Math.sin(t * Math.PI);
+    var y  = sy + (ey-sy)*e;
     var op = fade(t, 0.06) * 0.72;
     img.style.opacity   = op.toFixed(3);
-    /* No flip — image already faces right = direction of travel */
-    img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
+    img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
     if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
   }
   requestAnimationFrame(frame);
