@@ -437,37 +437,40 @@ function layout() {
   var vw = window.innerWidth;
   var vh = window.innerHeight;
 
-  /* background-size: auto 52vh — image height = 52% of viewport height */
-  /* image width scales proportionally, centered horizontally */
+  /* Image: 1376x768, background-size: auto 52vh, anchored bottom center  */
+  /* Image renders taller than screen on portrait phone — crops sides     */
   var imgR  = 1376 / 768;
   var rendH = vh * 0.52;
   var rendW = rendH * imgR;
-  var offX  = (vw - rendW) / 2;  /* negative if wider than screen = crops sides */
-  var offY  = vh - rendH;        /* anchored to bottom */
+  var offX  = (vw - rendW) / 2;   /* negative — image wider than screen  */
+  var offY  = vh - rendH;          /* top edge of image in screen coords  */
 
-  /* Arch glass zone */
-  var archTop    = offY + rendH * 0.02;
-  var archBottom = offY + rendH * 0.75;
+  /* Arch opening measured from image analysis:                           */
+  /* Glass opens at ~10% image height, widest at 30%-65%, closes at 65%  */
+  /* At mid-height the arch spans ~87% of image width                    */
+  var archTop    = offY + rendH * 0.10;
+  var archBottom = offY + rendH * 0.64;
   var archH      = archBottom - archTop;
   var archCX     = vw / 2;
 
-  /* Safe horizontal zone — arch narrows toward top */
-  var safeL = offX + rendW * 0.14;
-  var safeR = offX + rendW * 0.86;
+  /* Since image crops horizontally, use screen-relative safe zone        */
+  /* Arch fills almost full screen width at mid-height                    */
+  var safeL = vw * 0.08;
+  var safeR = vw * 0.92;
   var safeW = safeR - safeL;
 
-  /* Planet sizes — relative to arch height which is now much larger */
+  /* Planet sizes */
   var unit   = Math.min(safeW, archH);
-  var mainSz = unit * 0.28;   /* Tatooine — hero */
-  var secSz  = unit * 0.17;   /* Coruscant + Dagobah */
-  var smSz   = unit * 0.12;   /* Hoth — distant */
+  var mainSz = unit * 0.30;
+  var secSz  = unit * 0.19;
+  var smSz   = unit * 0.13;
 
-  /* Spread planets across the full arch opening */
+  /* Positions — spread across the arch, Tatooine center-low             */
   var pos = {
-    tatooine:  { cx: archCX,               cy: archTop + archH * 0.55, sz: mainSz },
-    coruscant: { cx: safeL + safeW * 0.18, cy: archTop + archH * 0.28, sz: secSz  },
-    dagobah:   { cx: safeL + safeW * 0.82, cy: archTop + archH * 0.25, sz: secSz  },
-    hoth:      { cx: safeL + safeW * 0.80, cy: archTop + archH * 0.65, sz: smSz   }
+    tatooine:  { cx: archCX,               cy: archTop + archH * 0.58, sz: mainSz },
+    coruscant: { cx: safeL + safeW * 0.16, cy: archTop + archH * 0.28, sz: secSz  },
+    dagobah:   { cx: safeL + safeW * 0.84, cy: archTop + archH * 0.25, sz: secSz  },
+    hoth:      { cx: safeL + safeW * 0.82, cy: archTop + archH * 0.68, sz: smSz   }
   };
 
   Object.keys(pos).forEach(function(key) {
@@ -502,8 +505,9 @@ function layout() {
   var tm = document.getElementById('tmain');
   if (tm) tm.style.fontSize = tSz + 'px';
 
-  /* Yoda position */
-  yodaEl.style.top = (archBottom - 36) + 'px';
+  /* Yoda — sits just above dashboard, inside the arch gap between seats */
+  var yodaTop = offY + rendH * 0.63;
+  yodaEl.style.top = yodaTop + 'px';
   var qF = Math.max(10, Math.min(14, vw * 0.034));
   var qEl = yodaEl.querySelector('.y-quote');
   if (qEl) qEl.style.fontSize = qF + 'px';
