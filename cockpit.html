@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Star Wars — Which Character Are You?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #000008;
+  font-family: 'Rajdhani', sans-serif;
+  color: white;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ============================================================
+   SCENE — three layers
+   ============================================================ */
+
+/* Layer 1: Deep space background */
+#space-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 40%, #040818 0%, #010408 60%, #000005 100%);
+  overflow: hidden;
+}
+
+/* Layer 2: Planets + starfield */
+#space-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* Layer 3: Cockpit PNG on top */
+#cockpit-frame {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none; /* clicks pass through to planets below */
+  background-image: url('./cockpit-bg.png');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+}
+
+/* ============================================================
+   STARS
+   ============================================================ */
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle var(--dur) var(--delay) ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  from { opacity: var(--min-op); transform: scale(0.8); }
+  to   { opacity: var(--max-op); transform: scale(1.2); }
+}
+
+/* ============================================================
+   NEBULA CLOUDS
+   ============================================================ */
+.nebula {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  pointer-events: none;
+  animation: nebula-drift 18s ease-in-out infinite alternate;
+}
+@keyframes nebula-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(15px, -10px) scale(1.06); }
+}
+
+/* ============================================================
+   PLANETS
+   ============================================================ */
+.planet-wrap {
+  position: absolute;
+  cursor: pointer;
+  transform-origin: center center;
+  z-index: 5;
+  /* float animation applied per-planet via JS */
+}
+
+.planet-glow-ring {
+  position: absolute;
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  filter: blur(14px);
+  pointer-events: none;
+  animation: glow-breathe 3.5s ease-in-out infinite alternate;
+}
+@keyframes glow-breathe {
+  from { opacity: 0.55; transform: translate(-50%,-50%) scale(0.88); }
+  to   { opacity: 1;    transform: translate(-50%,-50%) scale(1.12); }
+}
+
+.planet-body {
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    inset -6px -6px 16px rgba(0,0,0,0.7),
+    inset 3px 3px 10px rgba(255,255,255,0.12);
+  transition: transform 0.15s ease;
+}
+.planet-wrap:active .planet-body {
+  transform: scale(0.9);
+}
+
+/* Atmosphere rim */
+.planet-body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 12px rgba(255,255,255,0.08);
+}
+
+/* Saturn-style ring for quiz planet */
+.planet-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.18);
+  transform: translate(-50%, -50%) rotateX(68deg);
+  pointer-events: none;
+}
+
+/* Tap ripple */
+.planet-ripple {
+  position: absolute;
+  top: 50%; left: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.5);
+  transform: translate(-50%,-50%) scale(1);
+  opacity: 0;
+  pointer-events: none;
+}
+.planet-wrap.tapping .planet-ripple {
+  animation: ripple-out 0.55s ease-out forwards;
+}
+@keyframes ripple-out {
+  from { opacity: 0.7; transform: translate(-50%,-50%) scale(1); }
+  to   { opacity: 0;   transform: translate(-50%,-50%) scale(2.4); }
+}
+
+/* Labels */
+.planet-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.planet-label .pl-main {
+  display: block;
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px currentColor, 0 1px 3px rgba(0,0,0,0.9);
+}
+.planet-label .pl-sub {
+  display: block;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  opacity: 0.65;
+  margin-top: 1px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+}
+
+/* ============================================================
+   TITLE — inside the glass, upper area
+   ============================================================ */
+#title-block {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 4;
+  pointer-events: none;
+  animation: title-fade-in 1.8s ease-out forwards;
+}
+@keyframes title-fade-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.title-eyebrow {
+  font-family: 'Orbitron', monospace;
+  font-size: 7px;
+  letter-spacing: 3.5px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.title-main {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(13px, 3.5vw, 20px);
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  line-height: 1.25;
+  color: white;
+  text-shadow:
+    0 0 40px rgba(255,160,40,0.5),
+    0 0 80px rgba(255,120,0,0.2),
+    0 2px 4px rgba(0,0,0,0.8);
+}
+.title-rule {
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,160,40,0.5), transparent);
+  margin: 7px auto;
+}
+.title-sub {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   YODA PROMPT — bottom of glass area
+   ============================================================ */
+#yoda-prompt {
+  position: absolute;
+  bottom: 34%;   /* just above the dashboard */
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 4;
+  pointer-events: none;
+  animation: yoda-fade-in 2.5s ease-out 1.2s both;
+  white-space: nowrap;
+}
+@keyframes yoda-fade-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.yoda-quote {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: rgba(0, 220, 255, 0.55);
+  font-style: italic;
+}
+.yoda-name {
+  font-family: 'Orbitron', monospace;
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.2);
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   LIGHTSPEED OVERLAY
+   ============================================================ */
+#lightspeed {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  background: #000008;
+  overflow: hidden;
+}
+#lightspeed.active {
+  pointer-events: all;
+  opacity: 1;
+}
+
+#ls-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#ls-dest {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+#ls-dest.visible { opacity: 1; }
+
+.ls-planet-sphere {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  margin-bottom: 28px;
+  box-shadow: 0 0 60px var(--planet-glow), 0 0 120px var(--planet-glow-dim);
+  animation: ls-planet-pulse 2s ease-in-out infinite alternate;
+}
+@keyframes ls-planet-pulse {
+  from { box-shadow: 0 0 50px var(--planet-glow), 0 0 100px var(--planet-glow-dim); }
+  to   { box-shadow: 0 0 80px var(--planet-glow), 0 0 160px var(--planet-glow-dim); }
+}
+
+.ls-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  text-shadow: 0 0 20px var(--planet-glow);
+}
+.ls-sub {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+.ls-btn {
+  padding: 13px 36px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: white;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.ls-btn:hover, .ls-btn:active {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.5);
+}
+
+</style>
+</head>
+<body>
+
+<!-- LAYER 1: Space background -->
+<div id="space-bg"></div>
+
+<!-- LAYER 2: Stars + planets + title (behind cockpit) -->
+<div id="space-layer">
+
+  <!-- Nebula atmosphere -->
+  <div class="nebula" id="neb1" style="width:340px;height:200px;top:5%;left:5%;background:rgba(80,0,180,0.06);animation-duration:22s;"></div>
+  <div class="nebula" id="neb2" style="width:300px;height:180px;top:15%;left:55%;background:rgba(0,100,200,0.05);animation-duration:17s;animation-direction:alternate-reverse;"></div>
+  <div class="nebula" id="neb3" style="width:260px;height:140px;top:30%;left:30%;background:rgba(200,80,0,0.04);animation-duration:25s;"></div>
+
+  <!-- Title block -->
+  <div id="title-block">
+    <div class="title-eyebrow">A long time ago in a galaxy far, far away</div>
+    <div class="title-main">WHICH STAR WARS<br>CHARACTER ARE YOU?</div>
+    <div class="title-rule"></div>
+    <div class="title-sub">Choose your destination</div>
+  </div>
+
+  <!-- Planets positioned in glass panes -->
+  <!-- positions set by JS after measuring viewport -->
+
+  <!-- QUIZ — center ring -->
+  <div class="planet-wrap" id="p-quiz" data-key="quiz">
+    <div class="planet-glow-ring" id="pg-quiz"></div>
+    <div class="planet-body" id="pb-quiz"></div>
+    <div class="planet-ring" id="pr-quiz"></div>
+    <div class="planet-ripple" id="prip-quiz"></div>
+    <div class="planet-label" id="pl-quiz">
+      <span class="pl-main" style="color:#FFAA44;">TAKE THE QUIZ</span>
+      <span class="pl-sub" style="color:rgba(255,170,68,0.8);">Which character are you?</span>
+    </div>
+  </div>
+
+  <!-- FORCE MAP — upper left pane -->
+  <div class="planet-wrap" id="p-map" data-key="map">
+    <div class="planet-glow-ring" id="pg-map"></div>
+    <div class="planet-body" id="pb-map"></div>
+    <div class="planet-ripple" id="prip-map"></div>
+    <div class="planet-label" id="pl-map">
+      <span class="pl-main" style="color:#44DDFF;">FORCE MAP</span>
+      <span class="pl-sub" style="color:rgba(68,221,255,0.8);">Your galaxy</span>
+    </div>
+  </div>
+
+  <!-- TRANSMISSIONS — upper right pane -->
+  <div class="planet-wrap" id="p-tx" data-key="transmissions">
+    <div class="planet-glow-ring" id="pg-tx"></div>
+    <div class="planet-body" id="pb-tx"></div>
+    <div class="planet-ripple" id="prip-tx"></div>
+    <div class="planet-label" id="pl-tx">
+      <span class="pl-main" style="color:#BB66FF;">TRANSMISSIONS</span>
+      <span class="pl-sub" style="color:rgba(187,102,255,0.8);">Messages from Dad</span>
+    </div>
+  </div>
+
+  <!-- ARCHIVE — small, lower right pane -->
+  <div class="planet-wrap" id="p-archive" data-key="archive">
+    <div class="planet-glow-ring" id="pg-archive"></div>
+    <div class="planet-body" id="pb-archive"></div>
+    <div class="planet-ripple" id="prip-archive"></div>
+    <div class="planet-label" id="pl-archive">
+      <span class="pl-main" style="color:#44FF99;">ARCHIVE</span>
+      <span class="pl-sub" style="color:rgba(68,255,153,0.8);">Past results</span>
+    </div>
+  </div>
+
+  <!-- Yoda prompt -->
+  <div id="yoda-prompt">
+    <div class="yoda-quote">"Choose your destination, you must."</div>
+    <div class="yoda-name">— Master Yoda</div>
+  </div>
+
+</div>
+
+<!-- LAYER 3: Cockpit frame (on top of everything) -->
+<div id="cockpit-frame"></div>
+
+<!-- LIGHTSPEED OVERLAY -->
+<div id="lightspeed">
+  <canvas id="ls-canvas"></canvas>
+  <div id="ls-dest">
+    <div class="ls-planet-sphere" id="ls-sphere"></div>
+    <div class="ls-title" id="ls-title">DESTINATION</div>
+    <div class="ls-sub" id="ls-sub">Preparing your journey</div>
+    <button class="ls-btn" onclick="closeLightspeed()">ENTER →</button>
+  </div>
+</div>
+
+<script>
+
+/* ============================================================
+   PLANET CONFIG
+   ============================================================ */
+var PLANETS = {
+  quiz: {
+    title: 'THE QUIZ',
+    sub: 'Which character are you?',
+    gradient: 'radial-gradient(circle at 35% 30%, #FFBB55, #CC6600 45%, #883300 75%, #331100)',
+    glow: 'rgba(255,140,0,0.7)',
+    glowDim: 'rgba(255,100,0,0.25)',
+    glowColor: 'rgba(255,140,0,0.45)',
+    ringColor: 'rgba(255,180,80,0.2)',
+    hasRing: true
+  },
+  map: {
+    title: 'FORCE MAP',
+    sub: 'Your personal galaxy',
+    gradient: 'radial-gradient(circle at 38% 32%, #66EEFF, #0099CC 45%, #004477 75%, #001122)',
+    glow: 'rgba(0,200,255,0.7)',
+    glowDim: 'rgba(0,150,255,0.2)',
+    glowColor: 'rgba(0,200,255,0.4)',
+    ringColor: 'transparent',
+    hasRing: false
+  },
+  transmissions: {
+    title: 'TRANSMISSIONS',
+    sub: 'Messages waiting',
+    gradient: 'radial-gradient(circle at 38% 30%, #DD99FF, #8822CC 45%, #440077 75%, #110022)',
+    glow: 'rgba(180,80,255,0.7)',
+    glowDim: 'rgba(140,50,255,0.2)',
+    glowColor: 'rgba(180,80,255,0.4)',
+    ringColor: 'transparent',
+    hasRing: false
+  },
+  archive: {
+    title: 'THE ARCHIVE',
+    sub: 'Your journey so far',
+    gradient: 'radial-gradient(circle at 40% 32%, #77FFBB, #00AA55 48%, #005522 75%, #001A0A)',
+    glow: 'rgba(0,220,120,0.7)',
+    glowDim: 'rgba(0,180,100,0.2)',
+    glowColor: 'rgba(0,220,120,0.4)',
+    ringColor: 'transparent',
+    hasRing: false
+  }
+};
+
+/* ============================================================
+   RESPONSIVE PLANET SIZING + POSITIONING
+   Based on analysis: glass spans 11%-89% width, 0%-76% height
+   Dashboard starts at ~68% height
+   ============================================================ */
+function layoutPlanets() {
+  var vw = window.innerWidth;
+  var vh = window.innerHeight;
+
+  // Glass zone (where transparency is)
+  // Image is 1376x768, displayed cover
+  // We'll use percentage-based positions within the glass area
+  var glassLeft   = vw * 0.11;
+  var glassRight  = vw * 0.89;
+  var glassTop    = vh * 0.03;
+  var glassBottom = vh * 0.68;
+  var glassW = glassRight - glassLeft;
+  var glassH = glassBottom - glassTop;
+  var glassCX = (glassLeft + glassRight) / 2;
+  var glassCY = (glassTop + glassBottom) / 2;
+
+  // Planet sizes — relative to screen
+  var quizSize    = Math.min(vw, vh) * 0.14;
+  var mapSize     = Math.min(vw, vh) * 0.09;
+  var txSize      = Math.min(vw, vh) * 0.08;
+  var archiveSize = Math.min(vw, vh) * 0.065;
+
+  // QUIZ — center ring, slightly below center of glass
+  placePlanet('quiz', glassCX, glassCY * 0.9 + glassBottom * 0.1, quizSize);
+
+  // MAP — upper-left pane (roughly left third, upper half of glass)
+  placePlanet('map', glassLeft + glassW * 0.2, glassTop + glassH * 0.38, mapSize);
+
+  // TRANSMISSIONS — upper-right pane
+  placePlanet('transmissions', glassLeft + glassW * 0.78, glassTop + glassH * 0.32, txSize);
+
+  // ARCHIVE — lower right area, smaller
+  placePlanet('archive', glassLeft + glassW * 0.82, glassTop + glassH * 0.65, archiveSize);
+}
+
+function placePlanet(key, cx, cy, size) {
+  var wrap = document.getElementById('p-' + key);
+  var body = document.getElementById('pb-' + key);
+  var glow = document.getElementById('pg-' + key);
+  var ring = document.getElementById('pr-' + key);
+  var ripple = document.getElementById('prip-' + key);
+  var label = document.getElementById('pl-' + key);
+  var cfg = PLANETS[key];
+
+  var glowSize = size * 2.2;
+  var labelOffset = size * 0.62;
+
+  wrap.style.cssText =
+    'position:absolute;' +
+    'left:' + (cx - size/2) + 'px;' +
+    'top:' + (cy - size/2) + 'px;' +
+    'width:' + size + 'px;' +
+    'height:' + size + 'px;';
+
+  body.style.cssText =
+    'width:' + size + 'px;height:' + size + 'px;' +
+    'background:' + cfg.gradient + ';';
+
+  glow.style.cssText =
+    'width:' + glowSize + 'px;height:' + glowSize + 'px;' +
+    'background:' + cfg.glowColor + ';';
+
+  if (ring && cfg.hasRing) {
+    ring.style.cssText =
+      'width:' + (size * 1.55) + 'px;height:' + (size * 0.4) + 'px;' +
+      'border:2px solid rgba(255,180,80,0.2);';
+  }
+
+  ripple.style.cssText =
+    'width:' + (size * 1.3) + 'px;height:' + (size * 1.3) + 'px;' +
+    'margin-left:' + (-size * 0.15) + 'px;margin-top:' + (-size * 0.15) + 'px;';
+
+  label.style.top = labelOffset + 'px';
+
+  var labelFontMain = Math.max(7, Math.min(10, size * 0.14));
+  var labelFontSub  = Math.max(6, Math.min(9, size * 0.12));
+  label.querySelector('.pl-main').style.fontSize = labelFontMain + 'px';
+  label.querySelector('.pl-sub').style.fontSize  = labelFontSub + 'px';
+}
+
+/* ============================================================
+   STARS
+   ============================================================ */
+function buildStars() {
+  var layer = document.getElementById('space-layer');
+  var vw = window.innerWidth;
+  var vh = window.innerHeight;
+
+  for (var i = 0; i < 160; i++) {
+    var s = document.createElement('div');
+    s.className = 'star';
+    var size = Math.random() < 0.12 ? (1.5 + Math.random() * 2) : (0.3 + Math.random() * 1.1);
+    var minOp = (0.1 + Math.random() * 0.2).toFixed(2);
+    var maxOp = (0.5 + Math.random() * 0.5).toFixed(2);
+    var dur   = (2 + Math.random() * 4).toFixed(1) + 's';
+    var delay = (Math.random() * 6).toFixed(1) + 's';
+    s.style.cssText =
+      'width:' + size + 'px;height:' + size + 'px;' +
+      'left:' + (Math.random() * 100) + '%;' +
+      'top:' + (Math.random() * 68) + '%;' +   // keep stars in glass zone
+      '--dur:' + dur + ';--delay:' + delay + ';' +
+      '--min-op:' + minOp + ';--max-op:' + maxOp + ';';
+    layer.insertBefore(s, layer.firstChild);
+  }
+}
+
+/* ============================================================
+   PLANET FLOAT ANIMATION
+   ============================================================ */
+var floatOffsets = {};
+function startFloating() {
+  var keys = ['quiz', 'map', 'transmissions', 'archive'];
+  keys.forEach(function(k, i) {
+    floatOffsets[k] = Math.random() * Math.PI * 2; // random phase
+  });
+  var t = 0;
+  function tick() {
+    t += 0.018;
+    keys.forEach(function(k, i) {
+      var el = document.getElementById('p-' + k);
+      if (!el) return;
+      var speed = 0.6 + i * 0.15;
+      var amp = 4 + i * 1.5;
+      var dy = Math.sin(t * speed + floatOffsets[k]) * amp;
+      var dx = Math.cos(t * speed * 0.6 + floatOffsets[k]) * (amp * 0.4);
+      el.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    });
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+/* ============================================================
+   PLANET TAP
+   ============================================================ */
+var pendingDest = null;
+
+document.querySelectorAll('.planet-wrap').forEach(function(el) {
+  el.addEventListener('click', function() {
+    var key = el.getAttribute('data-key');
+    pendingDest = key;
+
+    el.classList.add('tapping');
+    setTimeout(function() { el.classList.remove('tapping'); }, 600);
+
+    setTimeout(function() { launchLightspeed(key); }, 500);
+  });
+});
+
+/* ============================================================
+   LIGHTSPEED
+   ============================================================ */
+var lsCanvas = document.getElementById('ls-canvas');
+var lsCtx = lsCanvas.getContext('2d');
+var lsRaf = null;
+
+function launchLightspeed(key) {
+  var cfg = PLANETS[key];
+  var overlay = document.getElementById('lightspeed');
+  overlay.classList.add('active');
+
+  lsCanvas.width  = window.innerWidth;
+  lsCanvas.height = window.innerHeight;
+
+  // Setup destination
+  var sphere = document.getElementById('ls-sphere');
+  sphere.style.background = cfg.gradient;
+  sphere.style.setProperty('--planet-glow', cfg.glow);
+  sphere.style.setProperty('--planet-glow-dim', cfg.glowDim);
+  document.getElementById('ls-title').textContent = cfg.title;
+  document.getElementById('ls-title').style.color = 'white';
+  document.getElementById('ls-sub').textContent = cfg.sub;
+
+  // Generate stars
+  var cx = lsCanvas.width / 2;
+  var cy = lsCanvas.height / 2;
+  var stars = [];
+  for (var i = 0; i < 220; i++) {
+    var angle = Math.random() * Math.PI * 2;
+    var dist  = 15 + Math.random() * Math.min(cx, cy) * 0.85;
+    stars.push({
+      angle: angle,
+      dist: dist,
+      speed: 0.4 + Math.random() * 2.2,
+      size: 0.4 + Math.random() * 1.4,
+      brightness: 160 + Math.floor(Math.random() * 95)
+    });
+  }
+
+  var start = null;
+  var STRETCH_MS = 1100;
+  var FLASH_MS   = 280;
+  var phase = 'stretch';
+
+  function frame(ts) {
+    if (!start) start = ts;
+    var elapsed = ts - start;
+
+    lsCtx.clearRect(0, 0, lsCanvas.width, lsCanvas.height);
+    lsCtx.fillStyle = '#000008';
+    lsCtx.fillRect(0, 0, lsCanvas.width, lsCanvas.height);
+
+    if (phase === 'stretch') {
+      var t = Math.min(elapsed / STRETCH_MS, 1);
+      var e = t * t * (3 - 2 * t); // smoothstep
+
+      stars.forEach(function(st) {
+        var stretch = 1 + e * 28 * st.speed;
+        var distNow = st.dist * (1 + e * 5);
+        var sx = cx + Math.cos(st.angle) * distNow;
+        var sy = cy + Math.sin(st.angle) * distNow;
+        var ex = cx + Math.cos(st.angle) * (distNow + stretch * 9);
+        var ey = cy + Math.sin(st.angle) * (distNow + stretch * 9);
+
+        lsCtx.beginPath();
+        lsCtx.moveTo(sx, sy);
+        lsCtx.lineTo(ex, ey);
+        var b = st.brightness;
+        lsCtx.strokeStyle = 'rgba(' + b + ',' + b + ',' + Math.min(255, b + 40) + ',' + (0.35 + e * 0.65) + ')';
+        lsCtx.lineWidth = st.size * (1 + e * 2.5);
+        lsCtx.stroke();
+      });
+
+      // Central radial glow
+      var g = lsCtx.createRadialGradient(cx, cy, 0, cx, cy, 120 * e);
+      g.addColorStop(0, 'rgba(180,220,255,' + (e * 0.5) + ')');
+      g.addColorStop(1, 'transparent');
+      lsCtx.fillStyle = g;
+      lsCtx.fillRect(0, 0, lsCanvas.width, lsCanvas.height);
+
+      if (elapsed >= STRETCH_MS) { phase = 'flash'; start = ts; }
+      lsRaf = requestAnimationFrame(frame);
+
+    } else if (phase === 'flash') {
+      var tf = elapsed / FLASH_MS;
+      var op = tf < 0.35 ? tf / 0.35 : 1 - ((tf - 0.35) / 0.65);
+      lsCtx.fillStyle = 'rgba(255,255,255,' + Math.max(0, op) + ')';
+      lsCtx.fillRect(0, 0, lsCanvas.width, lsCanvas.height);
+
+      if (elapsed >= FLASH_MS) {
+        // Show destination
+        document.getElementById('ls-dest').classList.add('visible');
+        return; // stop RAF
+      }
+      lsRaf = requestAnimationFrame(frame);
+    }
+  }
+
+  lsRaf = requestAnimationFrame(frame);
+}
+
+function closeLightspeed() {
+  var dest = document.getElementById('ls-dest');
+  var overlay = document.getElementById('lightspeed');
+  dest.classList.remove('visible');
+  setTimeout(function() {
+    overlay.classList.remove('active');
+    if (lsRaf) { cancelAnimationFrame(lsRaf); lsRaf = null; }
+    lsCtx.clearRect(0, 0, lsCanvas.width, lsCanvas.height);
+  }, 400);
+  // TODO: navigate to actual section based on pendingDest
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  buildStars();
+  layoutPlanets();
+  startFloating();
+}
+
+window.addEventListener('load', init);
+window.addEventListener('resize', function() {
+  layoutPlanets();
+});
+
+</script>
+</body>
+</html>
