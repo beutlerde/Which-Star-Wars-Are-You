@@ -557,6 +557,24 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
 <script>
 
 /* ============================================================
+   IMAGE HELPER — tries .png then .PNG automatically
+   ============================================================ */
+function setImgSrc(el, path) {
+  var base = path.replace(/\.[Pp][Nn][Gg]$/,'').replace(/\.[Jj][Pp][Gg]$/,'');
+  var extMatch = path.match(/(\.[Pp][Nn][Gg]|\.[Jj][Pp][Gg])$/);
+  var pri = extMatch ? extMatch[1].toLowerCase() : '.png';
+  var sec = pri === '.png' ? '.PNG' : '.png';
+  el.onerror = function() {
+    el.onerror = function() {
+      el.onerror = null;
+      el.style.visibility = 'hidden';
+    };
+    el.src = base + sec;
+  };
+  el.src = base + pri;
+}
+
+/* ============================================================
    CHARACTERS
    ============================================================ */
 var CHARACTERS = {
@@ -658,42 +676,72 @@ var yodaShown = [];
 /* ============================================================
    PASSING SHIPS — same as index.html
    ============================================================ */
-var SHIP_SVGS = {
-  xwing: '<svg viewBox="0 0 60 30" fill="none" xmlns="http://www.w3.org/2000/svg" width="60" height="30"><g opacity="0.45" fill="rgba(180,210,255,0.8)"><rect x="24" y="12" width="12" height="6" rx="1"/><rect x="28" y="10" width="4" height="10" rx="1"/><polygon points="12,4 26,13 24,17 8,20"/><polygon points="12,26 26,17 24,13 8,10"/><polygon points="48,4 34,13 36,17 52,20"/><polygon points="48,26 34,17 36,13 52,10"/><circle cx="18" cy="12" r="1.5" fill="rgba(255,150,80,0.7)"/><circle cx="18" cy="18" r="1.5" fill="rgba(255,150,80,0.7)"/><circle cx="42" cy="12" r="1.5" fill="rgba(255,150,80,0.7)"/><circle cx="42" cy="18" r="1.5" fill="rgba(255,150,80,0.7)"/></g></svg>',
-  falcon: '<svg viewBox="0 0 50 35" fill="none" xmlns="http://www.w3.org/2000/svg" width="50" height="35"><g opacity="0.4" fill="rgba(180,190,200,0.7)"><ellipse cx="22" cy="18" rx="18" ry="14"/><rect x="32" y="14" width="14" height="8" rx="4"/><ellipse cx="46" cy="18" rx="4" ry="4" fill="rgba(80,120,180,0.5)"/><circle cx="5" cy="18" r="3" fill="rgba(100,180,255,0.4)"/></g></svg>'
+/* Real ship images — same configs as index.html */
+var SHIP_CFGS = {
+  destroyer:  { file:'./destroyer.png',  width:220, maxOp:0.5,  anim:'drift'    },
+  xwing:      { file:'./xwing.png',      width:110, maxOp:0.7,  anim:'approach' },
+  falcon:     { file:'./falcon.png',     width:130, maxOp:0.6,  anim:'flee'     },
+  tiefighter: { file:'./tiefighter.png', width:70,  maxOp:0.55, anim:'dart'     }
 };
 
 function spawnShip() {
   var sl = document.getElementById('ship-layer');
   if (!sl) return;
   var vw = window.innerWidth, vh = window.innerHeight;
-  var types = ['xwing','falcon','xwing','xwing'];
-  var type  = types[Math.floor(Math.random()*types.length)];
-  var goRight = Math.random() > 0.5;
-  var ship = document.createElement('div');
-  ship.style.cssText = 'position:absolute;pointer-events:none;opacity:0;';
-  ship.innerHTML = SHIP_SVGS[type];
-  var topPct = 5 + Math.random() * 50;
-  var startX = goRight ? -100 : (vw + 100);
-  var endX   = goRight ? (vw + 100) : -100;
-  var dur    = 7000 + Math.random() * 8000;
-  ship.style.top = topPct + '%';
-  sl.appendChild(ship);
-  var t0 = null;
-  function anim(ts) {
-    if (!t0) t0 = ts;
-    var t  = Math.min((ts-t0)/dur, 1);
-    var e  = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
-    var x  = startX + (endX-startX)*e;
-    var op = Math.min(t*8, 1, (1-t)*8) * 0.55;
-    ship.style.opacity = op.toFixed(3);
-    ship.style.transform = 'translateX('+x.toFixed(1)+'px) scaleX('+(goRight?1:-1)+')';
-    if (t < 1) { requestAnimationFrame(anim); }
-    else { if (ship.parentNode) ship.parentNode.removeChild(ship); }
-  }
-  requestAnimationFrame(anim);
+  var roll = Math.random();
+  var type = roll < 0.30 ? 'xwing' : roll < 0.55 ? 'tiefighter' : roll < 0.75 ? 'falcon' : 'destroyer';
+  var cfg  = SHIP_CFGS[type];
+  var img  = document.createElement('img');
+  setImgSrc(img, cfg.file);
+  img.style.cssText = 'position:absolute;pointer-events:none;opacity:0;width:'+cfg.width+'px;height:auto;';
+  sl.appendChild(img);
+  if      (cfg.anim==='drift')    qDrift(img,cfg,vw,vh);
+  else if (cfg.anim==='approach') qApproach(img,cfg,vw,vh);
+  else if (cfg.anim==='flee')     qFlee(img,cfg,vw,vh);
+  else                            qDart(img,cfg,vw,vh);
   setTimeout(spawnShip, 18000 + Math.random()*22000);
 }
+
+function qClean(el) { if (el&&el.parentNode) el.parentNode.removeChild(el); }
+
+function qDrift(img,cfg,vw,vh) {
+  var sy=vh*(0.08+Math.random()*0.25),dur=18000+Math.random()*8000,sx=-cfg.width-20,ex=vw+20;
+  img.style.top=sy+'px';img.style.left=sx+'px';
+  var t0=null;
+  function f(ts){if(!t0)t0=ts;var t=Math.min((ts-t0)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    var op=Math.min(t/0.06,1,(1-t)/0.06)*cfg.maxOp;
+    img.style.opacity=op.toFixed(3);img.style.transform='translateX('+(sx+(ex-sx)*e).toFixed(1)+'px) translateY('+(40*t).toFixed(1)+'px)';
+    if(t<1)requestAnimationFrame(f);else qClean(img);}requestAnimationFrame(f);}
+
+function qApproach(img,cfg,vw,vh) {
+  var cx=vw*(0.3+Math.random()*0.4),cy=vh*(0.15+Math.random()*0.3),dur=4000+Math.random()*2000,bd=Math.random()>0.5?1:-1;
+  img.style.left=(cx-cfg.width/2)+'px';img.style.top=cy+'px';
+  var t0=null;
+  function f(ts){if(!t0)t0=ts;var t=Math.min((ts-t0)/dur,1),scale,op,tx,ty;
+    if(t<0.55){var ta=t/0.55;scale=0.3+0.8*ta;op=Math.min(ta*3,1)*cfg.maxOp;tx=0;ty=0;}
+    else{var tb=(t-0.55)/0.45;scale=1.1-0.95*tb;op=Math.max(0,cfg.maxOp*(1-tb*1.2));tx=bd*vw*0.4*tb*tb;ty=-vh*0.15*tb;}
+    img.style.opacity=op.toFixed(3);img.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px) scale('+scale.toFixed(3)+')';
+    if(t<1)requestAnimationFrame(f);else qClean(img);}requestAnimationFrame(f);}
+
+function qFlee(img,cfg,vw,vh) {
+  var sy=vh*(0.2+Math.random()*0.35),dur=7000+Math.random()*3000,sx=vw+20,ex=-cfg.width-20;
+  img.style.top=sy+'px';img.style.left='0px';
+  var t0=null;
+  function f(ts){if(!t0)t0=ts;var t=Math.min((ts-t0)/dur,1),e=t<0.5?2*t*t:-1+(4-2*t)*t;
+    var op=Math.min(t/0.1,1,(1-t)/0.1)*cfg.maxOp;
+    img.style.opacity=op.toFixed(3);img.style.transform='translate('+(sx+(ex-sx)*e).toFixed(1)+'px,'+(-30*t).toFixed(1)+'px) scaleX(-1)';
+    if(t<1)requestAnimationFrame(f);else qClean(img);}requestAnimationFrame(f);}
+
+function qDart(img,cfg,vw,vh) {
+  var fl=Math.random()>0.5,dur=2500+Math.random()*1500,sx=fl?-cfg.width:vw+cfg.width,ex=fl?(vw+cfg.width):-cfg.width;
+  var sy=vh*(0.05+Math.random()*0.4),ey=sy+(Math.random()>0.5?80:-80);
+  img.style.top=sy+'px';img.style.left='0px';
+  var t0=null;
+  function f(ts){if(!t0)t0=ts;var t=Math.min((ts-t0)/dur,1),e=t*t*(3-2*t);
+    var op=Math.min(t/0.12,1,(1-t)/0.12)*cfg.maxOp;
+    img.style.opacity=op.toFixed(3);img.style.transform='translate('+(sx+(ex-sx)*e).toFixed(1)+'px,'+(ey-sy==0?0:(sy+(ey-sy)*t-sy)).toFixed(1)+'px)'+(fl?'':' scaleX(-1)');
+    if(t<1)requestAnimationFrame(f);else qClean(img);}requestAnimationFrame(f);}
+
 setTimeout(spawnShip, 5000);
 
 /* ============================================================
@@ -856,10 +904,11 @@ function renderQuestion() {
   var imgWrap = document.getElementById('q-image');
   var imgEl   = document.getElementById('q-image-img');
   if (q.image) {
-    imgEl.src = q.image;
+    setImgSrc(imgEl, q.image);
     imgWrap.classList.add('has-image');
   } else {
     imgEl.src = '';
+    imgEl.style.visibility = 'visible';
     imgWrap.classList.remove('has-image');
   }
 
@@ -878,7 +927,7 @@ function renderQuestion() {
       var btn = document.createElement('button');
       btn.className = 'q-answer image-answer';
       var img = document.createElement('img');
-      img.src = ans.image || '';
+      if (ans.image) { setImgSrc(img, ans.image); } else { img.src = ''; }
       img.alt = ans.caption || ans.text || '';
       var cap = document.createElement('div');
       cap.className = 'q-answer-caption';

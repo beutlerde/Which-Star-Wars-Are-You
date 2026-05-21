@@ -470,6 +470,36 @@ html, body {
 /* ============================================================
    GUAPO — visit count + personalized greeting
    ============================================================ */
+/* ============================================================
+   IMAGE HELPER — tries .png then .PNG automatically
+   Solves the uppercase/lowercase extension problem forever.
+   Usage: setImgSrc(imgElement, './tatooine') — no extension needed
+   Or:    setImgSrc(imgElement, './tatooine.PNG') — strips and retries
+   ============================================================ */
+function setImgSrc(el, path) {
+  /* Strip any existing extension so we always start clean */
+  var base = path.replace(/\.[Pp][Nn][Gg]$/,'').replace(/\.[Jj][Pp][Gg]$/,'').replace(/\.[Ww][Ee][Bb][Pp]$/,'');
+  /* Determine original extension if present */
+  var extMatch = path.match(/(\.[Pp][Nn][Gg]|\.[Jj][Pp][Gg]|\.[Ww][Ee][Bb][Pp])$/);
+  var primaryExt   = extMatch ? extMatch[1].toLowerCase() : '.png';
+  var secondaryExt = primaryExt === '.png' ? '.PNG' : '.png';
+
+  el.onerror = function() {
+    /* First attempt failed — try the other casing */
+    el.onerror = function() {
+      /* Both failed — try .jpg and .JPG as last resort */
+      el.onerror = function() {
+        el.onerror = null;
+        /* Give up silently — broken image hidden */
+        el.style.display = 'none';
+      };
+      el.src = base + '.JPG';
+    };
+    el.src = base + secondaryExt;
+  };
+  el.src = base + primaryExt;
+}
+
 var GUAPO_NAME = 'Guapo';
 var visitKey   = 'sw_visit_count';
 var visits     = 0;
@@ -537,7 +567,7 @@ function getYodaQuote() {
    ============================================================ */
 var PD = {
   tatooine: {
-    img:'./tatooine.PNG', label:'TAKE THE QUIZ',
+    img:'./tatooine.png', label:'TAKE THE QUIZ',
     planet:'TATOOINE', sub:'Which character are you?',
     color:'#FFB055', glowColor:'rgba(255,150,40,0.55)',
     g1:'rgba(255,150,40,1)', g2:'rgba(200,80,0,0.5)',
@@ -549,7 +579,7 @@ var PD = {
     bladeColor:'#FF9933'
   },
   coruscant: {
-    img:'./coruscant.PNG', label:'FORCE MAP',
+    img:'./coruscant.png', label:'FORCE MAP',
     planet:'CORUSCANT', sub:'Your galaxy',
     color:'#44CCFF', glowColor:'rgba(0,180,255,0.45)',
     g1:'rgba(0,190,255,1)', g2:'rgba(0,100,220,0.5)',
@@ -561,7 +591,7 @@ var PD = {
     bladeColor:'#44CCFF'
   },
   dagobah: {
-    img:'./dagobah.PNG', label:'TRANSMISSIONS',
+    img:'./dagobah.png', label:'TRANSMISSIONS',
     planet:'DAGOBAH', sub:'Messages from Dad',
     color:'#44EE88', glowColor:'rgba(0,200,100,0.45)',
     g1:'rgba(0,210,110,1)', g2:'rgba(0,130,60,0.5)',
@@ -573,7 +603,7 @@ var PD = {
     bladeColor:'#44EE88'
   },
   hoth: {
-    img:'./hoth.PNG', label:'ARCHIVE',
+    img:'./hoth.png', label:'ARCHIVE',
     planet:'HOTH', sub:'Past results',
     color:'#AADDFF', glowColor:'rgba(150,210,255,0.4)',
     g1:'rgba(160,215,255,1)', g2:'rgba(80,160,230,0.45)',
@@ -615,7 +645,7 @@ Object.keys(PD).forEach(function(key) {
 
   var img = document.createElement('img');
   img.className = 'pi';
-  img.src = d.img;
+  setImgSrc(img, d.img);
   /* Planet rotation — direction via animation-direction */
   img.style.setProperty('--rot-dur', d.rotDur);
   img.style.animationDirection = (d.rotDir === '-1') ? 'reverse' : 'normal';
@@ -876,65 +906,142 @@ function floatTick() {
 }
 
 /* ============================================================
-   PASSING SHIPS — X-Wing and Star Destroyer silhouettes
+   SHIP ANIMATION SYSTEM — real images, custom per-ship behavior
    ============================================================ */
-var SHIP_SVGS = {
-  xwing: '<svg viewBox="0 0 60 30" fill="none" xmlns="http://www.w3.org/2000/svg" width="60" height="30"><g opacity="0.55" fill="rgba(180,210,255,0.8)"><!-- Body --><rect x="24" y="12" width="12" height="6" rx="1"/><rect x="28" y="10" width="4" height="10" rx="1"/><!-- Wings --><polygon points="12,4 26,13 24,17 8,20"/><!-- Wing 2 --><polygon points="12,26 26,17 24,13 8,10"/><!-- Wing 3 --><polygon points="48,4 34,13 36,17 52,20"/><!-- Wing 4 --><polygon points="48,26 34,17 36,13 52,10"/><!-- Engines --><circle cx="18" cy="12" r="1.5" fill="rgba(255,150,80,0.9)"/><circle cx="18" cy="18" r="1.5" fill="rgba(255,150,80,0.9)"/><circle cx="42" cy="12" r="1.5" fill="rgba(255,150,80,0.9)"/><circle cx="42" cy="18" r="1.5" fill="rgba(255,150,80,0.9)"/></g></svg>',
-  destroyer: '<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="30"><g opacity="0.4" fill="rgba(160,180,200,0.7)"><!-- Hull --><polygon points="0,15 30,5 80,12 80,18 30,25"/><!-- Bridge --><polygon points="62,12 70,10 75,15 70,20 62,18"/><!-- Detail lines --><line x1="10" y1="13" x2="60" y2="11" stroke="rgba(200,220,255,0.3)" stroke-width="0.5"/><line x1="10" y1="17" x2="60" y2="19" stroke="rgba(200,220,255,0.3)" stroke-width="0.5"/></g></svg>',
-  falcon: '<svg viewBox="0 0 50 35" fill="none" xmlns="http://www.w3.org/2000/svg" width="50" height="35"><g opacity="0.5" fill="rgba(180,190,200,0.8)"><!-- Main disc --><ellipse cx="22" cy="18" rx="18" ry="14"/><!-- Cockpit arm --><rect x="32" y="14" width="14" height="8" rx="4"/><!-- Cockpit --><ellipse cx="46" cy="18" rx="4" ry="4" fill="rgba(80,120,180,0.6)"/><!-- Engine glow --><circle cx="5" cy="18" r="3" fill="rgba(100,180,255,0.5)"/></g></svg>'
+var SHIP_CONFIGS = {
+  destroyer:  { file:'./destroyer.png',  width:220, maxOp:0.55, anim:'drift'    },
+  xwing:      { file:'./xwing.png',      width:110, maxOp:0.75, anim:'approach' },
+  falcon:     { file:'./falcon.png',     width:130, maxOp:0.65, anim:'flee'     },
+  tiefighter: { file:'./tiefighter.png', width:70,  maxOp:0.60, anim:'dart'     }
 };
 
 var shipLayer = document.getElementById('ship-layer');
-var shipQueue = [];
 
 function spawnShip() {
-  var vw = window.innerWidth;
-  var vh = window.innerHeight;
-  var types = ['xwing','falcon','destroyer','xwing','xwing']; /* xwing most common */
-  var type = types[Math.floor(Math.random()*types.length)];
-  var goRight = Math.random() > 0.5;
+  var vw  = window.innerWidth;
+  var vh  = window.innerHeight;
+  var roll = Math.random();
+  var type;
+  if      (roll < 0.30) type = 'xwing';
+  else if (roll < 0.55) type = 'tiefighter';
+  else if (roll < 0.75) type = 'falcon';
+  else                  type = 'destroyer';
 
-  var ship = document.createElement('div');
-  ship.className = 'ship';
-  ship.innerHTML = SHIP_SVGS[type];
+  var cfg = SHIP_CONFIGS[type];
+  var img = document.createElement('img');
+  setImgSrc(img, cfg.file);
+  img.style.cssText = 'position:absolute;pointer-events:none;opacity:0;width:' + cfg.width + 'px;height:auto;';
+  shipLayer.appendChild(img);
 
-  /* Random vertical position — upper 65% of screen */
-  var topPct = 5 + Math.random() * 55;
-  var startX = goRight ? -100 : (vw + 100);
-  var endX   = goRight ? (vw + 100) : -100;
-  var duration = 6000 + Math.random() * 8000; /* 6-14 seconds */
-  var yWobble = (Math.random() - 0.5) * 30;
-
-  ship.style.cssText =
-    'position:absolute;top:' + topPct + '%;left:0;opacity:0;' +
-    'transform:translateX(' + startX + 'px) scaleX(' + (goRight ? 1 : -1) + ')';
-
-  if (type === 'destroyer') ship.style.opacity = '0.35';
-  shipLayer.appendChild(ship);
-
-  var start = null;
-  function animShip(ts) {
-    if (!start) start = ts;
-    var el = ts - start;
-    var t  = Math.min(el / duration, 1);
-    /* ease in-out */
-    var e  = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
-    var x  = startX + (endX - startX) * e;
-    var y  = Math.sin(t * Math.PI) * yWobble;
-    /* Fade in/out at edges */
-    var op = Math.min(t * 8, 1, (1 - t) * 8) * 0.7;
-    ship.style.opacity = op.toFixed(3);
-    ship.style.transform = 'translateX(' + x.toFixed(1) + 'px) translateY(' + y.toFixed(1) + 'px) scaleX(' + (goRight ? 1 : -1) + ')';
-    if (t < 1) {
-      requestAnimationFrame(animShip);
-    } else {
-      if (ship.parentNode) ship.parentNode.removeChild(ship);
+  if      (cfg.anim === 'drift')    animDrift(img, cfg, vw, vh);
+  else if (cfg.anim === 'approach') animApproach(img, cfg, vw, vh);
+  else if (cfg.anim === 'flee')     animFlee(img, cfg, vw, vh);
+  else if (cfg.anim === 'dart') {
+    animDart(img, cfg, vw, vh);
+    if (Math.random() < 0.35) {
+      setTimeout(function() {
+        var img2 = document.createElement('img');
+        setImgSrc(img2, cfg.file);
+        img2.style.cssText = 'position:absolute;pointer-events:none;opacity:0;width:' + Math.round(cfg.width*0.85) + 'px;height:auto;';
+        shipLayer.appendChild(img2);
+        animDart(img2, cfg, vw, vh);
+      }, 800);
     }
   }
-  requestAnimationFrame(animShip);
+  setTimeout(spawnShip, 18000 + Math.random() * 22000);
+}
 
-  /* Schedule next ship — 20-45 seconds */
-  setTimeout(spawnShip, 20000 + Math.random() * 25000);
+function shipCleanup(el) { if (el && el.parentNode) el.parentNode.removeChild(el); }
+
+/* Destroyer — majestic slow drift left to right */
+function animDrift(img, cfg, vw, vh) {
+  var topY = vh * (0.08 + Math.random() * 0.25);
+  var dur  = 18000 + Math.random() * 8000;
+  var sx   = -cfg.width - 20, ex = vw + 20;
+  img.style.top = topY + 'px'; img.style.left = sx + 'px';
+  var t0 = null;
+  function frame(ts) {
+    if (!t0) t0 = ts;
+    var t = Math.min((ts-t0)/dur, 1);
+    var e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+    var op = Math.min(t/0.06, 1, (1-t)/0.06) * cfg.maxOp;
+    img.style.opacity   = op.toFixed(3);
+    img.style.transform = 'translateX(' + (sx + (ex-sx)*e).toFixed(1) + 'px) translateY(' + (40*t).toFixed(1) + 'px)';
+    if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* X-Wing — approaches from distance, banks away */
+function animApproach(img, cfg, vw, vh) {
+  var cx = vw * (0.3 + Math.random()*0.4);
+  var cy = vh * (0.15 + Math.random()*0.3);
+  var dur = 4000 + Math.random()*2000;
+  var bankDir = Math.random() > 0.5 ? 1 : -1;
+  img.style.left = (cx - cfg.width/2) + 'px';
+  img.style.top  = cy + 'px';
+  var t0 = null;
+  function frame(ts) {
+    if (!t0) t0 = ts;
+    var t = Math.min((ts-t0)/dur, 1);
+    var scale, op, tx, ty;
+    if (t < 0.55) {
+      var ta = t/0.55;
+      scale = 0.3 + 0.8*ta; op = Math.min(ta*3,1)*cfg.maxOp; tx = 0; ty = 0;
+    } else {
+      var tb = (t-0.55)/0.45;
+      scale = 1.1 - 0.95*tb; op = Math.max(0, cfg.maxOp*(1-tb*1.2));
+      tx = bankDir * vw * 0.4 * tb * tb; ty = -vh*0.15*tb;
+    }
+    img.style.opacity   = op.toFixed(3);
+    img.style.transform = 'translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px) scale('+scale.toFixed(3)+')';
+    if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* Falcon — enters from right, flees to the left */
+function animFlee(img, cfg, vw, vh) {
+  var topY = vh * (0.2 + Math.random()*0.35);
+  var dur  = 7000 + Math.random()*3000;
+  var sx   = vw + 20, ex = -cfg.width - 20;
+  img.style.top = topY + 'px'; img.style.left = '0px';
+  var t0 = null;
+  function frame(ts) {
+    if (!t0) t0 = ts;
+    var t = Math.min((ts-t0)/dur, 1);
+    var e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+    var x = sx + (ex-sx)*e;
+    var op = Math.min(t/0.1, 1, (1-t)/0.1) * cfg.maxOp;
+    img.style.opacity   = op.toFixed(3);
+    img.style.transform = 'translate('+x.toFixed(1)+'px,'+(-30*t).toFixed(1)+'px) scaleX(-1)';
+    if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* TIE Fighter — fast diagonal dart */
+function animDart(img, cfg, vw, vh) {
+  var fromLeft = Math.random() > 0.5;
+  var dur   = 2500 + Math.random()*1500;
+  var sx    = fromLeft ? -cfg.width : vw + cfg.width;
+  var ex    = fromLeft ? (vw + cfg.width) : -cfg.width;
+  var sy    = vh * (0.05 + Math.random()*0.4);
+  var ey    = sy + (Math.random()>0.5 ? 80 : -80);
+  img.style.top = sy + 'px'; img.style.left = '0px';
+  var t0 = null;
+  function frame(ts) {
+    if (!t0) t0 = ts;
+    var t = Math.min((ts-t0)/dur, 1);
+    var e = t*t*(3-2*t);
+    var x = sx + (ex-sx)*e;
+    var y = sy + (ey-sy)*t;
+    var op = Math.min(t/0.12, 1, (1-t)/0.12) * cfg.maxOp;
+    img.style.opacity   = op.toFixed(3);
+    img.style.transform = 'translate('+x.toFixed(1)+'px,'+(y-sy).toFixed(1)+'px)'+(fromLeft?'':' scaleX(-1)');
+    if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
+  }
+  requestAnimationFrame(frame);
 }
 
 /* ============================================================
@@ -1154,7 +1261,7 @@ function launchLS(key) {
   lsCanvas.width = window.innerWidth; lsCanvas.height = window.innerHeight;
 
   var pimg = document.getElementById('ls-pimg');
-  pimg.src = d.img;
+  setImgSrc(pimg, d.img);
   pimg.style.setProperty('--pg1', d.g1);
   pimg.style.setProperty('--pg2', d.g2);
   document.getElementById('ls-pname').textContent = d.planet;
