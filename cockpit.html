@@ -6,7 +6,7 @@
 <title>Star Wars — Which Character Are You?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -17,30 +17,63 @@ html, body {
   background:#000008;
   -webkit-font-smoothing:antialiased;
   user-select:none; -webkit-user-select:none;
+  font-family:'Rajdhani',sans-serif;
 }
 
-/* ── Layer 1: deep space ── */
-#space-bg {
+/* ============================================================
+   LAYERS
+   ============================================================ */
+
+/* Layer 1 — deep space gradient */
+#bg {
   position:fixed; inset:0; z-index:1;
-  background: radial-gradient(ellipse 140% 120% at 50% 30%,
-    #040C1E 0%, #020610 50%, #000308 100%);
+  background:
+    radial-gradient(ellipse 160% 80% at 30% 60%, #0A0520 0%, transparent 55%),
+    radial-gradient(ellipse 120% 60% at 80% 20%, #050D1F 0%, transparent 50%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, #02061A 0%, #000008 100%);
 }
 
-/* ── Layer 2: stars, nebulae, planets, text ── */
-#space-layer {
+/* Layer 2 — nebulae (parallax group far) */
+#nebula-layer {
   position:fixed; inset:0; z-index:2;
-  overflow:hidden;
+  pointer-events:none;
+  will-change:transform;
+}
+
+/* Layer 3 — stars far */
+#stars-far {
+  position:fixed; inset:0; z-index:3;
+  pointer-events:none;
+  will-change:transform;
+}
+
+/* Layer 4 — stars near */
+#stars-near {
+  position:fixed; inset:0; z-index:4;
+  pointer-events:none;
+  will-change:transform;
+}
+
+/* Layer 5 — planets */
+#planet-layer {
+  position:fixed; inset:0; z-index:5;
+  pointer-events:none;
+  will-change:transform;
+}
+
+/* Layer 6 — UI (title, labels — no parallax) */
+#ui-layer {
+  position:fixed; inset:0; z-index:8;
   pointer-events:none;
 }
 
-/* ── Layer 3: cockpit PNG foreground ── */
-#cockpit-frame {
-  position:fixed; inset:0; z-index:10;
+/* Layer 7 — bottom vignette */
+#vignette {
+  position:fixed; inset:0; z-index:7;
   pointer-events:none;
-  background-image: url('./cockpit-bg.PNG');
-  background-size: auto 52vh;
-  background-position: center bottom;
-  background-repeat: no-repeat;
+  background:
+    radial-gradient(ellipse 100% 40% at 50% 100%, rgba(0,0,8,0.85) 0%, transparent 100%),
+    radial-gradient(ellipse 100% 25% at 50% 0%, rgba(0,0,8,0.5) 0%, transparent 100%);
 }
 
 /* ============================================================
@@ -58,149 +91,170 @@ html, body {
 /* ============================================================
    NEBULAE
    ============================================================ */
-.nebula {
+.neb {
   position:absolute; border-radius:50%;
-  filter:blur(70px); pointer-events:none;
-  animation: nd var(--nd) ease-in-out infinite alternate;
+  filter:blur(80px); pointer-events:none;
+  animation: nbr var(--nd) ease-in-out infinite alternate;
 }
-@keyframes nd {
-  from { transform:translate(0,0) scale(1); }
-  to   { transform:translate(18px,-12px) scale(1.1); }
+@keyframes nbr {
+  from { opacity:var(--nlo); transform:scale(1); }
+  to   { opacity:var(--nhi); transform:scale(1.08); }
 }
 
 /* ============================================================
-   TITLE
+   TITLE BLOCK
    ============================================================ */
-#title-block {
+#title-wrap {
   position:absolute;
-  top:3%; left:50%;
-  transform:translateX(-50%);
-  text-align:center; z-index:5;
-  pointer-events:none; white-space:nowrap;
-  animation: tfi 1.8s ease-out forwards;
+  top:0; left:0; right:0;
+  padding: env(safe-area-inset-top, 12px) 24px 0;
+  padding-top: max(env(safe-area-inset-top, 12px), 52px);
+  text-align:center;
+  pointer-events:none;
 }
-@keyframes tfi {
-  from { opacity:0; transform:translateX(-50%) translateY(-12px); }
-  to   { opacity:1; transform:translateX(-50%) translateY(0); }
-}
-.t-eye {
+
+.t-crawl {
   font-family:'Orbitron',monospace;
   font-size:7px; letter-spacing:3.5px;
-  color:rgba(255,255,255,0.22);
-  text-transform:uppercase; margin-bottom:5px;
+  color:rgba(255,255,255,0.2);
+  text-transform:uppercase;
+  margin-bottom:8px;
+  opacity:0;
+  animation: fadeup 1s ease-out 0.3s forwards;
 }
-.t-main {
+.t-title {
   font-family:'Orbitron',monospace;
-  font-weight:900; letter-spacing:3px;
-  text-transform:uppercase; line-height:1.25;
+  font-weight:900;
+  font-size:clamp(22px, 8vw, 32px);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  line-height:1.15;
   color:white;
   text-shadow:
-    0 0 30px rgba(255,150,30,0.6),
-    0 0 70px rgba(255,100,0,0.25),
-    0 2px 6px rgba(0,0,0,0.95);
+    0 0 40px rgba(255,160,40,0.45),
+    0 0 80px rgba(255,100,0,0.15),
+    0 3px 8px rgba(0,0,0,0.9);
+  opacity:0;
+  animation: fadeup 1s ease-out 0.7s forwards;
 }
-.t-rule {
-  width:44px; height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,150,30,0.6),transparent);
-  margin:7px auto;
+.t-line {
+  width:0; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,160,40,0.7), transparent);
+  margin:10px auto;
+  animation: linegrow 0.8s ease-out 1.4s forwards;
+}
+@keyframes linegrow {
+  from { width:0; opacity:0; }
+  to   { width:60%; opacity:1; }
 }
 .t-sub {
   font-family:'Rajdhani',sans-serif;
-  font-size:9px; letter-spacing:2.5px;
-  color:rgba(255,255,255,0.3);
+  font-size:10px; letter-spacing:3px;
+  color:rgba(255,255,255,0.28);
   text-transform:uppercase;
+  opacity:0;
+  animation: fadeup 0.8s ease-out 1.8s forwards;
+}
+
+@keyframes fadeup {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
 }
 
 /* ============================================================
-   YODA QUOTE
-   ============================================================ */
-#yoda-block {
-  position:absolute;
-  left:50%; transform:translateX(-50%);
-  text-align:center; z-index:5;
-  pointer-events:none; white-space:nowrap;
-  animation: yfi 2.5s ease-out 1.5s both;
-}
-@keyframes yfi {
-  from { opacity:0; transform:translateX(-50%) translateY(8px); }
-  to   { opacity:1; transform:translateX(-50%) translateY(0); }
-}
-.y-quote {
-  font-family:'Rajdhani',sans-serif;
-  font-weight:500; letter-spacing:1px;
-  color:rgba(0,215,255,0.5);
-  font-style:italic;
-}
-.y-attr {
-  font-family:'Orbitron',monospace;
-  font-size:7px; letter-spacing:2px;
-  color:rgba(255,255,255,0.18);
-  margin-top:3px; text-transform:uppercase;
-}
-
-/* ============================================================
-   PLANETS — real image-based
+   PLANETS
    ============================================================ */
 .pw {
   position:absolute;
   cursor:pointer;
   pointer-events:all;
   z-index:6;
+  /* entrance animation */
+  opacity:0;
 }
+.pw.entered { opacity:1; }
 
-/* atmospheric glow behind the planet image */
+/* atmospheric glow */
 .pg {
-  position:absolute;
-  border-radius:50%;
+  position:absolute; border-radius:50%;
   top:50%; left:50%;
   transform:translate(-50%,-50%);
-  filter:blur(22px);
+  filter:blur(24px);
   pointer-events:none;
   animation: gp var(--gd,3.5s) ease-in-out infinite alternate;
 }
 @keyframes gp {
-  from { opacity:0.4; transform:translate(-50%,-50%) scale(0.8); }
-  to   { opacity:0.9; transform:translate(-50%,-50%) scale(1.2); }
+  from { opacity:0.35; transform:translate(-50%,-50%) scale(0.78); }
+  to   { opacity:0.85; transform:translate(-50%,-50%) scale(1.22); }
 }
 
 /* planet image */
 .pi {
-  position:absolute;
-  top:0; left:0;
+  position:absolute; top:0; left:0;
   width:100%; height:100%;
   object-fit:contain;
   pointer-events:none;
-  filter: drop-shadow(0 0 12px var(--shadow-color,rgba(255,255,255,0.3)));
-  transition:transform 0.15s ease, filter 0.15s ease;
+  transition:transform 0.2s ease, filter 0.2s ease;
+  filter: drop-shadow(0 0 10px var(--sc,rgba(255,255,255,0.3)));
 }
-.pw:active .pi {
-  transform:scale(0.9);
-  filter: drop-shadow(0 0 20px var(--shadow-color,rgba(255,255,255,0.5))) brightness(1.1);
-}
+.pw.locked .pi { filter: drop-shadow(0 0 20px var(--sc)) brightness(1.15); }
 
-/* tap ripple */
-.prip {
-  position:absolute;
-  top:50%; left:50%;
+/* targeting reticle — 4 corner brackets */
+.reticle {
+  position:absolute; top:50%; left:50%;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+.pw.locked .reticle { opacity:1; }
+
+.ret-corner {
+  position:absolute; width:12px; height:12px;
+  border-color:var(--rc,rgba(255,255,255,0.8));
+  border-style:solid;
+  transition:all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.ret-tl { top:0; left:0;
+  border-width:2px 0 0 2px;
+  transform:translate(-140%,-140%); }
+.ret-tr { top:0; right:0;
+  border-width:2px 2px 0 0;
+  transform:translate(40%,-140%); }
+.ret-bl { bottom:0; left:0;
+  border-width:0 0 2px 2px;
+  transform:translate(-140%,40%); }
+.ret-br { bottom:0; right:0;
+  border-width:0 2px 2px 0;
+  transform:translate(40%,40%); }
+
+.pw.locked .ret-tl { transform:translate(-108%,-108%); }
+.pw.locked .ret-tr { transform:translate(8%,-108%); }
+.pw.locked .ret-bl { transform:translate(-108%,8%); }
+.pw.locked .ret-br { transform:translate(8%,8%); }
+
+/* tap pulse */
+.pulse-ring {
+  position:absolute; top:50%; left:50%;
   border-radius:50%;
-  border:1.5px solid rgba(255,255,255,0.5);
-  transform:translate(-50%,-50%) scale(0.7);
+  border:1.5px solid rgba(255,255,255,0.6);
+  transform:translate(-50%,-50%) scale(0.8);
   opacity:0; pointer-events:none;
 }
-.pw.tap .prip {
-  animation:rip 0.55s ease-out forwards;
+.pw.tapping .pulse-ring {
+  animation:pring 0.55s ease-out forwards;
 }
-@keyframes rip {
-  from { opacity:0.85; transform:translate(-50%,-50%) scale(0.7); }
-  to   { opacity:0;   transform:translate(-50%,-50%) scale(2.4); }
+@keyframes pring {
+  from { opacity:0.9; transform:translate(-50%,-50%) scale(0.8); }
+  to   { opacity:0;   transform:translate(-50%,-50%) scale(2.6); }
 }
 
-/* label */
+/* planet label */
 .plabel {
   position:absolute; left:50%;
   transform:translateX(-50%);
   text-align:center; white-space:nowrap;
   pointer-events:none;
+  transition:opacity 0.3s ease;
 }
 .pm {
   display:block;
@@ -212,9 +266,91 @@ html, body {
 .ps {
   display:block;
   font-family:'Rajdhani',sans-serif;
-  font-weight:500; letter-spacing:1px;
-  opacity:0.62;
+  font-weight:400; letter-spacing:1.5px;
+  opacity:0.6;
   text-shadow:0 1px 6px rgba(0,0,0,1);
+}
+
+/* ============================================================
+   PLANET INFO CARD — appears when locked
+   ============================================================ */
+#info-card {
+  position:absolute;
+  left:50%; bottom:18%;
+  transform:translateX(-50%) translateY(20px);
+  text-align:center;
+  pointer-events:none;
+  opacity:0;
+  transition:all 0.4s cubic-bezier(0.34,1.2,0.64,1);
+  z-index:9;
+  white-space:nowrap;
+}
+#info-card.visible {
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+.ic-planet {
+  font-family:'Orbitron',monospace;
+  font-size:11px; letter-spacing:5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+  margin-bottom:4px;
+}
+.ic-action {
+  font-family:'Orbitron',monospace;
+  font-weight:900;
+  font-size:clamp(18px,5vw,24px);
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:white;
+  text-shadow:0 0 20px var(--ic-color,white), 0 2px 6px rgba(0,0,0,0.9);
+}
+.ic-sub {
+  font-family:'Rajdhani',sans-serif;
+  font-size:11px; letter-spacing:2px;
+  color:rgba(255,255,255,0.38);
+  text-transform:uppercase;
+  margin-top:3px;
+}
+.ic-tap {
+  font-family:'Orbitron',monospace;
+  font-size:8px; letter-spacing:3px;
+  color:rgba(255,255,255,0.22);
+  text-transform:uppercase;
+  margin-top:8px;
+  animation: blink-tap 1.5s ease-in-out infinite;
+}
+@keyframes blink-tap {
+  0%,100% { opacity:0.22; }
+  50%      { opacity:0.6; }
+}
+
+/* ============================================================
+   YODA HINT — appears after 8s idle
+   ============================================================ */
+#yoda-hint {
+  position:absolute;
+  bottom:8%; left:50%;
+  transform:translateX(-50%);
+  text-align:center;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 1.2s ease;
+  z-index:9;
+  white-space:nowrap;
+}
+#yoda-hint.show { opacity:1; }
+.yh-quote {
+  font-family:'Rajdhani',sans-serif;
+  font-weight:500; letter-spacing:1px;
+  color:rgba(0,215,255,0.45);
+  font-style:italic;
+}
+.yh-attr {
+  font-family:'Orbitron',monospace;
+  font-size:7px; letter-spacing:2px;
+  color:rgba(255,255,255,0.15);
+  margin-top:4px; text-transform:uppercase;
 }
 
 /* ============================================================
@@ -224,6 +360,7 @@ html, body {
   position:fixed; inset:0; z-index:100;
   opacity:0; pointer-events:none;
   background:#000008;
+  transition:opacity 0.1s;
 }
 #ls.on { opacity:1; pointer-events:all; }
 #ls-canvas { position:absolute; inset:0; width:100%; height:100%; }
@@ -232,45 +369,44 @@ html, body {
   position:absolute; inset:0;
   display:flex; flex-direction:column;
   align-items:center; justify-content:center;
-  opacity:0; transition:opacity 0.65s ease;
+  opacity:0; transition:opacity 0.7s ease;
   padding:28px;
 }
 #ls-dest.show { opacity:1; }
 
-#ls-planet-img {
-  object-fit:contain;
-  margin-bottom:28px;
-  flex-shrink:0;
+#ls-pimg {
+  object-fit:contain; flex-shrink:0;
+  margin-bottom:24px;
   animation:lspp 2.2s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 30px var(--pg1)) drop-shadow(0 0 60px var(--pg2));
+  filter:drop-shadow(0 0 30px var(--pg1)) drop-shadow(0 0 60px var(--pg2));
 }
 @keyframes lspp {
-  from { filter:drop-shadow(0 0 25px var(--pg1)) drop-shadow(0 0 50px var(--pg2)); transform:scale(1); }
-  to   { filter:drop-shadow(0 0 50px var(--pg1)) drop-shadow(0 0 100px var(--pg2)); transform:scale(1.04); }
-}
-
-.ls-title {
-  font-family:'Orbitron',monospace;
-  font-size:clamp(16px,5.5vw,26px);
-  font-weight:900; letter-spacing:5px;
-  text-transform:uppercase; color:white;
-  margin-bottom:6px; text-align:center;
+  from { filter:drop-shadow(0 0 20px var(--pg1)) drop-shadow(0 0 40px var(--pg2)); transform:scale(1); }
+  to   { filter:drop-shadow(0 0 55px var(--pg1)) drop-shadow(0 0 110px var(--pg2)); transform:scale(1.05); }
 }
 .ls-planet-name {
-  font-family:'Rajdhani',sans-serif;
-  font-size:13px; letter-spacing:4px;
+  font-family:'Orbitron',monospace;
+  font-size:10px; letter-spacing:6px;
   text-transform:uppercase;
+  margin-bottom:6px; text-align:center;
+  opacity:0.5;
+}
+.ls-title {
+  font-family:'Orbitron',monospace;
+  font-size:clamp(18px,6vw,28px);
+  font-weight:900; letter-spacing:4px;
+  text-transform:uppercase; color:white;
   margin-bottom:6px; text-align:center;
 }
 .ls-sub {
   font-family:'Rajdhani',sans-serif;
-  font-size:12px; letter-spacing:2px;
-  color:rgba(255,255,255,0.38);
+  font-size:12px; letter-spacing:2.5px;
+  color:rgba(255,255,255,0.35);
   text-transform:uppercase;
-  margin-bottom:38px; text-align:center;
+  margin-bottom:40px; text-align:center;
 }
 .ls-btn {
-  padding:15px 44px;
+  padding:15px 48px;
   background:rgba(255,255,255,0.05);
   border:1px solid rgba(255,255,255,0.2);
   border-radius:4px;
@@ -283,23 +419,45 @@ html, body {
 }
 .ls-btn:active {
   background:rgba(255,255,255,0.14);
-  border-color:rgba(255,255,255,0.55);
+  border-color:rgba(255,255,255,0.6);
 }
 
 </style>
 </head>
 <body>
 
-<div id="space-bg"></div>
-<div id="space-layer"></div>
-<div id="cockpit-frame"></div>
+<div id="bg"></div>
+<div id="nebula-layer"></div>
+<div id="stars-far"></div>
+<div id="stars-near"></div>
+<div id="planet-layer"></div>
+<div id="vignette"></div>
+<div id="ui-layer">
+  <div id="title-wrap">
+    <div class="t-crawl">A long time ago in a galaxy far, far away&hellip;</div>
+    <div class="t-title">WHICH STAR WARS<br>CHARACTER ARE YOU?</div>
+    <div class="t-line"></div>
+    <div class="t-sub">Choose your destination</div>
+  </div>
+  <div id="info-card">
+    <div class="ic-planet" id="ic-planet"></div>
+    <div class="ic-action" id="ic-action"></div>
+    <div class="ic-sub" id="ic-sub"></div>
+    <div class="ic-tap">TAP TO JUMP TO HYPERSPACE</div>
+  </div>
+  <div id="yoda-hint">
+    <div class="yh-quote">&ldquo;Waiting, are you? Choose, you must.&rdquo;</div>
+    <div class="yh-attr">&mdash; Master Yoda</div>
+  </div>
+</div>
 
+<!-- Lightspeed -->
 <div id="ls">
   <canvas id="ls-canvas"></canvas>
   <div id="ls-dest">
-    <img id="ls-planet-img" src="" alt="">
-    <div class="ls-title" id="ls-title"></div>
+    <img id="ls-pimg" src="" alt="">
     <div class="ls-planet-name" id="ls-pname"></div>
+    <div class="ls-title" id="ls-title"></div>
     <div class="ls-sub" id="ls-sub"></div>
     <button class="ls-btn" id="ls-btn">ENTER &rarr;</button>
   </div>
@@ -308,88 +466,84 @@ html, body {
 <script>
 
 /* ============================================================
-   PLANET CONFIG
+   PLANET DATA
    ============================================================ */
 var PD = {
   tatooine: {
-    img:        './tatooine.PNG',
-    label:      'TAKE THE QUIZ',
-    planetName: 'TATOOINE',
-    sub:        'Which character are you?',
-    color:      '#FFB055',
-    glowColor:  'rgba(255,150,40,0.5)',
-    g1:         'rgba(255,150,40,1)',
-    g2:         'rgba(200,90,0,0.5)',
-    shadow:     'rgba(255,140,30,0.55)',
-    glowDur:    '3.2s',
-    href:       'quiz.html'
+    img:'./tatooine.PNG', label:'TAKE THE QUIZ',
+    planet:'TATOOINE', sub:'Which character are you?',
+    color:'#FFB055', glowColor:'rgba(255,150,40,0.55)',
+    g1:'rgba(255,150,40,1)', g2:'rgba(200,80,0,0.5)',
+    shadow:'rgba(255,140,30,0.6)', retColor:'rgba(255,180,80,0.9)',
+    glowDur:'3.0s', href:'quiz.html', main:true
   },
   coruscant: {
-    img:        './coruscant.PNG',
-    label:      'FORCE MAP',
-    planetName: 'CORUSCANT',
-    sub:        'Your galaxy',
-    color:      '#44CCFF',
-    glowColor:  'rgba(0,180,255,0.45)',
-    g1:         'rgba(0,190,255,1)',
-    g2:         'rgba(0,100,220,0.5)',
-    shadow:     'rgba(0,180,255,0.55)',
-    glowDur:    '4s',
-    href:       '#'
+    img:'./coruscant.PNG', label:'FORCE MAP',
+    planet:'CORUSCANT', sub:'Your galaxy',
+    color:'#44CCFF', glowColor:'rgba(0,180,255,0.45)',
+    g1:'rgba(0,190,255,1)', g2:'rgba(0,100,220,0.5)',
+    shadow:'rgba(0,180,255,0.6)', retColor:'rgba(80,210,255,0.9)',
+    glowDur:'4.0s', href:'#', main:false
   },
   dagobah: {
-    img:        './dagobah.PNG',
-    label:      'TRANSMISSIONS',
-    planetName: 'DAGOBAH',
-    sub:        'Messages from Dad',
-    color:      '#44EE88',
-    glowColor:  'rgba(0,200,100,0.45)',
-    g1:         'rgba(0,210,110,1)',
-    g2:         'rgba(0,130,60,0.5)',
-    shadow:     'rgba(0,200,100,0.55)',
-    glowDur:    '3.8s',
-    href:       '#'
+    img:'./dagobah.PNG', label:'TRANSMISSIONS',
+    planet:'DAGOBAH', sub:'Messages from Dad',
+    color:'#44EE88', glowColor:'rgba(0,200,100,0.45)',
+    g1:'rgba(0,210,110,1)', g2:'rgba(0,130,60,0.5)',
+    shadow:'rgba(0,200,100,0.6)', retColor:'rgba(80,240,140,0.9)',
+    glowDur:'3.8s', href:'#', main:false
   },
   hoth: {
-    img:        './hoth.PNG',
-    label:      'ARCHIVE',
-    planetName: 'HOTH',
-    sub:        'Past results',
-    color:      '#AADDFF',
-    glowColor:  'rgba(150,210,255,0.4)',
-    g1:         'rgba(160,215,255,1)',
-    g2:         'rgba(80,160,230,0.45)',
-    shadow:     'rgba(150,210,255,0.5)',
-    glowDur:    '4.5s',
-    href:       '#'
+    img:'./hoth.PNG', label:'ARCHIVE',
+    planet:'HOTH', sub:'Past results',
+    color:'#AADDFF', glowColor:'rgba(150,210,255,0.4)',
+    g1:'rgba(160,215,255,1)', g2:'rgba(80,160,230,0.45)',
+    shadow:'rgba(150,210,255,0.55)', retColor:'rgba(180,225,255,0.9)',
+    glowDur:'4.5s', href:'#', main:false
   }
 };
 
 /* ============================================================
-   BUILD PLANET ELEMENTS
+   BUILD ELEMENTS
    ============================================================ */
-var sl   = document.getElementById('space-layer');
+var pl   = document.getElementById('planet-layer');
+var sl_f = document.getElementById('stars-far');
+var sl_n = document.getElementById('stars-near');
+var nl   = document.getElementById('nebula-layer');
 var pels = {};
-var lsDest = null;
+var lockedKey = null;
+var lsDest    = null;
+var yodaTimer = null;
+var yodaShown = false;
 
+/* Build planet elements */
 Object.keys(PD).forEach(function(key) {
   var d = PD[key];
-
   var wrap = document.createElement('div');
   wrap.className = 'pw';
+  wrap.style.setProperty('--sc', d.shadow);
+  wrap.style.setProperty('--rc', d.retColor);
 
   var glow = document.createElement('div');
   glow.className = 'pg';
-  glow.style.setProperty('--gd', d.glowDur);
   glow.style.background = d.glowColor;
+  glow.style.setProperty('--gd', d.glowDur);
 
   var img = document.createElement('img');
   img.className = 'pi';
   img.src = d.img;
-  img.style.setProperty('--shadow-color', d.shadow);
 
-  var rip = document.createElement('div');
-  rip.className = 'prip';
+  /* Reticle */
+  var ret = document.createElement('div');
+  ret.className = 'reticle';
+  ['tl','tr','bl','br'].forEach(function(c) {
+    var corner = document.createElement('div');
+    corner.className = 'ret-corner ret-' + c;
+    ret.appendChild(corner);
+  });
+
+  var ring = document.createElement('div');
+  ring.className = 'pulse-ring';
 
   var label = document.createElement('div');
   label.className = 'plabel';
@@ -399,82 +553,89 @@ Object.keys(PD).forEach(function(key) {
 
   wrap.appendChild(glow);
   wrap.appendChild(img);
-  wrap.appendChild(rip);
+  wrap.appendChild(ret);
+  wrap.appendChild(ring);
   wrap.appendChild(label);
-  sl.appendChild(wrap);
+  pl.appendChild(wrap);
 
-  pels[key] = { wrap:wrap, glow:glow, img:img, rip:rip, label:label };
+  pels[key] = { wrap:wrap, glow:glow, img:img, ret:ret, ring:ring, label:label };
 
+  /* Tap handler */
   wrap.addEventListener('click', function() {
-    wrap.classList.add('tap');
-    setTimeout(function() { wrap.classList.remove('tap'); }, 600);
-    setTimeout(function() { launchLS(key); }, 480);
+    if (lockedKey === key) {
+      /* Second tap — launch */
+      wrap.classList.add('tapping');
+      setTimeout(function() { wrap.classList.remove('tapping'); }, 600);
+      setTimeout(function() { launchLS(key); }, 400);
+    } else {
+      /* First tap — lock on */
+      lockOn(key);
+    }
   });
 });
 
-/* Title + Yoda appended to space-layer */
-var titleEl = document.createElement('div');
-titleEl.id = 'title-block';
-titleEl.innerHTML =
-  '<div class="t-eye">A long time ago in a galaxy far, far away&hellip;</div>' +
-  '<div class="t-main" id="tmain">WHICH STAR WARS<br>CHARACTER ARE YOU?</div>' +
-  '<div class="t-rule"></div>' +
-  '<div class="t-sub">Choose your destination</div>';
-sl.appendChild(titleEl);
+/* ============================================================
+   LOCK ON
+   ============================================================ */
+function lockOn(key) {
+  /* Clear previous */
+  if (lockedKey && lockedKey !== key) {
+    pels[lockedKey].wrap.classList.remove('locked');
+  }
+  lockedKey = key;
+  var d = PD[key];
 
-var yodaEl = document.createElement('div');
-yodaEl.id = 'yoda-block';
-yodaEl.innerHTML =
-  '<div class="y-quote">&ldquo;Choose your destination, you must.&rdquo;</div>' +
-  '<div class="y-attr">&mdash; Master Yoda</div>';
-sl.appendChild(yodaEl);
+  /* Lock this planet */
+  pels[key].wrap.classList.add('locked');
+
+  /* Dim other planets slightly */
+  Object.keys(pels).forEach(function(k) {
+    pels[k].wrap.style.opacity = (k === key) ? '1' : '0.5';
+  });
+
+  /* Show info card */
+  var card = document.getElementById('info-card');
+  document.getElementById('ic-planet').textContent = d.planet;
+  document.getElementById('ic-planet').style.color = d.color;
+  document.getElementById('ic-action').textContent = d.label;
+  document.getElementById('ic-action').style.setProperty('--ic-color', d.color);
+  document.getElementById('ic-action').style.textShadow = '0 0 20px ' + d.g1 + ', 0 2px 6px rgba(0,0,0,0.9)';
+  document.getElementById('ic-sub').textContent = d.sub;
+  card.classList.add('visible');
+
+  /* Hide Yoda if shown */
+  document.getElementById('yoda-hint').classList.remove('show');
+  clearTimeout(yodaTimer);
+}
 
 /* ============================================================
-   LAYOUT
-   Image: 1376×768, background-size:100% auto, position:center bottom
+   LAYOUT — responsive planet positions
    ============================================================ */
 function layout() {
   var vw = window.innerWidth;
   var vh = window.innerHeight;
 
-  /* Image: 1376x768, background-size: auto 52vh, anchored bottom center  */
-  /* Image renders taller than screen on portrait phone — crops sides     */
-  var imgR  = 1376 / 768;
-  var rendH = vh * 0.52;
-  var rendW = rendH * imgR;
-  var offX  = (vw - rendW) / 2;   /* negative — image wider than screen  */
-  var offY  = vh - rendH;          /* top edge of image in screen coords  */
+  /* Tatooine — center, lower third */
+  /* Coruscant — upper left */
+  /* Dagobah — upper right */
+  /* Hoth — lower right, smaller + distant */
 
-  /* Arch opening measured from image analysis:                           */
-  /* Glass opens at ~10% image height, widest at 30%-65%, closes at 65%  */
-  /* At mid-height the arch spans ~87% of image width                    */
-  var archTop    = offY + rendH * 0.10;
-  var archBottom = offY + rendH * 0.64;
-  var archH      = archBottom - archTop;
-  var archCX     = vw / 2;
+  var mainSz = Math.min(vw, vh) * 0.28;
+  var secSz  = Math.min(vw, vh) * 0.16;
+  var smSz   = Math.min(vw, vh) * 0.11;
 
-  /* Since image crops horizontally, use screen-relative safe zone        */
-  /* Arch fills almost full screen width at mid-height                    */
-  var safeL = vw * 0.08;
-  var safeR = vw * 0.92;
-  var safeW = safeR - safeL;
+  /* Title occupies top ~28% of screen */
+  var topGap = vh * 0.30;
 
-  /* Planet sizes */
-  var unit   = Math.min(safeW, archH);
-  var mainSz = unit * 0.30;
-  var secSz  = unit * 0.19;
-  var smSz   = unit * 0.13;
-
-  /* Positions — spread across the arch, Tatooine center-low             */
-  var pos = {
-    tatooine:  { cx: archCX,               cy: archTop + archH * 0.58, sz: mainSz },
-    coruscant: { cx: safeL + safeW * 0.16, cy: archTop + archH * 0.28, sz: secSz  },
-    dagobah:   { cx: safeL + safeW * 0.84, cy: archTop + archH * 0.25, sz: secSz  },
-    hoth:      { cx: safeL + safeW * 0.82, cy: archTop + archH * 0.68, sz: smSz   }
+  var positions = {
+    tatooine:  { cx: vw * 0.50, cy: topGap + (vh - topGap) * 0.52, sz: mainSz },
+    coruscant: { cx: vw * 0.22, cy: topGap + (vh - topGap) * 0.22, sz: secSz  },
+    dagobah:   { cx: vw * 0.78, cy: topGap + (vh - topGap) * 0.18, sz: secSz  },
+    hoth:      { cx: vw * 0.80, cy: topGap + (vh - topGap) * 0.65, sz: smSz   }
   };
 
-  Object.keys(pos).forEach(function(key) {
-    var p  = pos[key];
+  Object.keys(positions).forEach(function(key) {
+    var p  = positions[key];
     var sz = p.sz;
     var e  = pels[key];
 
@@ -483,60 +644,63 @@ function layout() {
     e.wrap.style.width  = sz + 'px';
     e.wrap.style.height = sz + 'px';
 
-    var gSz = sz * 1.9;
+    var gSz = sz * 2.0;
     e.glow.style.width  = gSz + 'px';
     e.glow.style.height = gSz + 'px';
 
-    var rSz = sz * 1.4;
-    e.rip.style.width      = rSz + 'px';
-    e.rip.style.height     = rSz + 'px';
-    e.rip.style.marginLeft = (-rSz/2) + 'px';
-    e.rip.style.marginTop  = (-rSz/2) + 'px';
+    /* Reticle size */
+    e.ret.style.width  = (sz * 0.9) + 'px';
+    e.ret.style.height = (sz * 0.9) + 'px';
+    e.ret.style.marginLeft = (-(sz * 0.9)/2) + 'px';
+    e.ret.style.marginTop  = (-(sz * 0.9)/2) + 'px';
+
+    var rSz = sz * 1.5;
+    e.ring.style.width  = rSz + 'px';
+    e.ring.style.height = rSz + 'px';
+    e.ring.style.marginLeft = (-rSz/2) + 'px';
+    e.ring.style.marginTop  = (-rSz/2) + 'px';
 
     e.label.style.top = (sz * 0.56) + 'px';
     var mF = Math.max(7, Math.min(11, sz * 0.12));
     var sF = Math.max(6, Math.min(9,  sz * 0.10));
     e.label.querySelector('.pm').style.fontSize = mF + 'px';
     e.label.querySelector('.ps').style.fontSize = sF + 'px';
+
+    /* LS planet size */
+    var lsSz = Math.min(vw, vh) * 0.34;
+    document.getElementById('ls-pimg').style.width  = lsSz + 'px';
+    document.getElementById('ls-pimg').style.height = lsSz + 'px';
   });
-
-  /* Title font size */
-  var tSz = Math.max(13, Math.min(22, safeW * 0.057));
-  var tm = document.getElementById('tmain');
-  if (tm) tm.style.fontSize = tSz + 'px';
-
-  /* Yoda — sits just above dashboard, inside the arch gap between seats */
-  var yodaTop = offY + rendH * 0.63;
-  yodaEl.style.top = yodaTop + 'px';
-  var qF = Math.max(10, Math.min(14, vw * 0.034));
-  var qEl = yodaEl.querySelector('.y-quote');
-  if (qEl) qEl.style.fontSize = qF + 'px';
-
-  /* LS planet size */
-  var lsSz = Math.min(vw, vh) * 0.35;
-  document.getElementById('ls-planet-img').style.width  = lsSz + 'px';
-  document.getElementById('ls-planet-img').style.height = lsSz + 'px';
 }
 
 /* ============================================================
-   STARS
+   STARS — two layers for parallax depth
    ============================================================ */
 function buildStars() {
-  for (var i = 0; i < 160; i++) {
-    var s  = document.createElement('div');
+  /* Far stars — small, dim */
+  for (var i=0;i<120;i++) {
+    var s = document.createElement('div');
     s.className = 'star';
-    var big = Math.random() < 0.1;
-    var sz  = big ? (1.5 + Math.random()*2.2) : (0.3 + Math.random()*1.0);
-    var lo  = (0.06 + Math.random()*0.14).toFixed(2);
-    var hi  = (0.45 + Math.random()*0.5).toFixed(2);
-    var d   = (2 + Math.random()*4.5).toFixed(1) + 's';
-    var dl  = (Math.random()*7).toFixed(1) + 's';
-    s.style.cssText =
-      'width:'+sz+'px;height:'+sz+'px;' +
-      'left:'+(10+Math.random()*80).toFixed(1)+'%;' +
-      'top:' +(Math.random()*72).toFixed(1)+'%;' +
-      '--lo:'+lo+';--hi:'+hi+';--d:'+d+';--dl:'+dl+';';
-    sl.insertBefore(s, sl.firstChild);
+    var sz  = 0.3 + Math.random()*0.8;
+    var lo  = (0.05 + Math.random()*0.12).toFixed(2);
+    var hi  = (0.3  + Math.random()*0.4).toFixed(2);
+    var d   = (3 + Math.random()*5).toFixed(1) + 's';
+    var dl  = (Math.random()*8).toFixed(1) + 's';
+    s.style.cssText = 'width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100).toFixed(1)+'%;top:'+(Math.random()*100).toFixed(1)+'%;--lo:'+lo+';--hi:'+hi+';--d:'+d+';--dl:'+dl+';';
+    sl_f.appendChild(s);
+  }
+  /* Near stars — larger, brighter */
+  for (var j=0;j<50;j++) {
+    var s2 = document.createElement('div');
+    s2.className = 'star';
+    var big = Math.random() < 0.15;
+    var sz2 = big ? (2 + Math.random()*2.5) : (0.8 + Math.random()*1.2);
+    var lo2 = (0.15 + Math.random()*0.2).toFixed(2);
+    var hi2 = (0.6  + Math.random()*0.4).toFixed(2);
+    var d2  = (1.5 + Math.random()*3.5).toFixed(1) + 's';
+    var dl2 = (Math.random()*5).toFixed(1) + 's';
+    s2.style.cssText = 'width:'+sz2+'px;height:'+sz2+'px;left:'+(Math.random()*100).toFixed(1)+'%;top:'+(Math.random()*100).toFixed(1)+'%;--lo:'+lo2+';--hi:'+hi2+';--d:'+d2+';--dl:'+dl2+';';
+    sl_n.appendChild(s2);
   }
 }
 
@@ -545,37 +709,118 @@ function buildStars() {
    ============================================================ */
 function buildNebulae() {
   [
-    {w:380,h:220,t:6, l:6,  c:'rgba(55,0,140,0.07)', nd:'24s'},
-    {w:320,h:180,t:14,l:54, c:'rgba(0,70,190,0.055)',nd:'18s'},
-    {w:260,h:150,t:30,l:24, c:'rgba(160,55,0,0.045)',nd:'29s'}
+    {w:500,h:300,t:5, l:5,  c:'rgba(60,0,140,0.09)',  lo:'0.06',hi:'0.12',nd:'25s'},
+    {w:420,h:260,t:15,l:50, c:'rgba(0,60,180,0.07)',  lo:'0.05',hi:'0.10',nd:'19s'},
+    {w:380,h:220,t:50,l:20, c:'rgba(140,50,0,0.065)', lo:'0.04',hi:'0.09',nd:'30s'},
+    {w:300,h:200,t:70,l:60, c:'rgba(80,0,120,0.06)',  lo:'0.04',hi:'0.08',nd:'22s'}
   ].forEach(function(sp) {
     var n = document.createElement('div');
-    n.className = 'nebula';
-    n.style.cssText =
-      'width:'+sp.w+'px;height:'+sp.h+'px;' +
-      'top:'+sp.t+'%;left:'+sp.l+'%;' +
-      'background:'+sp.c+';--nd:'+sp.nd+';';
-    sl.appendChild(n);
+    n.className = 'neb';
+    n.style.cssText = 'width:'+sp.w+'px;height:'+sp.h+'px;top:'+sp.t+'%;left:'+sp.l+'%;background:'+sp.c+';--nlo:'+sp.lo+';--nhi:'+sp.hi+';--nd:'+sp.nd+';';
+    nl.appendChild(n);
   });
 }
 
 /* ============================================================
-   FLOAT
+   PLANET FLOAT
    ============================================================ */
-var fp = {}, ft = 0;
-Object.keys(PD).forEach(function(k) { fp[k] = Math.random() * Math.PI * 2; });
-
+var fp={}, ft=0;
+Object.keys(PD).forEach(function(k) { fp[k] = Math.random()*Math.PI*2; });
 function floatTick() {
-  ft += 0.014;
-  Object.keys(PD).forEach(function(k, i) {
+  ft += 0.013;
+  Object.keys(PD).forEach(function(k,i) {
     var el  = pels[k].wrap;
-    var spd = 0.45 + i * 0.11;
-    var amp = 3 + i * 1.2;
-    var dy  = Math.sin(ft * spd + fp[k]) * amp;
-    var dx  = Math.cos(ft * spd * 0.52 + fp[k]) * (amp * 0.36);
+    var spd = 0.4 + i*0.1;
+    var amp = 4 + i*1.5;
+    var dy  = Math.sin(ft*spd + fp[k]) * amp;
+    var dx  = Math.cos(ft*spd*0.5 + fp[k]) * (amp*0.4);
     el.style.transform = 'translate('+dx.toFixed(2)+'px,'+dy.toFixed(2)+'px)';
   });
   requestAnimationFrame(floatTick);
+}
+
+/* ============================================================
+   GYROSCOPE PARALLAX
+   ============================================================ */
+var gyroX=0, gyroY=0, gyroTX=0, gyroTY=0;
+var gyroEnabled = false;
+
+function initGyro() {
+  if (!window.DeviceOrientationEvent) return;
+  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    /* iOS 13+ requires permission — trigger on first tap */
+    document.addEventListener('click', function askGyro() {
+      DeviceOrientationEvent.requestPermission().then(function(state) {
+        if (state === 'granted') { listenGyro(); gyroEnabled = true; }
+      }).catch(function(){});
+      document.removeEventListener('click', askGyro);
+    }, { once: true });
+  } else {
+    listenGyro(); gyroEnabled = true;
+  }
+}
+
+function listenGyro() {
+  window.addEventListener('deviceorientation', function(e) {
+    /* beta = front-back tilt (-180 to 180), gamma = left-right (-90 to 90) */
+    gyroTX = (e.gamma || 0) * 0.4;   /* left-right */
+    gyroTY = (e.beta  || 0) * 0.25;  /* front-back */
+    gyroTX = Math.max(-15, Math.min(15, gyroTX));
+    gyroTY = Math.max(-10, Math.min(10, gyroTY));
+  });
+}
+
+function gyroTick() {
+  /* Smooth interpolation */
+  gyroX += (gyroTX - gyroX) * 0.06;
+  gyroY += (gyroTY - gyroY) * 0.06;
+
+  if (Math.abs(gyroX) > 0.05 || Math.abs(gyroY) > 0.05) {
+    /* Far stars move least */
+    document.getElementById('stars-far').style.transform =
+      'translate('+( gyroX*0.8).toFixed(2)+'px,'+(gyroY*0.8).toFixed(2)+'px)';
+    /* Near stars move more */
+    document.getElementById('stars-near').style.transform =
+      'translate('+(gyroX*2.2).toFixed(2)+'px,'+(gyroY*2.2).toFixed(2)+'px)';
+    /* Nebulae drift subtly */
+    document.getElementById('nebula-layer').style.transform =
+      'translate('+( gyroX*0.4).toFixed(2)+'px,'+(gyroY*0.4).toFixed(2)+'px)';
+    /* Planets move most — creates depth illusion */
+    document.getElementById('planet-layer').style.transform =
+      'translate('+(gyroX*1.5).toFixed(2)+'px,'+(gyroY*1.5).toFixed(2)+'px)';
+  }
+  requestAnimationFrame(gyroTick);
+}
+
+/* ============================================================
+   ENTRANCE ANIMATIONS — staggered planet reveal
+   ============================================================ */
+function enterPlanets() {
+  var keys = Object.keys(PD);
+  var delays = [1.8, 2.2, 2.5, 2.9]; /* seconds after load */
+  keys.forEach(function(key, i) {
+    setTimeout(function() {
+      var el = pels[key].wrap;
+      el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+      el.classList.add('entered');
+    }, delays[i] * 1000);
+  });
+}
+
+/* ============================================================
+   YODA IDLE HINT
+   ============================================================ */
+function startYodaTimer() {
+  if (yodaShown) return;
+  yodaTimer = setTimeout(function() {
+    if (!lockedKey && !yodaShown) {
+      document.getElementById('yoda-hint').classList.add('show');
+      yodaShown = true;
+      setTimeout(function() {
+        document.getElementById('yoda-hint').classList.remove('show');
+      }, 5000);
+    }
+  }, 9000);
 }
 
 /* ============================================================
@@ -588,75 +833,53 @@ var lsRaf    = null;
 document.getElementById('ls-btn').addEventListener('click', closeLS);
 
 function launchLS(key) {
-  var d = PD[key];
-  lsDest = key;
+  var d = PD[key]; lsDest = key;
   document.getElementById('ls').classList.add('on');
+  lsCanvas.width = window.innerWidth; lsCanvas.height = window.innerHeight;
 
-  lsCanvas.width  = window.innerWidth;
-  lsCanvas.height = window.innerHeight;
-
-  /* Set destination panel */
-  var pimg = document.getElementById('ls-planet-img');
+  var pimg = document.getElementById('ls-pimg');
   pimg.src = d.img;
   pimg.style.setProperty('--pg1', d.g1);
   pimg.style.setProperty('--pg2', d.g2);
+  document.getElementById('ls-pname').textContent = d.planet;
+  document.getElementById('ls-pname').style.color = d.color;
   document.getElementById('ls-title').textContent = d.label;
   document.getElementById('ls-title').style.color = d.color;
-  document.getElementById('ls-pname').textContent = d.planetName;
-  document.getElementById('ls-pname').style.color = d.color;
-  document.getElementById('ls-pname').style.textShadow = '0 0 12px ' + d.g1;
   document.getElementById('ls-sub').textContent = d.sub;
 
-  /* Stars */
-  var cx = lsCanvas.width/2, cy = lsCanvas.height/2;
-  var stars = [];
-  for (var i=0;i<240;i++) {
-    var angle = Math.random()*Math.PI*2;
-    var dist  = 12 + Math.random()*Math.min(cx,cy)*0.9;
-    stars.push({ angle:angle, dist:dist,
-      spd:0.35+Math.random()*2.4,
-      sz: 0.4+Math.random()*1.5,
-      br: 150+Math.floor(Math.random()*105) });
+  var cx=lsCanvas.width/2, cy=lsCanvas.height/2;
+  var stars=[];
+  for (var i=0;i<260;i++) {
+    var angle=Math.random()*Math.PI*2, dist=10+Math.random()*Math.min(cx,cy)*0.92;
+    stars.push({angle:angle,dist:dist,spd:0.3+Math.random()*2.6,sz:0.4+Math.random()*1.6,br:145+Math.floor(Math.random()*110)});
   }
 
-  var t0=null, STRE=1100, FLASH=260, phase=1;
-
+  var t0=null,STRE=1100,FLASH=250,phase=1;
   function frame(ts) {
-    if (!t0) t0=ts;
-    var el=ts-t0;
+    if (!t0) t0=ts; var el=ts-t0;
     lsCtx.clearRect(0,0,lsCanvas.width,lsCanvas.height);
-    lsCtx.fillStyle='#000008';
-    lsCtx.fillRect(0,0,lsCanvas.width,lsCanvas.height);
-
+    lsCtx.fillStyle='#000008'; lsCtx.fillRect(0,0,lsCanvas.width,lsCanvas.height);
     if (phase===1) {
-      var t=Math.min(el/STRE,1), e=t*t*(3-2*t);
+      var t=Math.min(el/STRE,1),e=t*t*(3-2*t);
       stars.forEach(function(st) {
-        var stretch=1+e*26*st.spd;
-        var dn=st.dist*(1+e*5.5);
+        var stretch=1+e*28*st.spd, dn=st.dist*(1+e*6);
         var sx=cx+Math.cos(st.angle)*dn, sy=cy+Math.sin(st.angle)*dn;
-        var ex=cx+Math.cos(st.angle)*(dn+stretch*9), ey=cy+Math.sin(st.angle)*(dn+stretch*9);
+        var ex=cx+Math.cos(st.angle)*(dn+stretch*10), ey=cy+Math.sin(st.angle)*(dn+stretch*10);
         lsCtx.beginPath(); lsCtx.moveTo(sx,sy); lsCtx.lineTo(ex,ey);
         var b=st.br;
-        lsCtx.strokeStyle='rgba('+b+','+b+','+Math.min(255,b+45)+','+(0.3+e*0.7)+')';
-        lsCtx.lineWidth=st.sz*(1+e*2.8); lsCtx.stroke();
+        lsCtx.strokeStyle='rgba('+b+','+b+','+Math.min(255,b+50)+','+(0.28+e*0.72)+')';
+        lsCtx.lineWidth=st.sz*(1+e*3); lsCtx.stroke();
       });
-      var g=lsCtx.createRadialGradient(cx,cy,0,cx,cy,130*e);
-      g.addColorStop(0,'rgba(180,220,255,'+(e*0.55)+')');
-      g.addColorStop(1,'transparent');
-      lsCtx.fillStyle=g;
-      lsCtx.fillRect(0,0,lsCanvas.width,lsCanvas.height);
+      var g=lsCtx.createRadialGradient(cx,cy,0,cx,cy,140*e);
+      g.addColorStop(0,'rgba(180,220,255,'+(e*0.6)+')'); g.addColorStop(1,'transparent');
+      lsCtx.fillStyle=g; lsCtx.fillRect(0,0,lsCanvas.width,lsCanvas.height);
       if (el>=STRE){phase=2;t0=ts;}
       lsRaf=requestAnimationFrame(frame);
-
     } else if (phase===2) {
-      var tf=el/FLASH;
-      var op=tf<0.4?tf/0.4:1-((tf-0.4)/0.6);
+      var tf=el/FLASH, op=tf<0.4?tf/0.4:1-((tf-0.4)/0.6);
       lsCtx.fillStyle='rgba(255,255,255,'+Math.max(0,Math.min(1,op))+')';
       lsCtx.fillRect(0,0,lsCanvas.width,lsCanvas.height);
-      if (el>=FLASH){
-        document.getElementById('ls-dest').classList.add('show');
-        return;
-      }
+      if (el>=FLASH){document.getElementById('ls-dest').classList.add('show');return;}
       lsRaf=requestAnimationFrame(frame);
     }
   }
@@ -669,8 +892,15 @@ function closeLS() {
     document.getElementById('ls').classList.remove('on');
     if (lsRaf){cancelAnimationFrame(lsRaf);lsRaf=null;}
     lsCtx.clearRect(0,0,lsCanvas.width,lsCanvas.height);
+    /* Reset planet states */
+    Object.keys(pels).forEach(function(k) {
+      pels[k].wrap.style.opacity='1';
+      pels[k].wrap.classList.remove('locked');
+    });
+    lockedKey=null;
+    document.getElementById('info-card').classList.remove('visible');
   },400);
-  if (lsDest && PD[lsDest].href !== '#') {
+  if (lsDest && PD[lsDest].href!=='#') {
     setTimeout(function(){ window.location.href=PD[lsDest].href; },520);
   }
 }
@@ -683,6 +913,10 @@ function init() {
   buildNebulae();
   layout();
   floatTick();
+  enterPlanets();
+  initGyro();
+  gyroTick();
+  startYodaTimer();
 }
 window.addEventListener('load', init);
 window.addEventListener('resize', layout);
