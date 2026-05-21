@@ -38,7 +38,7 @@ html, body {
   position:fixed; inset:0; z-index:10;
   pointer-events:none;
   background-image: url('./cockpit-bg.PNG');
-  background-size: 100% auto;
+  background-size: auto 52vh;
   background-position: center bottom;
   background-repeat: no-repeat;
 }
@@ -437,11 +437,13 @@ function layout() {
   var vw = window.innerWidth;
   var vh = window.innerHeight;
 
+  /* background-size: auto 52vh — image height = 52% of viewport height */
+  /* image width scales proportionally, centered horizontally */
   var imgR  = 1376 / 768;
-  var rendW = vw;
-  var rendH = vw / imgR;
-  var offX  = 0;
-  var offY  = vh - rendH; /* top edge of image — image anchored to bottom */
+  var rendH = vh * 0.52;
+  var rendW = rendH * imgR;
+  var offX  = (vw - rendW) / 2;  /* negative if wider than screen = crops sides */
+  var offY  = vh - rendH;        /* anchored to bottom */
 
   /* Arch glass zone */
   var archTop    = offY + rendH * 0.02;
@@ -454,18 +456,18 @@ function layout() {
   var safeR = offX + rendW * 0.86;
   var safeW = safeR - safeL;
 
-  /* Planet sizes */
+  /* Planet sizes — relative to arch height which is now much larger */
   var unit   = Math.min(safeW, archH);
-  var mainSz = unit * 0.30;   /* Tatooine — prominent hero planet */
-  var secSz  = unit * 0.18;   /* Coruscant + Dagobah */
-  var smSz   = unit * 0.14;   /* Hoth — small + distant */
+  var mainSz = unit * 0.28;   /* Tatooine — hero */
+  var secSz  = unit * 0.17;   /* Coruscant + Dagobah */
+  var smSz   = unit * 0.12;   /* Hoth — distant */
 
-  /* Positions */
+  /* Spread planets across the full arch opening */
   var pos = {
-    tatooine:  { cx: archCX,              cy: archTop + archH * 0.52, sz: mainSz },
-    coruscant: { cx: safeL + safeW * 0.2, cy: archTop + archH * 0.32, sz: secSz  },
-    dagobah:   { cx: safeL + safeW * 0.8, cy: archTop + archH * 0.30, sz: secSz  },
-    hoth:      { cx: safeL + safeW * 0.82,cy: archTop + archH * 0.62, sz: smSz   }
+    tatooine:  { cx: archCX,               cy: archTop + archH * 0.55, sz: mainSz },
+    coruscant: { cx: safeL + safeW * 0.18, cy: archTop + archH * 0.28, sz: secSz  },
+    dagobah:   { cx: safeL + safeW * 0.82, cy: archTop + archH * 0.25, sz: secSz  },
+    hoth:      { cx: safeL + safeW * 0.80, cy: archTop + archH * 0.65, sz: smSz   }
   };
 
   Object.keys(pos).forEach(function(key) {
