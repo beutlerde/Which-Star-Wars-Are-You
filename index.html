@@ -1567,12 +1567,21 @@ function init() {
   startYodaTimer();
   animateConstellations();
   /* First ship appears after 8 seconds */
-  /* TIE formation sets the Star Wars tone immediately */
   setTimeout(function() { tieFormation(); }, 5000);
-  /* Falcon guaranteed within first 20s */
-  setTimeout(function() { animFalcon(); }, 12000 + Math.random()*8000);
-  /* Ongoing scheduler after initial events */
+  /* Falcon guaranteed at 3s — always visible early */
+  setTimeout(function() { animFalcon(); }, 3000);
   setTimeout(scheduleNextShip, 22000);
+
+  /* 5-tap forces a Falcon — for testing */
+  (function() {
+    var taps = 0, tapTimer = null;
+    document.addEventListener('touchstart', function() {
+      taps++;
+      clearTimeout(tapTimer);
+      tapTimer = setTimeout(function() { taps = 0; }, 800);
+      if (taps >= 5) { taps = 0; animFalcon(); }
+    });
+  })();
 }
 
 window.addEventListener('load', init);

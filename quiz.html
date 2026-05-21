@@ -807,8 +807,20 @@ function qSchedule() {
 }
 
 setTimeout(function(){ qTieFormation(); }, 4000);
-setTimeout(function(){ qFalcon(); }, 10000 + Math.random()*8000);
+/* Falcon guaranteed at 3s — always visible early */
+setTimeout(function(){ qFalcon(); }, 3000);
 setTimeout(qSchedule, 20000);
+
+/* 5-tap anywhere forces a Falcon — for testing */
+(function() {
+  var taps = 0, tapTimer = null;
+  document.addEventListener('touchstart', function() {
+    taps++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(function() { taps = 0; }, 800);
+    if (taps >= 5) { taps = 0; qFalcon(); }
+  });
+})();
 
 /* ============================================================
    ASSEMBLED BUTTON
@@ -1226,9 +1238,13 @@ function showResult() {
     row.className = 'calc-row';
     row.style.animationDelay = (i*0.12) + 's';
     var color = isW ? 'linear-gradient(90deg,rgba(0,212,255,0.4),var(--cyan))' : 'rgba(255,255,255,0.15)';
+    var SHORT = {yoda:'Yoda',obiwan:'Obi-Wan',luke:'Luke',mace:'Mace',poe:'Poe',finn:'Finn',
+      quigon:'Qui-Gon',mando:'Mando',boba:'Boba',han:'Han',chewie:'Chewie',
+      vader:'Vader',palpatine:'Palpatine',kylo:'Kylo Ren',maul:'Maul',grogu:'Grogu'};
+    var displayName = SHORT[id] || CHARACTERS[id].name;
     row.innerHTML =
       '<span class="calc-name" style="' + (isW ? 'color:var(--cyan)' : '') + '">' +
-        CHARACTERS[id].name.split(' ')[0] +
+        displayName +
       '</span>' +
       '<div class="calc-track">' +
         '<div class="calc-fill" style="background:' + color + ';--w:' + pct + '%;"></div>' +
