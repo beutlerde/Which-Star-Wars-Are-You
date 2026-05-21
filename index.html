@@ -141,8 +141,8 @@ html, body {
   animation: gp var(--gd,3.5s) ease-in-out infinite alternate;
 }
 @keyframes gp {
-  from { opacity:0.35; transform:translate(-50%,-50%) scale(0.78); }
-  to   { opacity:0.85; transform:translate(-50%,-50%) scale(1.22); }
+  from { opacity:0.2; transform:translate(-50%,-50%) scale(0.82); }
+  to   { opacity:0.5; transform:translate(-50%,-50%) scale(1.12); }
 }
 
 /* planet image — rotation applied here */
@@ -198,16 +198,13 @@ html, body {
   to   { opacity:0;   transform:translate(-50%,-50%) scale(2.6); }
 }
 
-/* Tatooine heartbeat — extra pulse to invite first tap */
+/* Tatooine — gentle warm breathe, invites tap without screaming */
 #pw-tatooine .pg {
-  animation: tatooine-heartbeat 2.4s ease-in-out infinite;
+  animation: tatooine-breathe 4.5s ease-in-out infinite alternate;
 }
-@keyframes tatooine-heartbeat {
-  0%   { opacity:0.4; transform:translate(-50%,-50%) scale(0.82); }
-  30%  { opacity:1;   transform:translate(-50%,-50%) scale(1.28); }
-  50%  { opacity:0.6; transform:translate(-50%,-50%) scale(1.0); }
-  70%  { opacity:0.95; transform:translate(-50%,-50%) scale(1.22); }
-  100% { opacity:0.4; transform:translate(-50%,-50%) scale(0.82); }
+@keyframes tatooine-breathe {
+  from { opacity:0.25; transform:translate(-50%,-50%) scale(0.88); }
+  to   { opacity:0.5;  transform:translate(-50%,-50%) scale(1.06); }
 }
 
 /* planet label */
@@ -321,34 +318,17 @@ html, body {
 }
 
 /* ============================================================
-   LIGHTSABER BLADE WIPE — global transition overlay
+   SCREEN TRANSITION — clean fade through black
    ============================================================ */
-#blade-wipe {
+#fade-overlay {
   position:fixed; inset:0; z-index:200;
   pointer-events:none;
-  overflow:hidden;
+  background:#000008;
+  opacity:0;
+  transition:opacity 0.3s ease;
 }
-.blade-line {
-  position:absolute; top:0; bottom:0;
-  width:3px;
-  background:linear-gradient(180deg,
-    transparent 0%,
-    rgba(255,255,255,0.1) 10%,
-    white 50%,
-    rgba(255,255,255,0.1) 90%,
-    transparent 100%
-  );
-  box-shadow:0 0 12px 4px var(--blade-color, #44AAFF), 0 0 30px 8px var(--blade-color, #44AAFF);
-  left:-4px;
-  transform:scaleY(0);
-}
-.blade-left, .blade-right {
-  position:absolute; top:0; bottom:0; width:50%;
-  background:var(--wipe-bg, #000008);
-  transform:scaleX(0);
-  transform-origin:left center;
-}
-.blade-right { left:50%; transform-origin:right center; }
+#fade-overlay.fade-in  { opacity:1; pointer-events:all; }
+#fade-overlay.fade-out { opacity:0; pointer-events:none; }
 
 /* ============================================================
    LIGHTSPEED OVERLAY
@@ -466,12 +446,7 @@ html, body {
   </svg>
 </div>
 
-<!-- Blade wipe transition overlay -->
-<div id="blade-wipe">
-  <div class="blade-line" id="blade-line"></div>
-  <div class="blade-left" id="blade-left"></div>
-  <div class="blade-right" id="blade-right"></div>
-</div>
+<div id="fade-overlay"></div>
 
 <!-- Lightspeed -->
 <div id="ls">
@@ -1121,73 +1096,25 @@ function startYodaTimer() {
 }
 
 /* ============================================================
-   LIGHTSABER BLADE WIPE TRANSITION
-   Usage: bladeWipe(color, callback)
+   FADE TRANSITION — clean, simple, premium
+   Usage: fadeTransition(callback)
    ============================================================ */
-function bladeWipe(color, callback) {
-  var line  = document.getElementById('blade-line');
-  var left  = document.getElementById('blade-left');
-  var right = document.getElementById('blade-right');
-
-  line.style.setProperty('--blade-color', color || '#44AAFF');
-  left.style.setProperty('--wipe-bg',  '#000008');
-  right.style.setProperty('--wipe-bg', '#000008');
-
-  /* Phase 1 — blade line sweeps across */
-  line.style.transition = 'none';
-  line.style.left = '-4px';
-  line.style.transform = 'scaleY(1)';
-  line.style.opacity = '1';
-
-  /* Animate blade across screen */
-  var start = null;
-  var vw = window.innerWidth;
-  var DURATION = 350;
-
-  function sweepBlade(ts) {
-    if (!start) start = ts;
-    var t = Math.min((ts - start) / DURATION, 1);
-    var e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
-    line.style.left = (e * (vw + 8) - 4) + 'px';
-
-    /* At midpoint, expand panels to cover screen */
-    if (t > 0.45 && !left._expanding) {
-      left._expanding = true;
-      left.style.transition = 'transform ' + (DURATION * 0.6) + 'ms ease';
-      right.style.transition = 'transform ' + (DURATION * 0.6) + 'ms ease';
-      left.style.transform  = 'scaleX(1)';
-      right.style.transform = 'scaleX(1)';
-    }
-
-    if (t < 1) {
-      requestAnimationFrame(sweepBlade);
-    } else {
-      /* Screen covered — fire callback, then reverse */
-      if (callback) callback();
-      setTimeout(function() {
-        line.style.opacity = '0';
-        left.style.transition  = 'transform 0.4s ease';
-        right.style.transition = 'transform 0.4s ease';
-        left.style.transform   = 'scaleX(0)';
-        right.style.transform  = 'scaleX(0)';
-        left._expanding = false;
-        /* Reset for next use */
-        setTimeout(function() {
-          line.style.left = '-4px';
-          line.style.opacity = '';
-        }, 500);
-      }, 200);
-    }
-  }
-  requestAnimationFrame(sweepBlade);
+function fadeTransition(callback) {
+  var overlay = document.getElementById('fade-overlay');
+  overlay.classList.add('fade-in');
+  setTimeout(function() {
+    if (callback) callback();
+    setTimeout(function() {
+      overlay.classList.remove('fade-in');
+    }, 200);
+  }, 300);
 }
 
 /* ============================================================
-   BLADE THEN LAUNCH
+   FADE THEN LAUNCH
    ============================================================ */
 function bladeThenLaunch(key) {
-  var d = PD[key];
-  bladeWipe(d.bladeColor, function() {
+  fadeTransition(function() {
     launchLS(key);
   });
 }
@@ -1306,8 +1233,10 @@ function closeLS() {
     lockedKey=null;
     document.getElementById('info-card').classList.remove('visible');
   },400);
-  if (lsDest && PD[lsDest].href!=='#') {
-    setTimeout(function(){ bladeWipe(PD[lsDest].bladeColor, function(){ window.location.href=PD[lsDest].href; }); },300);
+  if (lsDest && PD[lsDest].href !== '#') {
+    setTimeout(function() {
+      fadeTransition(function() { window.location.href = PD[lsDest].href; });
+    }, 300);
   }
 }
 
