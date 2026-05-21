@@ -988,113 +988,39 @@ function animDestroyer() {
 }
 
 /* ============================================================
-   X-WING — fast, heroic, crosses the full screen
-   Flies LEFT → RIGHT. Image nose faces LEFT so we scaleX(-1).
-   Variable speed: sometimes fast patrol, sometimes urgent dash.
+   X-WING
+   Image: nose points LOWER-LEFT at ~15° diagonal angle.
+   To fly LEFT→RIGHT: scaleX(-1) flips nose to lower-right,
+     then rotate(-15deg) tilts it to match horizontal travel.
+   To fly RIGHT→LEFT: no flip, rotate(+15deg).
+   Fast: 1.2s–4s. Multiple can fly at once.
    ============================================================ */
 function animXWing(opts) {
   opts = opts || {};
-  var vw   = window.innerWidth;
-  var vh   = window.innerHeight;
-  var sz   = Math.round(Math.min(vw,vh) * (opts.scale || (0.14 + Math.random()*0.08)));
-  var img  = makeShip('./xwing.png', sz);
+  var vw  = window.innerWidth;
+  var vh  = window.innerHeight;
+  var sz  = Math.round(Math.min(vw,vh) * (opts.scale || (0.13 + Math.random()*0.07)));
+  var img = makeShip('./xwing.png', sz);
   var goRight = opts.goRight !== undefined ? opts.goRight : (Math.random() > 0.5);
+  var delay   = opts.delay   !== undefined ? opts.delay   : 0;
+  var topY    = vh * (opts.topFrac !== undefined ? opts.topFrac : (0.05 + Math.random()*0.44));
 
-  var topY = vh * (opts.topFrac !== undefined ? opts.topFrac : (0.06 + Math.random()*0.48));
-  var sx, ex, flip;
+  var sx, ex, xform;
   if (goRight) {
-    sx = -sz - 10; ex = vw + sz + 10;
-    flip = ' scaleX(-1)'; /* nose originally LEFT, flip to face RIGHT */
+    sx    = -sz - 10;
+    ex    = vw + sz + 10;
+    /* flip nose right, tilt to align with travel direction */
+    xform = 'scaleX(-1) rotate(-15deg)';
   } else {
-    sx = vw + sz + 10; ex = -sz - 10;
-    flip = '';           /* nose originally LEFT, already faces LEFT = direction of travel */
+    sx    = vw + sz + 10;
+    ex    = -sz - 10;
+    /* nose already left, tilt up slightly for left travel */
+    xform = 'rotate(15deg)';
   }
 
-  /* Speed variety: 1.5s (screaming fast) to 6s (patrol pace) */
-  var dur = opts.dur || (1500 + Math.random() * 4500);
-  /* Slight diagonal drift */
-  var diagDir = opts.diagDir !== undefined ? opts.diagDir : (Math.random() > 0.5 ? 1 : -1);
-  var diag = vh * 0.06 * diagDir;
-
-  img.style.top  = topY + 'px';
-  img.style.left = '0px';
-
-  var t0 = null;
-  function frame(ts) {
-    if (!t0) t0 = ts;
-    var t  = Math.min((ts-t0)/dur, 1);
-    var e  = sms(t);
-    var x  = sx + (ex-sx)*e;
-    var dy = diag * t;
-    var op = fade(t, 0.08) * (opts.maxOp || 0.70);
-    img.style.opacity   = op.toFixed(3);
-    img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)' + flip;
-    if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
-  }
-  requestAnimationFrame(frame);
-}
-
-/* ============================================================
-   FALCON — medium speed, elegant arc
-   Flies RIGHT → LEFT (fleeing). Image faces right naturally,
-   so scaleX(-1) to face LEFT = direction of travel.
-   ============================================================ */
-function animFalcon() {
-  var vw  = window.innerWidth;
-  var vh  = window.innerHeight;
-  var sz  = Math.round(Math.min(vw,vh) * (0.18 + Math.random()*0.08));
-  var img = makeShip('./falcon.png', sz);
-
-  var topY = vh * (0.12 + Math.random()*0.38);
-  /* Enters from RIGHT, exits LEFT */
-  var sx   = vw + sz + 10;
-  var ex   = -sz - 10;
-  /* Arc — rises in the middle like it's banking */
-  var arcH = vh * (0.04 + Math.random()*0.05);
-  var dur  = 6000 + Math.random() * 4000;
-
-  img.style.top  = topY + 'px';
-  img.style.left = '0px';
-
-  var t0 = null;
-  function frame(ts) {
-    if (!t0) t0 = ts;
-    var t  = Math.min((ts-t0)/dur, 1);
-    var e  = eio(t);
-    var x  = sx + (ex-sx)*e;
-    /* Parabolic arc: dy is negative (rises) at t=0.5 */
-    var dy = -arcH * Math.sin(t * Math.PI);
-    var op = fade(t, 0.07) * 0.65;
-    img.style.opacity   = op.toFixed(3);
-    /* scaleX(-1): image faces right, flip so it faces LEFT = direction of travel */
-    img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scaleX(-1)';
-    if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
-  }
-  requestAnimationFrame(frame);
-}
-
-/* ============================================================
-   TIE FIGHTER — fast dart, symmetric so no flip needed
-   Can go either direction. Used solo and in formations.
-   ============================================================ */
-function animTie(opts) {
-  opts = opts || {};
-  var vw  = window.innerWidth;
-  var vh  = window.innerHeight;
-  var scl = opts.scale || (0.10 + Math.random()*0.06);
-  var sz  = Math.round(Math.min(vw,vh) * scl);
-  var img = makeShip('./tiefighter.png', sz);
-
-  var goRight = opts.goRight !== undefined ? opts.goRight : (Math.random() > 0.5);
-  var topFrac = opts.topFrac !== undefined ? opts.topFrac : (0.04 + Math.random()*0.46);
-  var topY    = vh * topFrac;
-  var sx, ex;
-  if (goRight) { sx = -sz - 10; ex = vw + sz + 10; }
-  else         { sx = vw + sz + 10; ex = -sz - 10; }
-
-  /* TIEs are fast: 1.2s – 3.5s */
-  var dur   = opts.dur || (1200 + Math.random()*2300);
-  var diag  = opts.diag !== undefined ? opts.diag : (vh * 0.06 * (Math.random()>0.5?1:-1));
+  /* Diagonal drift that matches the tilt — feels physically correct */
+  var diag = vh * 0.07 * (goRight ? 1 : -1) * (opts.diagMult || 1);
+  var dur  = opts.dur || (1200 + Math.random() * 2800);
 
   img.style.top  = topY + 'px';
   img.style.left = '0px';
@@ -1107,7 +1033,85 @@ function animTie(opts) {
       var e  = sms(t);
       var x  = sx + (ex-sx)*e;
       var dy = diag * t;
-      var op = fade(t, 0.10) * (opts.maxOp || 0.60);
+      var op = fade(t, 0.07) * (opts.maxOp || 0.72);
+      img.style.opacity   = op.toFixed(3);
+      img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) ' + xform;
+      if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
+    }
+    requestAnimationFrame(frame);
+  }, delay);
+}
+
+/* ============================================================
+   FALCON
+   Image: engines on LEFT (rear), nose/cockpit arm points
+   UPPER-RIGHT. The ship naturally faces RIGHT.
+   To fly LEFT→RIGHT: NO flip needed (already faces right).
+   Diagonal: slight upward drift (matches the upper-right angle).
+   Speed: 5–9s. Large, beautiful.
+   ============================================================ */
+function animFalcon(opts) {
+  opts = opts || {};
+  var vw  = window.innerWidth;
+  var vh  = window.innerHeight;
+  var sz  = Math.round(Math.min(vw,vh) * (opts.scale || (0.22 + Math.random()*0.06)));
+  var img = makeShip('./falcon.png', sz);
+
+  var topY = vh * (opts.topFrac !== undefined ? opts.topFrac : (0.18 + Math.random()*0.32));
+  /* Enters from LEFT, exits RIGHT — matches natural image direction */
+  var sx   = -sz - 10;
+  var ex   = vw + sz + 10;
+  /* Slight upward arc — matches the upper-right diagonal of the image */
+  var arcH = vh * (0.04 + Math.random()*0.04);
+  var dur  = opts.dur || (5000 + Math.random() * 4000);
+
+  img.style.top  = topY + 'px';
+  img.style.left = '0px';
+
+  var t0 = null;
+  function frame(ts) {
+    if (!t0) t0 = ts;
+    var t  = Math.min((ts-t0)/dur, 1);
+    var e  = eio(t);
+    var x  = sx + (ex-sx)*e;
+    /* Rises slightly in middle — like it's banking upward */
+    var dy = -arcH * Math.sin(t * Math.PI);
+    var op = fade(t, 0.06) * 0.72;
+    img.style.opacity   = op.toFixed(3);
+    /* No flip — image already faces right = direction of travel */
+    img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
+    if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ============================================================
+   TIE FIGHTER — symmetric, no flip needed, fast darts
+   ============================================================ */
+function animTie(opts) {
+  opts = opts || {};
+  var vw  = window.innerWidth;
+  var vh  = window.innerHeight;
+  var sz  = Math.round(Math.min(vw,vh) * (opts.scale || (0.10 + Math.random()*0.05)));
+  var img = makeShip('./tiefighter.png', sz);
+  var goRight = opts.goRight !== undefined ? opts.goRight : (Math.random() > 0.5);
+  var topY    = vh * (opts.topFrac !== undefined ? opts.topFrac : (0.04 + Math.random()*0.44));
+  var sx = goRight ? -sz-10 : vw+sz+10;
+  var ex = goRight ? vw+sz+10 : -sz-10;
+  var dur  = opts.dur  !== undefined ? opts.dur  : (1200 + Math.random()*2000);
+  var diag = opts.diag !== undefined ? opts.diag : (vh * 0.05 * (Math.random()>0.5?1:-1));
+
+  img.style.top  = topY + 'px';
+  img.style.left = '0px';
+
+  setTimeout(function() {
+    var t0 = null;
+    function frame(ts) {
+      if (!t0) t0 = ts;
+      var t  = Math.min((ts-t0)/dur, 1);
+      var x  = sx + (ex-sx)*sms(t);
+      var dy = diag * t;
+      var op = fade(t, 0.10) * (opts.maxOp || 0.62);
       img.style.opacity   = op.toFixed(3);
       img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
       if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
@@ -1117,45 +1121,44 @@ function animTie(opts) {
 }
 
 /* ============================================================
-   TIE FORMATIONS — the premium touch
+   TIE FORMATIONS
    ============================================================ */
 function tieFormation() {
-  var vw      = window.innerWidth;
   var vh      = window.innerHeight;
   var goRight = Math.random() > 0.5;
   var roll    = Math.random();
   var base    = 0.05 + Math.random() * 0.35;
-  var spd     = 1400 + Math.random() * 1800; /* base speed for formation */
+  var spd     = 1300 + Math.random() * 1600;
 
-  if (roll < 0.30) {
-    /* 2-ship patrol — tight pair, same direction */
-    animTie({ goRight:goRight, topFrac:base,       scale:0.13, dur:spd,       diag: vh*0.04,  delay:0   });
-    animTie({ goRight:goRight, topFrac:base+0.065, scale:0.11, dur:spd*1.05,  diag: vh*0.03,  delay:250 });
+  if (roll < 0.28) {
+    /* 2-ship patrol */
+    animTie({ goRight:goRight, topFrac:base,       scale:0.12, dur:spd,      diag: vh*0.04, delay:0   });
+    animTie({ goRight:goRight, topFrac:base+0.07,  scale:0.10, dur:spd*1.05, diag: vh*0.03, delay:250 });
 
-  } else if (roll < 0.58) {
+  } else if (roll < 0.55) {
     /* 3-ship wedge */
-    animTie({ goRight:goRight, topFrac:base,       scale:0.14, dur:spd,       diag:-vh*0.03, delay:0   });
-    animTie({ goRight:goRight, topFrac:base+0.07,  scale:0.12, dur:spd*1.08,  diag: vh*0.04, delay:200 });
-    animTie({ goRight:goRight, topFrac:base+0.14,  scale:0.10, dur:spd*1.15,  diag:-vh*0.02, delay:430 });
+    animTie({ goRight:goRight, topFrac:base,       scale:0.13, dur:spd,       diag:-vh*0.03, delay:0   });
+    animTie({ goRight:goRight, topFrac:base+0.08,  scale:0.11, dur:spd*1.08,  diag: vh*0.04, delay:200 });
+    animTie({ goRight:goRight, topFrac:base+0.15,  scale:0.09, dur:spd*1.15,  diag:-vh*0.02, delay:420 });
 
-  } else if (roll < 0.80) {
-    /* 4-ship scramble — staggered, some from opposite direction */
-    animTie({ goRight:goRight,  topFrac:base,       scale:0.14, dur:spd*0.9,  diag: vh*0.05,  delay:0   });
-    animTie({ goRight:goRight,  topFrac:base+0.09,  scale:0.11, dur:spd,      diag:-vh*0.03,  delay:180 });
-    animTie({ goRight:!goRight, topFrac:base+0.04,  scale:0.12, dur:spd*0.85, diag: vh*0.04,  delay:350 });
-    animTie({ goRight:goRight,  topFrac:base+0.16,  scale:0.10, dur:spd*1.1,  diag:-vh*0.04,  delay:580 });
+  } else if (roll < 0.78) {
+    /* 4-ship scramble */
+    animTie({ goRight:goRight,  topFrac:base,      scale:0.13, dur:spd*0.9,  diag: vh*0.05, delay:0   });
+    animTie({ goRight:goRight,  topFrac:base+0.09, scale:0.11, dur:spd,      diag:-vh*0.03, delay:180 });
+    animTie({ goRight:!goRight, topFrac:base+0.04, scale:0.11, dur:spd*0.85, diag: vh*0.04, delay:340 });
+    animTie({ goRight:goRight,  topFrac:base+0.16, scale:0.09, dur:spd*1.1,  diag:-vh*0.04, delay:560 });
 
   } else {
-    /* 5-ship full scramble across the sky */
+    /* 5-ship full sky scramble */
     for (var i = 0; i < 5; i++) {
       (function(idx) {
         animTie({
           goRight: Math.random() > 0.4,
-          topFrac: 0.04 + idx * 0.09 + Math.random()*0.04,
+          topFrac: 0.04 + idx * 0.09 + Math.random()*0.03,
           scale:   0.09 + Math.random()*0.05,
-          dur:     1000 + Math.random()*2000,
+          dur:     900  + Math.random()*1800,
           diag:    vh * 0.05 * (Math.random()>0.5?1:-1),
-          delay:   idx * 200 + Math.random()*150
+          delay:   idx * 180 + Math.random()*120
         });
       })(i);
     }
@@ -1163,51 +1166,94 @@ function tieFormation() {
 }
 
 /* ============================================================
-   MASTER SCHEDULER — organic timing, varied encounters
+   SQUADRON BATTLE — X-Wings right, TIEs left, simultaneous
+   The premium Star Wars moment.
+   ============================================================ */
+function squadronBattle() {
+  var vh   = window.innerHeight;
+  var base = 0.05 + Math.random() * 0.18;
+  var xCount = 3 + Math.floor(Math.random()*2); /* 3-4 X-Wings */
+
+  /* X-Wings flying right */
+  for (var i = 0; i < xCount; i++) {
+    (function(idx) {
+      animXWing({
+        goRight:  true,
+        topFrac:  base + idx * 0.09,
+        scale:    0.12 + Math.random()*0.04,
+        dur:      1300 + Math.random()*700,
+        delay:    idx * 260,
+        diagMult: 0.7
+      });
+    })(i);
+  }
+
+  /* TIEs flying left — head-on conflict, staggered 600ms after first X-Wing */
+  setTimeout(function() {
+    var tBase = base + 0.03;
+    animTie({ goRight:false, topFrac:tBase,       scale:0.12, dur:1500, diag:-vh*0.04, delay:0   });
+    animTie({ goRight:false, topFrac:tBase+0.08,  scale:0.11, dur:1400, diag: vh*0.03, delay:200 });
+    animTie({ goRight:false, topFrac:tBase+0.16,  scale:0.10, dur:1600, diag:-vh*0.05, delay:400 });
+    animTie({ goRight:false, topFrac:tBase-0.04,  scale:0.09, dur:1350, diag: vh*0.04, delay:600 });
+  }, 600);
+}
+
+/* ============================================================
+   MASTER SCHEDULER
+   Falcon appears every cycle now — not optional.
    ============================================================ */
 function scheduleNextShip() {
   var roll = Math.random();
 
-  if (roll < 0.35) {
-    /* TIE formation — most common, creates Star Wars energy */
+  if (roll < 0.26) {
+    /* TIE formation */
     tieFormation();
-    setTimeout(scheduleNextShip, 12000 + Math.random()*12000);
+    setTimeout(scheduleNextShip, 10000 + Math.random()*10000);
 
-  } else if (roll < 0.52) {
+  } else if (roll < 0.40) {
     /* Single X-Wing fast pass */
-    animXWing({ dur: 2000 + Math.random()*2000 });
+    animXWing({ dur: 1400 + Math.random()*1600 });
+    setTimeout(scheduleNextShip, 12000 + Math.random()*8000);
+
+  } else if (roll < 0.53) {
+    /* Multiple X-Wings — 2-3 in loose formation */
+    var gr  = Math.random() > 0.5;
+    var b   = 0.06 + Math.random()*0.3;
+    var cnt = 2 + Math.floor(Math.random()*2);
+    for (var i = 0; i < cnt; i++) {
+      (function(idx) {
+        animXWing({ goRight:gr, topFrac:b+idx*0.10, scale:0.13, dur:1500+Math.random()*1000, delay:idx*300 });
+      })(i);
+    }
+    setTimeout(scheduleNextShip, 13000 + Math.random()*9000);
+
+  } else if (roll < 0.68) {
+    /* Falcon — every cycle has a ~25% chance */
+    animFalcon();
     setTimeout(scheduleNextShip, 14000 + Math.random()*10000);
 
-  } else if (roll < 0.65) {
-    /* X-Wing patrol — slower, more visible */
-    animXWing({ dur: 5000 + Math.random()*3000, scale: 0.18 });
-    setTimeout(scheduleNextShip, 16000 + Math.random()*12000);
+  } else if (roll < 0.80) {
+    /* Squadron battle — X-Wings vs TIEs head on */
+    squadronBattle();
+    setTimeout(scheduleNextShip, 16000 + Math.random()*10000);
 
-  } else if (roll < 0.78) {
-    /* Falcon */
-    animFalcon();
-    setTimeout(scheduleNextShip, 18000 + Math.random()*12000);
-
-  } else if (roll < 0.90) {
-    /* Destroyer — rare, dramatic */
-    animDestroyer();
-    /* Send TIE escort 6 seconds after destroyer appears */
-    setTimeout(function() {
-      var goRight = true; /* same direction as destroyer */
-      animTie({ goRight:goRight, topFrac:0.10, scale:0.10, dur:3500, diag:vh*0.04, delay:0,    maxOp:0.5 });
-      animTie({ goRight:goRight, topFrac:0.16, scale:0.09, dur:3200, diag:vh*0.03, delay:1800, maxOp:0.45 });
-    }, 6000);
-    setTimeout(scheduleNextShip, 28000 + Math.random()*10000);
+  } else if (roll < 0.92) {
+    /* X-Wing chases a TIE */
+    var goR  = Math.random() > 0.5;
+    var topF = 0.08 + Math.random()*0.28;
+    animTie({ goRight:goR, topFrac:topF,      scale:0.11, dur:2000, diag:window.innerHeight*0.05, delay:0   });
+    animXWing({ goRight:goR, topFrac:topF+0.05, scale:0.14, dur:1600, delay:350 });
+    setTimeout(scheduleNextShip, 14000 + Math.random()*8000);
 
   } else {
-    /* X-Wing vs TIE dogfight — X-Wing chases a TIE */
-    var goR = Math.random() > 0.5;
-    var topF = 0.08 + Math.random()*0.3;
-    /* TIE goes first */
-    animTie({ goRight:goR, topFrac:topF, scale:0.11, dur:2200, diag:vh*0.05, delay:0 });
-    /* X-Wing follows 0.4s behind, slightly faster */
-    animXWing({ goRight:goR, topFrac:topF+0.04, scale:0.15, dur:1800, diagDir:1, delay:400 });
-    setTimeout(scheduleNextShip, 15000 + Math.random()*10000);
+    /* Destroyer — rare, majestic */
+    animDestroyer();
+    /* TIE escort follows 5s later */
+    setTimeout(function() {
+      animTie({ goRight:true, topFrac:0.09, scale:0.10, dur:3500, diag:window.innerHeight*0.04, delay:0    });
+      animTie({ goRight:true, topFrac:0.15, scale:0.09, dur:3200, diag:window.innerHeight*0.03, delay:1600 });
+    }, 5000);
+    setTimeout(scheduleNextShip, 26000 + Math.random()*8000);
   }
 }
 
@@ -1528,9 +1574,12 @@ function init() {
   startYodaTimer();
   animateConstellations();
   /* First ship appears after 8 seconds */
-  /* First ship appears after 6s, TIE formation after 12s to set the tone */
-  setTimeout(function() { tieFormation(); }, 6000);
-  setTimeout(scheduleNextShip, 14000);
+  /* TIE formation sets the Star Wars tone immediately */
+  setTimeout(function() { tieFormation(); }, 5000);
+  /* Falcon guaranteed within first 20s */
+  setTimeout(function() { animFalcon(); }, 12000 + Math.random()*8000);
+  /* Ongoing scheduler after initial events */
+  setTimeout(scheduleNextShip, 22000);
 }
 
 window.addEventListener('load', init);
