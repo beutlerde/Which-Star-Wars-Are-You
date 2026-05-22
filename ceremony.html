@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>The Awakening</title>
+<style>
+/* ============================================================
+   CEREMONY — 8-scene Star Wars opening for Guapo
+   Safari-safe: no template literals, no arrow functions,
+   no async/await in setTimeout
+   ============================================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: #000;
+  color: #fff;
+  font-family: 'Orbitron', 'Trebuchet MS', sans-serif;
+  overflow: hidden;
+  position: fixed;
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Starfield base — reused from cockpit */
+#bg {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse at 50% 30%, #0a0d2a 0%, #04050d 60%, #000 100%);
+}
+
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* Scene container */
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  text-align: center;
+}
+.scene.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Skip button — always present, top right */
+#skip-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  padding: 10px 18px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.4s, color 0.2s, border-color 0.2s;
+  -webkit-appearance: none;
+}
+#skip-btn.visible { opacity: 1; }
+#skip-btn:hover, #skip-btn:active {
+  color: #fff;
+  border-color: rgba(255,255,255,0.6);
+}
+
+/* ============================================================
+   SCENE 1 — THE CALL
+   ============================================================ */
+.call-light {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 20px 4px rgba(255,255,255,0.9),
+    0 0 60px 10px rgba(120,180,255,0.5),
+    0 0 120px 30px rgba(80,140,240,0.25);
+  animation: call-pulse 2.4s ease-in-out infinite;
+}
+@keyframes call-pulse {
+  0%, 100% { transform: scale(1);   opacity: 0.85; }
+  50%      { transform: scale(1.6); opacity: 1; }
+}
+.call-text {
+  margin-top: 80px;
+  font-family: 'Cinzel', 'Trebuchet MS', serif;
+  font-style: italic;
+  font-size: clamp(20px, 5vw, 30px);
+  color: rgba(255,255,255,0.85);
+  opacity: 0;
+  letter-spacing: 0.05em;
+  transition: opacity 1.4s ease;
+}
+.call-text.visible { opacity: 1; }
+.call-tap {
+  position: absolute;
+  bottom: 60px;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: rgba(255,255,255,0.4);
+  opacity: 0;
+  animation: tap-fade 2s ease-in-out infinite;
+  animation-delay: 4s;
+}
+@keyframes tap-fade {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 0.8; }
+}
+
+/* ============================================================
+   SCENE 2 — NAME INPUT
+   ============================================================ */
+.prompt-text {
+  font-family: 'Cinzel', serif;
+  font-style: italic;
+  font-size: clamp(20px, 5vw, 28px);
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 60px;
+  letter-spacing: 0.03em;
+}
+.name-input-wrap {
+  position: relative;
+  width: min(90vw, 360px);
+  margin-bottom: 40px;
+}
+#name-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(80,160,255,0.4);
+  color: #6bb8ff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(28px, 8vw, 44px);
+  letter-spacing: 0.25em;
+  text-align: center;
+  padding: 10px 0;
+  text-transform: uppercase;
+  text-shadow: 0 0 12px rgba(100,180,255,0.6);
+  outline: none;
+  caret-color: #6bb8ff;
+  -webkit-appearance: none;
+}
+#name-input::placeholder {
+  color: rgba(100,160,220,0.35);
+  letter-spacing: 0.25em;
+}
+.name-confirm-btn {
+  padding: 14px 36px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: #6bb8ff;
+  background: transparent;
+  border: 1px solid rgba(100,180,255,0.5);
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s;
+  -webkit-appearance: none;
+}
+.name-confirm-btn.visible { opacity: 1; }
+.name-confirm-btn:hover, .name-confirm-btn:active {
+  background: rgba(100,180,255,0.15);
+  color: #fff;
+  border-color: #6bb8ff;
+  box-shadow: 0 0 24px rgba(100,180,255,0.4);
+}
+
+/* Name ring expansion effect on confirm */
+.name-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 4px; height: 4px;
+  border: 2px solid #6bb8ff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+}
+.name-ring.expand {
+  animation: ring-expand 1.2s ease-out forwards;
+}
+@keyframes ring-expand {
+  0%   { width: 4px;   height: 4px;   opacity: 1; border-width: 2px; }
+  100% { width: 200vw; height: 200vw; opacity: 0; border-width: 0; }
+}
+
+/* ============================================================
+   SCENE 3 — BIRTHPLACE
+   ============================================================ */
+.planets-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  max-width: 500px;
+  width: 100%;
+  margin-top: 30px;
+}
+.planet-choice {
+  position: relative;
+  aspect-ratio: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: transform 0.3s;
+}
+.planet-choice:active { transform: scale(0.96); }
+.planet-orb {
+  width: 75%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.4s;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+/* Fallback CSS planets — replaced when image loads */
+.planet-orb.tatooine-fb { background: radial-gradient(circle at 35% 35%, #FFD79A, #D87B2A 60%, #6B3811 100%); box-shadow: inset -8px -10px 24px rgba(50,15,0,0.8), 0 0 40px rgba(255,160,60,0.4); }
+.planet-orb.naboo-fb     { background: radial-gradient(circle at 35% 35%, #BFE9B5, #4FA67A 55%, #1F4D3F 100%); box-shadow: inset -8px -10px 24px rgba(10,40,30,0.8), 0 0 40px rgba(100,200,150,0.4); }
+.planet-orb.coruscant-fb { background: radial-gradient(circle at 35% 35%, #C9C9D8, #6A8AB8 55%, #2A3A6B 100%); box-shadow: inset -8px -10px 24px rgba(15,20,50,0.8), 0 0 40px rgba(120,160,240,0.4); }
+.planet-orb.mandalore-fb { background: radial-gradient(circle at 35% 35%, #C0B5A8, #7A685B 55%, #3A2E26 100%); box-shadow: inset -8px -10px 24px rgba(25,18,12,0.8), 0 0 40px rgba(200,170,130,0.4); }
+.planet-choice:hover .planet-orb, .planet-choice:active .planet-orb {
+  transform: scale(1.05);
+  filter: brightness(1.15);
+}
+.planet-label {
+  margin-top: 12px;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: rgba(255,255,255,0.7);
+}
+.planet-choice:hover .planet-label, .planet-choice:active .planet-label {
+  color: #fff;
+}
+/* Selected zoom-forward animation */
+.planet-choice.chosen .planet-orb {
+  animation: planet-zoom 1.2s ease-in forwards;
+}
+@keyframes planet-zoom {
+  0%   { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(8);    opacity: 0; }
+}
+.planet-confirm-text {
+  position: absolute;
+  bottom: 30px;
+  left: 0; right: 0;
+  font-family: 'Cinzel', serif;
+  font-style: italic;
+  font-size: clamp(18px, 4vw, 24px);
+  color: rgba(255,255,255,0.95);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.planet-confirm-text.visible { opacity: 1; }
+
+/* ============================================================
+   SCENE 4 — KYBER CRYSTAL
+   ============================================================ */
+.crystals-row {
+  display: flex;
+  gap: clamp(12px, 4vw, 28px);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  max-width: 500px;
+}
+.crystal-choice {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s;
+}
+.crystal-choice:active { transform: scale(0.94); }
+.crystal-shape {
+  width: clamp(50px, 14vw, 70px);
+  height: clamp(75px, 21vw, 105px);
+  position: relative;
+  animation: crystal-float 3.6s ease-in-out infinite;
+  background-size: cover;
+  background-position: center;
+}
+.crystal-shape.fallback {
+  clip-path: polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%);
+}
+.crystal-shape.blue.fallback   { background: linear-gradient(160deg, #B4DBFF 0%, #2A7FE5 50%, #0B3478 100%); box-shadow: 0 0 24px rgba(80,160,255,0.6); }
+.crystal-shape.green.fallback  { background: linear-gradient(160deg, #C6F5C2 0%, #34B854 50%, #0F4A20 100%); box-shadow: 0 0 24px rgba(100,220,120,0.55); }
+.crystal-shape.purple.fallback { background: linear-gradient(160deg, #E0B4FF 0%, #8A2EE5 50%, #3B0F78 100%); box-shadow: 0 0 24px rgba(170,90,240,0.6); }
+.crystal-shape.yellow.fallback { background: linear-gradient(160deg, #FFF1A8 0%, #E5C12A 50%, #785A0F 100%); box-shadow: 0 0 24px rgba(255,200,80,0.6); }
+.crystal-shape.white.fallback  { background: linear-gradient(160deg, #FFFFFF 0%, #D8E0F0 50%, #6A7896 100%); box-shadow: 0 0 24px rgba(220,230,255,0.7); }
+
+@keyframes crystal-float {
+  0%, 100% { transform: translateY(0)    rotate(-3deg); }
+  50%      { transform: translateY(-8px) rotate(3deg); }
+}
+.crystal-choice:hover .crystal-shape, .crystal-choice:active .crystal-shape {
+  filter: brightness(1.25) saturate(1.2);
+}
+.crystal-label {
+  margin-top: 14px;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: rgba(255,255,255,0.6);
+}
+.crystal-choice:hover .crystal-label, .crystal-choice:active .crystal-label {
+  color: #fff;
+}
+/* Selected flies toward viewer */
+.crystal-choice.chosen .crystal-shape {
+  animation: crystal-fly 1.4s ease-in forwards;
+}
+@keyframes crystal-fly {
+  0%   { transform: translateY(0)     scale(1)   rotate(0); }
+  60%  { transform: translateY(-30px) scale(3)   rotate(180deg); opacity: 1; }
+  100% { transform: translateY(0)     scale(20)  rotate(360deg); opacity: 0; }
+}
+.crystal-confirm-text {
+  position: absolute;
+  bottom: 30px;
+  left: 0; right: 0;
+  font-family: 'Cinzel', serif;
+  font-style: italic;
+  font-size: clamp(18px, 4vw, 24px);
+  color: rgba(255,255,255,0.95);
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.crystal-confirm-text.visible { opacity: 1; }
+
+/* ============================================================
+   SCENE 5 — THE OATH
+   ============================================================ */
+.oath-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  max-width: 600px;
+}
+.oath-word {
+  font-family: 'Cinzel', serif;
+  font-style: italic;
+  font-size: clamp(22px, 6vw, 36px);
+  color: rgba(255,255,255,0.2);
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: all 0.4s ease;
+  letter-spacing: 0.04em;
+}
+.oath-word.active {
+  color: rgba(255,255,255,0.65);
+  text-shadow: 0 0 12px rgba(255,255,255,0.3);
+  animation: oath-pulse 1.4s ease-in-out infinite;
+}
+.oath-word.taken {
+  color: #fff;
+  text-shadow: 0 0 24px rgba(180,220,255,0.8);
+  animation: none;
+}
+@keyframes oath-pulse {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+.oath-instruction {
+  margin-top: 60px;
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: rgba(255,255,255,0.5);
+}
+
+/* ============================================================
+   SCENE 6 — THE CRAWL
+   ============================================================ */
+#crawl-stage {
+  perspective: 400px;
+  perspective-origin: 50% 100%;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.crawl-text {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: min(80vw, 600px);
+  transform: translateX(-50%) rotateX(25deg);
+  transform-origin: 50% 100%;
+  color: #FFD142;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-weight: 700;
+  text-align: justify;
+  font-size: clamp(16px, 3vw, 22px);
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 8px rgba(255,209,66,0.3);
+}
+.crawl-text.scroll {
+  animation: crawl-scroll 40s linear forwards;
+}
+@keyframes crawl-scroll {
+  0%   { top: 100%; }
+  100% { top: -350%; }
+}
+.crawl-title {
+  text-align: center;
+  font-size: clamp(22px, 5vw, 32px);
+  letter-spacing: 0.08em;
+  margin-bottom: 40px;
+}
+.crawl-para { margin-bottom: 28px; text-align: justify; }
+
+/* ============================================================
+   SCENE 7 — THE CHAMBER
+   ============================================================ */
+.chamber-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+.chamber-bg.visible { opacity: 1; }
+/* Fallback chamber visuals — radial gradient by birthplace */
+.chamber-bg.tatooine-fb  { background: radial-gradient(ellipse at center, #8a4a18 0%, #3a1c08 40%, #0a0502 100%); }
+.chamber-bg.naboo-fb     { background: radial-gradient(ellipse at center, #2c6a4f 0%, #0f3024 40%, #020a06 100%); }
+.chamber-bg.coruscant-fb { background: radial-gradient(ellipse at center, #2a4878 0%, #0a1838 40%, #02060f 100%); }
+.chamber-bg.mandalore-fb { background: radial-gradient(ellipse at center, #4a3e30 0%, #1f1810 40%, #050402 100%); }
+
+.chamber-text {
+  position: relative;
+  z-index: 2;
+  font-family: 'Cinzel', serif;
+  font-style: italic;
+  font-size: clamp(22px, 5vw, 32px);
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.9);
+  opacity: 0;
+  transition: opacity 2s ease;
+  letter-spacing: 0.05em;
+  max-width: 90vw;
+}
+.chamber-text.visible { opacity: 1; }
+.chamber-tap {
+  position: absolute;
+  bottom: 60px;
+  z-index: 2;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: rgba(255,255,255,0.6);
+  opacity: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  animation: tap-fade 2s ease-in-out infinite;
+}
+.chamber-tap.visible { opacity: 1; }
+
+/* ============================================================
+   SCENE 8 — TRANSITION (hyperspace into quiz)
+   ============================================================ */
+#hyperspace {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+#hyperspace.active { opacity: 1; pointer-events: auto; }
+
+.hs-streak {
+  position: absolute;
+  width: 2px;
+  height: 100px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), #fff, rgba(255,255,255,0));
+  transform-origin: 50% 50%;
+}
+
+/* ============================================================
+   FLASH WHITE — used in transitions
+   ============================================================ */
+#flash {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#flash.show { opacity: 1; }
+
+/* Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Orbitron:wght@500;700&display=swap');
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+
+<button id="skip-btn" onclick="skipCeremony()">SKIP →</button>
+
+<!-- ============================================================
+     SCENE 1 — THE CALL
+     ============================================================ -->
+<section class="scene" id="scene-call">
+  <div class="call-light"></div>
+  <div class="call-text" id="call-text">Awaken, you must.</div>
+  <div class="call-tap">— TAP TO CONTINUE —</div>
+</section>
+
+<!-- ============================================================
+     SCENE 2 — NAME INPUT
+     ============================================================ -->
+<section class="scene" id="scene-name">
+  <div class="prompt-text">What is your name, young one?</div>
+  <div class="name-input-wrap">
+    <input id="name-input" type="text" maxlength="14" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="GUAPO">
+    <div class="name-ring" id="name-ring"></div>
+  </div>
+  <button class="name-confirm-btn" id="name-confirm-btn" onclick="confirmName()">CONFIRM</button>
+</section>
+
+<!-- ============================================================
+     SCENE 3 — BIRTHPLACE
+     ============================================================ -->
+<section class="scene" id="scene-birthplace">
+  <div class="prompt-text" id="birthplace-prompt">From which planet do you hail?</div>
+  <div class="planets-grid" id="planets-grid">
+    <div class="planet-choice" onclick="chooseBirthplace('tatooine', this)">
+      <div class="planet-orb tatooine-fb" data-img="./tatooine.png"></div>
+      <div class="planet-label">TATOOINE</div>
+    </div>
+    <div class="planet-choice" onclick="chooseBirthplace('naboo', this)">
+      <div class="planet-orb naboo-fb" data-img="./naboo.png"></div>
+      <div class="planet-label">NABOO</div>
+    </div>
+    <div class="planet-choice" onclick="chooseBirthplace('coruscant', this)">
+      <div class="planet-orb coruscant-fb" data-img="./coruscant.png"></div>
+      <div class="planet-label">CORUSCANT</div>
+    </div>
+    <div class="planet-choice" onclick="chooseBirthplace('mandalore', this)">
+      <div class="planet-orb mandalore-fb" data-img="./mandalore.png"></div>
+      <div class="planet-label">MANDALORE</div>
+    </div>
+  </div>
+  <div class="planet-confirm-text" id="planet-confirm-text"></div>
+</section>
+
+<!-- ============================================================
+     SCENE 4 — KYBER CRYSTAL
+     ============================================================ -->
+<section class="scene" id="scene-crystal">
+  <div class="prompt-text">A kyber crystal calls to you.<br>Which one?</div>
+  <div class="crystals-row" id="crystals-row">
+    <div class="crystal-choice" onclick="chooseCrystal('blue', this)">
+      <div class="crystal-shape blue fallback" data-img="./crystal-blue.png"></div>
+      <div class="crystal-label">BLUE</div>
+    </div>
+    <div class="crystal-choice" onclick="chooseCrystal('green', this)">
+      <div class="crystal-shape green fallback" data-img="./crystal-green.png"></div>
+      <div class="crystal-label">GREEN</div>
+    </div>
+    <div class="crystal-choice" onclick="chooseCrystal('purple', this)">
+      <div class="crystal-shape purple fallback" data-img="./crystal-purple.png"></div>
+      <div class="crystal-label">PURPLE</div>
+    </div>
+    <div class="crystal-choice" onclick="chooseCrystal('yellow', this)">
+      <div class="crystal-shape yellow fallback" data-img="./crystal-yellow.png"></div>
+      <div class="crystal-label">YELLOW</div>
+    </div>
+    <div class="crystal-choice" onclick="chooseCrystal('white', this)">
+      <div class="crystal-shape white fallback" data-img="./crystal-white.png"></div>
+      <div class="crystal-label">WHITE</div>
+    </div>
+  </div>
+  <div class="crystal-confirm-text" id="crystal-confirm-text"></div>
+</section>
+
+<!-- ============================================================
+     SCENE 5 — THE OATH
+     ============================================================ -->
+<section class="scene" id="scene-oath">
+  <div class="prompt-text">The Oath of the Path</div>
+  <div class="oath-wrap" id="oath-wrap">
+    <!-- Words injected by JS -->
+  </div>
+  <div class="oath-instruction" id="oath-instruction">TAP EACH WORD</div>
+</section>
+
+<!-- ============================================================
+     SCENE 6 — THE CRAWL
+     ============================================================ -->
+<section class="scene" id="scene-crawl">
+  <div id="crawl-stage">
+    <div class="crawl-text" id="crawl-text">
+      <div class="crawl-title" id="crawl-title">EPISODE I:<br>THE AWAKENING OF GUAPO</div>
+      <div class="crawl-para">A long time ago in a galaxy far, far away...</div>
+      <div class="crawl-para" id="crawl-p1"></div>
+      <div class="crawl-para" id="crawl-p2"></div>
+      <div class="crawl-para" id="crawl-p3"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SCENE 7 — THE CHAMBER
+     ============================================================ -->
+<section class="scene" id="scene-chamber">
+  <div class="chamber-bg" id="chamber-bg"></div>
+  <div class="chamber-text" id="chamber-text">The Council awaits your answers.</div>
+  <div class="chamber-tap" id="chamber-tap">— TAP TO ENTER —</div>
+</section>
+
+<!-- Hyperspace transition layer -->
+<div id="hyperspace"></div>
+
+<!-- White flash layer -->
+<div id="flash"></div>
+
+<script>
+/* ============================================================
+   CEREMONY ENGINE
+   Safari-safe: function declarations, string concat, setTimeout chains
+   ============================================================ */
+
+/* ---- State ---- */
+var playerName = '';
+var birthplace = '';
+var crystal = '';
+var currentOathWord = 0;
+var oathWords = ['I','will','use','my','gifts','for','good'];
+
+/* Planet display strings */
+var PLANET_NAMES = {
+  tatooine: 'Tatooine',
+  naboo: 'Naboo',
+  coruscant: 'Coruscant',
+  mandalore: 'Mandalore'
+};
+
+/* Crystal display strings */
+var CRYSTAL_NAMES = {
+  blue:   'blue',
+  green:  'green',
+  purple: 'purple',
+  yellow: 'yellow',
+  white:  'white'
+};
+
+/* ---- Helpers ---- */
+function $(id) { return document.getElementById(id); }
+
+function showScene(id) {
+  var scenes = document.querySelectorAll('.scene');
+  for (var i = 0; i < scenes.length; i++) {
+    scenes[i].classList.remove('active');
+  }
+  setTimeout(function() {
+    $(id).classList.add('active');
+  }, 50);
+}
+
+function flashWhite(cb, duration) {
+  duration = duration || 300;
+  var flash = $('flash');
+  flash.classList.add('show');
+  setTimeout(function() {
+    if (cb) cb();
+    setTimeout(function() {
+      flash.classList.remove('show');
+    }, 100);
+  }, duration);
+}
+
+/* ============================================================
+   STARFIELD (matches index.html style)
+   ============================================================ */
+function buildStars() {
+  var bg = $('bg');
+  var count = 120;
+  for (var i = 0; i < count; i++) {
+    var s = document.createElement('div');
+    s.className = 'star';
+    var sz = Math.random() * 2 + 0.5;
+    s.style.width = sz + 'px';
+    s.style.height = sz + 'px';
+    s.style.left = (Math.random() * 100) + '%';
+    s.style.top  = (Math.random() * 100) + '%';
+    s.style.opacity = (Math.random() * 0.7 + 0.3).toFixed(2);
+    var dur = (Math.random() * 4 + 3).toFixed(1);
+    s.style.animation = 'twinkle ' + dur + 's ease-in-out ' + (Math.random()*4).toFixed(1) + 's infinite';
+    bg.appendChild(s);
+  }
+}
+/* twinkle keyframes injected via inline style block since CSS file is inline */
+(function() {
+  var style = document.createElement('style');
+  style.textContent = '@keyframes twinkle { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }';
+  document.head.appendChild(style);
+})();
+
+/* ============================================================
+   IMAGE PROBE — gracefully use uploaded planet/crystal art
+   when present, otherwise stick with CSS fallback
+   ============================================================ */
+function probeAndApplyImage(el) {
+  var src = el.getAttribute('data-img');
+  if (!src) return;
+  var img = new Image();
+  img.onload = function() {
+    el.style.backgroundImage = 'url("' + src + '")';
+    el.classList.remove('fallback');
+    /* Remove planet fallback gradient classes */
+    el.classList.remove('tatooine-fb','naboo-fb','coruscant-fb','mandalore-fb');
+  };
+  img.onerror = function() {
+    /* keep fallback */
+  };
+  img.src = src;
+}
+function probeAllImages() {
+  var els = document.querySelectorAll('[data-img]');
+  for (var i = 0; i < els.length; i++) {
+    probeAndApplyImage(els[i]);
+  }
+}
+
+/* ============================================================
+   SCENE 1 — THE CALL
+   ============================================================ */
+function startScene1() {
+  showScene('scene-call');
+  /* Yoda whisper text fades in after 1.5s */
+  setTimeout(function() {
+    $('call-text').classList.add('visible');
+  }, 1500);
+  /* Tap anywhere on scene to advance after 3s */
+  setTimeout(function() {
+    $('scene-call').onclick = function() {
+      $('scene-call').onclick = null;
+      startScene2();
+    };
+  }, 3000);
+  /* Auto-advance after 7s if no tap */
+  setTimeout(function() {
+    if ($('scene-call').classList.contains('active')) {
+      $('scene-call').onclick = null;
+      startScene2();
+    }
+  }, 7000);
+}
+
+/* ============================================================
+   SCENE 2 — NAME INPUT
+   ============================================================ */
+function startScene2() {
+  showScene('scene-name');
+  setTimeout(function() {
+    var input = $('name-input');
+    input.value = '';
+    input.focus();
+    /* Show confirm button only when there's input */
+    input.oninput = function() {
+      var v = input.value.trim();
+      if (v.length >= 2) {
+        $('name-confirm-btn').classList.add('visible');
+      } else {
+        $('name-confirm-btn').classList.remove('visible');
+      }
+    };
+    /* Enter key confirms */
+    input.onkeydown = function(e) {
+      if (e.key === 'Enter' && input.value.trim().length >= 2) {
+        confirmName();
+      }
+    };
+  }, 800);
+}
+
+function confirmName() {
+  var input = $('name-input');
+  var val = input.value.trim().toUpperCase();
+  if (val.length < 2) return;
+  playerName = val;
+  try { localStorage.setItem('sw_player_name', playerName); } catch(e) {}
+
+  /* Blur input so soft keyboard closes */
+  input.blur();
+
+  /* Ring expand effect */
+  var ring = $('name-ring');
+  ring.classList.add('expand');
+
+  setTimeout(function() {
+    ring.classList.remove('expand');
+    startScene3();
+  }, 1200);
+}
+
+/* ============================================================
+   SCENE 3 — BIRTHPLACE
+   ============================================================ */
+function startScene3() {
+  showScene('scene-birthplace');
+  /* Personalize prompt with name */
+  $('birthplace-prompt').innerHTML = 'From which planet do you hail, ' + playerName + '?';
+}
+
+function chooseBirthplace(planetKey, el) {
+  if (birthplace) return; /* already chosen */
+  birthplace = planetKey;
+  try { localStorage.setItem('sw_birthplace', birthplace); } catch(e) {}
+
+  /* Fade out other choices */
+  var others = document.querySelectorAll('#planets-grid .planet-choice');
+  for (var i = 0; i < others.length; i++) {
+    if (others[i] !== el) {
+      others[i].style.transition = 'opacity 0.6s ease';
+      others[i].style.opacity = '0';
+      others[i].style.pointerEvents = 'none';
+    }
+  }
+  /* Chosen planet zooms forward */
+  el.classList.add('chosen');
+
+  /* Show confirmation text */
+  setTimeout(function() {
+    var txt = $('planet-confirm-text');
+    txt.textContent = 'A child of ' + PLANET_NAMES[planetKey] + ', you are.';
+    txt.classList.add('visible');
+  }, 600);
+
+  /* Advance after pause */
+  setTimeout(function() {
+    startScene4();
+  }, 3000);
+}
+
+/* ============================================================
+   SCENE 4 — KYBER CRYSTAL
+   ============================================================ */
+function startScene4() {
+  showScene('scene-crystal');
+}
+
+function chooseCrystal(color, el) {
+  if (crystal) return;
+  crystal = color;
+  try {
+    localStorage.setItem('sw_crystal', crystal);
+    /* Also set the saber color used downstream */
+    localStorage.setItem('sw_saber_color', crystalToSaberColor(color));
+  } catch(e) {}
+
+  var others = document.querySelectorAll('#crystals-row .crystal-choice');
+  for (var i = 0; i < others.length; i++) {
+    if (others[i] !== el) {
+      others[i].style.transition = 'opacity 0.6s ease';
+      others[i].style.opacity = '0';
+      others[i].style.pointerEvents = 'none';
+    }
+  }
+  el.classList.add('chosen');
+
+  setTimeout(function() {
+    var txt = $('crystal-confirm-text');
+    txt.textContent = 'The ' + CRYSTAL_NAMES[color] + ' crystal has chosen you.';
+    txt.classList.add('visible');
+  }, 700);
+
+  setTimeout(function() {
+    startScene5();
+  }, 3200);
+}
+
+function crystalToSaberColor(c) {
+  if (c === 'blue')   return '#3A9DFF';
+  if (c === 'green')  return '#33DD55';
+  if (c === 'purple') return '#A85AF0';
+  if (c === 'yellow') return '#FFC830';
+  if (c === 'white')  return '#FFFFFF';
+  return '#3A9DFF';
+}
+
+/* ============================================================
+   SCENE 5 — THE OATH
+   ============================================================ */
+function startScene5() {
+  showScene('scene-oath');
+  var wrap = $('oath-wrap');
+  wrap.innerHTML = '';
+  currentOathWord = 0;
+
+  for (var i = 0; i < oathWords.length; i++) {
+    var w = document.createElement('span');
+    w.className = 'oath-word';
+    w.textContent = oathWords[i];
+    w.setAttribute('data-idx', String(i));
+    w.onclick = function() {
+      var idx = parseInt(this.getAttribute('data-idx'), 10);
+      tapOathWord(idx, this);
+    };
+    wrap.appendChild(w);
+  }
+  /* Activate the first word so he knows where to start */
+  setTimeout(function() {
+    activateOathWord(0);
+  }, 700);
+}
+
+function activateOathWord(idx) {
+  var words = document.querySelectorAll('.oath-word');
+  if (idx < words.length) {
+    words[idx].classList.add('active');
+  }
+}
+
+function tapOathWord(idx, el) {
+  if (idx !== currentOathWord) return; /* must be in order */
+  el.classList.remove('active');
+  el.classList.add('taken');
+  currentOathWord++;
+
+  if (currentOathWord < oathWords.length) {
+    activateOathWord(currentOathWord);
+  } else {
+    /* Oath complete */
+    try { localStorage.setItem('sw_oath_complete', '1'); } catch(e) {}
+    $('oath-instruction').textContent = 'THE OATH IS YOURS';
+    setTimeout(function() {
+      startScene6();
+    }, 2000);
+  }
+}
+
+/* ============================================================
+   SCENE 6 — THE CRAWL
+   ============================================================ */
+function startScene6() {
+  /* Populate personalized crawl paragraphs */
+  $('crawl-title').innerHTML = 'EPISODE I:<br>THE AWAKENING OF ' + playerName;
+
+  $('crawl-p1').textContent =
+    'In a time of great change, a young hero named ' + playerName +
+    ' begins their journey to discover the truth of who they are. ' +
+    'The Force calls to them across the stars.';
+
+  $('crawl-p2').textContent =
+    'Born on ' + PLANET_NAMES[birthplace] + ', chosen by the ' + CRYSTAL_NAMES[crystal] +
+    ' crystal, ' + playerName + ' must now face the questions that will reveal their destiny.';
+
+  $('crawl-p3').textContent =
+    'Only by being true to themselves will they find their path among the legends of the galaxy...';
+
+  showScene('scene-crawl');
+
+  /* Start scroll after a beat */
+  setTimeout(function() {
+    $('crawl-text').classList.add('scroll');
+  }, 800);
+
+  /* Allow tap to skip crawl after 3s */
+  setTimeout(function() {
+    $('scene-crawl').onclick = function() {
+      $('scene-crawl').onclick = null;
+      $('crawl-text').classList.remove('scroll');
+      startScene7();
+    };
+  }, 3000);
+
+  /* Auto-advance after 18s (crawl reads, then we move on) */
+  setTimeout(function() {
+    if ($('scene-crawl').classList.contains('active')) {
+      $('scene-crawl').onclick = null;
+      startScene7();
+    }
+  }, 18000);
+}
+
+/* ============================================================
+   SCENE 7 — THE CHAMBER
+   ============================================================ */
+function startScene7() {
+  showScene('scene-chamber');
+  var bg = $('chamber-bg');
+
+  /* Clear any previous fallback classes */
+  bg.classList.remove('tatooine-fb','naboo-fb','coruscant-fb','mandalore-fb');
+  bg.style.backgroundImage = '';
+
+  /* Try to load a chamber image specific to birthplace */
+  var src = './chamber-' + birthplace + '.png';
+  var test = new Image();
+  test.onload = function() {
+    bg.style.backgroundImage = 'url("' + src + '")';
+    bg.classList.add('visible');
+  };
+  test.onerror = function() {
+    /* Use fallback gradient */
+    bg.classList.add(birthplace + '-fb');
+    bg.classList.add('visible');
+  };
+  test.src = src;
+
+  setTimeout(function() {
+    $('chamber-text').innerHTML = 'The Council awaits your answers, ' + playerName + '.';
+    $('chamber-text').classList.add('visible');
+  }, 1400);
+
+  setTimeout(function() {
+    $('chamber-tap').classList.add('visible');
+    $('scene-chamber').onclick = function() {
+      $('scene-chamber').onclick = null;
+      startScene8();
+    };
+  }, 3500);
+
+  /* Auto-advance after 10s */
+  setTimeout(function() {
+    if ($('scene-chamber').classList.contains('active') && $('scene-chamber').onclick) {
+      $('scene-chamber').onclick = null;
+      startScene8();
+    }
+  }, 10000);
+}
+
+/* ============================================================
+   SCENE 8 — HYPERSPACE TRANSITION → QUIZ
+   ============================================================ */
+function startScene8() {
+  var hs = $('hyperspace');
+  hs.classList.add('active');
+
+  /* Build streaks */
+  hs.innerHTML = '';
+  var cx = window.innerWidth / 2;
+  var cy = window.innerHeight / 2;
+  for (var i = 0; i < 50; i++) {
+    var s = document.createElement('div');
+    s.className = 'hs-streak';
+    var angle = Math.random() * 360;
+    var rad  = angle * Math.PI / 180;
+    var dist = 80 + Math.random() * 200;
+    var x = cx + Math.cos(rad) * dist;
+    var y = cy + Math.sin(rad) * dist;
+    s.style.left = x + 'px';
+    s.style.top  = y + 'px';
+    s.style.transform = 'rotate(' + angle + 'deg)';
+    s.style.opacity = '0';
+    hs.appendChild(s);
+    streakAnimate(s, cx, cy, angle);
+  }
+
+  /* Flash white then redirect */
+  setTimeout(function() {
+    flashWhite(function() {
+      try { localStorage.setItem('sw_ceremony_complete', '1'); } catch(e) {}
+      window.location.href = './quiz.html';
+    }, 350);
+  }, 1600);
+}
+
+function streakAnimate(el, cx, cy, angle) {
+  var delay = Math.random() * 400;
+  setTimeout(function() {
+    el.style.transition = 'all 1.2s cubic-bezier(0.5, 0, 0.9, 1)';
+    el.style.opacity = '1';
+    var rad = angle * Math.PI / 180;
+    var fx = cx + Math.cos(rad) * 1200;
+    var fy = cy + Math.sin(rad) * 1200;
+    el.style.left = fx + 'px';
+    el.style.top  = fy + 'px';
+    el.style.height = '300px';
+  }, delay);
+}
+
+/* ============================================================
+   SKIP CEREMONY
+   ============================================================ */
+function skipCeremony() {
+  /* If they skip, save whatever they've entered so far + sensible defaults */
+  if (!playerName) {
+    playerName = 'YOUNGLING';
+    try { localStorage.setItem('sw_player_name', playerName); } catch(e) {}
+  }
+  if (!birthplace) {
+    try { localStorage.setItem('sw_birthplace', 'tatooine'); } catch(e) {}
+  }
+  if (!crystal) {
+    try {
+      localStorage.setItem('sw_crystal', 'blue');
+      localStorage.setItem('sw_saber_color', '#3A9DFF');
+    } catch(e) {}
+  }
+  window.location.href = './quiz.html';
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  buildStars();
+  probeAllImages();
+
+  /* Show skip button after a short delay so it doesn't compete with Scene 1 */
+  setTimeout(function() {
+    $('skip-btn').classList.add('visible');
+  }, 2000);
+
+  startScene1();
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
