@@ -2,501 +2,461 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Star Wars Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Which Star Wars Character Are You?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 
+/* ============================================================
+   TOKENS
+   ============================================================ */
 :root {
-  --bg:#00060F; --bg-2:#040C1C;
-  --cyan:#00D4FF; --cyan-d:rgba(0,212,255,0.4); --cyan-g:rgba(0,212,255,0.15);
-  --amber:#FFB055; --amber-d:rgba(255,176,85,0.4);
-  --rebel:rgba(0,212,255,0.35);
-  --gold:#FFD060;
+  --bg:    #04060B;
+  --bg-1:  #080C18;
+  --bg-2:  #0F1422;
+  --bg-3:  #161B2E;
+
+  --cyan:  #00E5FF;
+  --cyan-d:#0097B2;
+  --cyan-g:rgba(0,229,255,0.35);
+  --cyan-g2:rgba(0,229,255,0.12);
+
+  --rebel: #FF6B2B;
+  --rebel-g:rgba(255,107,43,0.35);
+
+  --gold:  #FFB347;
+  --gold-g:rgba(255,179,71,0.30);
+
+  --ink-1: rgba(255,255,255,0.96);
+  --ink-2: rgba(255,255,255,0.65);
+  --ink-3: rgba(255,255,255,0.38);
+  --ink-4: rgba(255,255,255,0.14);
+
+  --hr:    rgba(255,255,255,0.08);
+  --hr-c:  rgba(0,229,255,0.18);
 }
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html,body { width:100%; height:100%; overflow:hidden; background:var(--bg); color:white;
-  font-family:'Rajdhani',sans-serif; -webkit-font-smoothing:antialiased;
-  user-select:none; -webkit-user-select:none;
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+html,body{overflow-x:hidden;height:100%;}
+body{
+  font-family:'Rajdhani',sans-serif;
+  background:var(--bg);
+  color:var(--ink-1);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  min-height:100dvh;
 }
-button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -webkit-appearance:none; }
+button{font:inherit;cursor:pointer;border:0;background:0;color:inherit;}
 
-/* ============================================================
-   DEEP SPACE BACKGROUND — shared across all screens
-   ============================================================ */
-#space-bg {
-  position:fixed; inset:0; z-index:0;
+/* ── Shared atmosphere ── */
+.atmo{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(ellipse 160% 80% at 30% 60%, #0A0520 0%, transparent 55%),
-    radial-gradient(ellipse 120% 60% at 80% 20%, #050D1F 0%, transparent 50%),
-    radial-gradient(ellipse 100% 100% at 50% 50%, #02061A 0%, #000008 100%);
-}
-#star-canvas {
-  position:fixed; inset:0; z-index:0; pointer-events:none;
-}
+    radial-gradient(ellipse 80% 60% at 20% 0%,rgba(255,107,43,0.07),transparent 60%),
+    radial-gradient(ellipse 80% 60% at 80% 100%,rgba(0,229,255,0.06),transparent 60%),
+    var(--bg-1);}
+.stars{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:
+    radial-gradient(.8px .8px at 12% 18%,rgba(255,255,255,.7),transparent),
+    radial-gradient(.8px .8px at 28% 67%,rgba(255,255,255,.6),transparent),
+    radial-gradient(1px 1px at 44% 32%,rgba(255,255,255,.8),transparent),
+    radial-gradient(.8px .8px at 61% 89%,rgba(255,255,255,.6),transparent),
+    radial-gradient(1px 1px at 78% 24%,rgba(255,255,255,.7),transparent),
+    radial-gradient(.8px .8px at 91% 71%,rgba(255,255,255,.6),transparent),
+    radial-gradient(.8px .8px at 7% 84%,rgba(255,255,255,.7),transparent),
+    radial-gradient(1px 1px at 35% 9%,rgba(255,255,255,.8),transparent),
+    radial-gradient(.8px .8px at 52% 53%,rgba(0,229,255,.4),transparent),
+    radial-gradient(.8px .8px at 73% 15%,rgba(255,179,71,.35),transparent),
+    radial-gradient(.8px .8px at 19% 44%,rgba(255,255,255,.6),transparent),
+    radial-gradient(1px 1px at 85% 60%,rgba(255,255,255,.7),transparent);
+  animation:star-t 7s ease-in-out infinite alternate;}
+@keyframes star-t{0%{opacity:.45;}100%{opacity:1;}}
 
 /* ============================================================
-   SHIP LAYER — passing ships in background
+   SCREENS — all hidden by default, shown via JS
    ============================================================ */
-#ship-layer {
-  position:fixed; inset:0; z-index:1;
-  pointer-events:none; overflow:hidden;
+.screen{
+  display:none;
+  position:relative;
+  z-index:10;
+  min-height:100vh;
+  min-height:100dvh;
 }
-
-/* ============================================================
-   SCREENS
-   ============================================================ */
-.screen {
-  position:fixed; inset:0; z-index:10;
-  display:none; flex-direction:column;
-  align-items:center; justify-content:center;
-  padding: max(env(safe-area-inset-top,12px),44px) 20px
-           max(env(safe-area-inset-bottom,12px),20px);
-  overflow-y:auto; overflow-x:hidden;
-}
-.screen.active { display:flex; }
-
-/* ============================================================
-   HOME BUTTON — persistent across all screens
-   ============================================================ */
-.home-btn {
-  position:fixed; top: max(env(safe-area-inset-top,8px),14px); left:16px;
-  z-index:50;
-  width:36px; height:36px;
-  display:flex; align-items:center; justify-content:center;
-  background:rgba(0,212,255,0.08);
-  border:1px solid rgba(0,212,255,0.2);
-  border-radius:8px;
-  opacity:0; pointer-events:none;
-  transition:opacity 0.3s ease;
-}
-.home-btn.visible { opacity:1; pointer-events:all; }
-.home-btn svg { width:16px; height:16px; }
-.home-btn:active { background:rgba(0,212,255,0.18); }
-
-/* ============================================================
-   FADE OVERLAY
-   ============================================================ */
-#fade-overlay {
-  position:fixed; inset:0; z-index:200;
-  background:#000008; opacity:0;
-  pointer-events:none; transition:opacity 0.3s ease;
-}
-#fade-overlay.on { opacity:1; pointer-events:all; }
+.screen.active{display:flex;flex-direction:column;}
 
 /* ============================================================
    SCREEN 1 — TITLE
    ============================================================ */
-#screen-title {
-  text-align:center; gap:16px;
+#screen-title{
+  align-items:center;justify-content:center;text-align:center;
+  padding:max(40px,env(safe-area-inset-top)) 28px max(40px,env(safe-area-inset-bottom));
 }
-.title-eyebrow {
-  font-family:'Orbitron',monospace; font-size:8px; letter-spacing:4px;
-  color:rgba(0,212,255,0.4); text-transform:uppercase;
-}
-.title-main {
-  font-family:'Orbitron',monospace; font-weight:900;
-  font-size:clamp(24px,7vw,38px); letter-spacing:2px;
-  text-transform:uppercase; line-height:1.2;
-  color:white;
-  text-shadow:0 0 40px rgba(255,160,40,0.45), 0 0 80px rgba(255,100,0,0.15), 0 3px 8px rgba(0,0,0,0.9);
-}
-.title-main span { display:block; }
-.title-rule {
-  width:60px; height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,160,40,0.6),transparent);
-}
-.title-sub {
-  font-family:'Rajdhani',sans-serif; font-size:10px; letter-spacing:3px;
-  color:rgba(255,255,255,0.25); text-transform:uppercase;
-}
-/* ASSEMBLED start button */
-.title-btn {
-  position:relative; margin-top:8px;
-  padding:16px 48px;
-  background:rgba(255,255,255,0.04);
-  border:none; border-radius:4px;
-  font-family:'Orbitron',monospace; font-size:12px; font-weight:700;
-  letter-spacing:4px; text-transform:uppercase;
-  color:transparent; /* assembles in */
-  cursor:pointer;
-}
-.title-btn.assembled { color:white; transition:color 0.3s ease 0.4s; }
-.title-btn:active { background:rgba(255,255,255,0.12); }
-.btn-border-svg {
-  position:absolute; top:0; left:0; width:100%; height:100%;
-  pointer-events:none; overflow:visible;
-}
-.btn-border-rect {
-  fill:none; stroke:rgba(255,255,255,0.22); stroke-width:1;
-  stroke-dasharray:600; stroke-dashoffset:600;
-  transition:stroke-dashoffset 0.55s ease;
-}
-.title-btn.assembled .btn-border-rect { stroke-dashoffset:0; }
 
-.title-stats {
-  font-family:'Rajdhani',sans-serif; font-size:11px; letter-spacing:1px;
-  color:rgba(255,255,255,0.2); text-align:center; line-height:1.8;
+.title-rebel{
+  width:72px;height:72px;margin:0 auto 28px;
+  background:url('https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/ui/rebel-symbol.png') center/contain no-repeat;
+  filter:sepia(1) hue-rotate(160deg) saturate(8) brightness(2);
+  opacity:0.8;
+  animation:rebel-pulse 4s ease-in-out infinite alternate;
 }
-.title-stats em { color:var(--cyan); font-style:normal; }
-.last-result {
-  font-family:'Rajdhani',sans-serif; font-size:11px; letter-spacing:1px;
-  color:rgba(255,176,85,0.5); text-align:center; padding:8px 16px;
-  border:1px solid rgba(255,176,85,0.15); border-radius:4px;
+@keyframes rebel-pulse{0%{opacity:.5;transform:scale(.97);}100%{opacity:.9;transform:scale(1.03);}}
+
+.title-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.36em;text-transform:uppercase;
+  color:var(--rebel);text-shadow:0 0 12px var(--rebel-g);
+  margin-bottom:16px;
+  opacity:0;animation:fu 1s ease-out .3s forwards;
 }
-.last-result strong { color:var(--amber); }
+
+.title-main{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(32px,10vw,52px);
+  line-height:1.05;letter-spacing:0.03em;text-transform:uppercase;
+  color:white;
+  text-shadow:0 0 32px rgba(0,229,255,0.5),0 0 64px rgba(0,229,255,0.2);
+  margin-bottom:8px;
+  opacity:0;animation:fu 1.2s ease-out .5s forwards;
+}
+.title-main span{
+  display:block;
+  font-size:clamp(42px,13vw,72px);
+  color:var(--cyan);
+  text-shadow:0 0 32px rgba(0,229,255,0.8),0 0 64px rgba(0,229,255,0.4);
+}
+
+.title-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(9px,2.5vw,11px);
+  letter-spacing:0.24em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:48px;
+  opacity:0;animation:fu 1s ease-out .8s forwards;
+}
+
+.title-btn{
+  background:var(--cyan);color:var(--bg);
+  font-family:'Orbitron',sans-serif;font-weight:700;
+  font-size:12px;letter-spacing:0.22em;text-transform:uppercase;
+  padding:20px 40px;
+  box-shadow:0 0 28px var(--cyan-g),0 8px 24px rgba(0,0,0,0.5);
+  transition:all .3s ease;
+  -webkit-tap-highlight-color:transparent;
+  opacity:0;animation:fu 1s ease-out 1.1s forwards;
+  width:100%;max-width:320px;
+}
+.title-btn:active{transform:scale(0.98);box-shadow:0 0 40px var(--cyan-g);}
+
+.title-stats{
+  margin-top:28px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-3);line-height:2;
+  opacity:0;animation:fu 1s ease-out 1.4s forwards;
+}
+.title-stats em{color:var(--cyan);font-style:normal;}
+
+/* Last result banner */
+.last-result{
+  margin-top:20px;
+  padding:12px 20px;
+  background:rgba(255,107,43,0.08);
+  border:1px solid rgba(255,107,43,0.25);
+  border-radius:4px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--rebel);
+  opacity:0;animation:fu 1s ease-out 1.6s forwards;
+}
+.last-result strong{color:white;}
 
 /* ============================================================
-   SCREEN 2 — SCANNING
+   SCREEN 2 — SCANNING (transition)
    ============================================================ */
-#screen-scan { gap:20px; }
-.scan-title {
-  font-family:'Orbitron',monospace; font-size:18px; font-weight:700;
-  letter-spacing:3px; color:var(--cyan);
-  text-shadow:0 0 20px var(--cyan-d);
+#screen-scan{
+  align-items:center;justify-content:center;text-align:center;
+  padding:40px 28px;
 }
-.scan-sub {
-  font-family:'Orbitron',monospace; font-size:9px; letter-spacing:3px;
-  color:rgba(0,212,255,0.4); text-transform:uppercase;
+.scan-rebel{
+  width:80px;height:80px;margin:0 auto 32px;
+  background:url('https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/ui/rebel-symbol.png') center/contain no-repeat;
+  filter:sepia(1) hue-rotate(160deg) saturate(8) brightness(2);
+  animation:scan-spin 3s linear infinite;
 }
-.scan-bar-wrap {
-  width:240px; height:2px;
-  background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.2);
-  overflow:hidden;
+@keyframes scan-spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+
+.scan-title{
+  font-family:'Orbitron',sans-serif;font-weight:700;
+  font-size:18px;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--cyan);text-shadow:0 0 16px var(--cyan-g);
+  margin-bottom:12px;
 }
-.scan-bar-fill {
-  height:100%; width:0;
-  background:linear-gradient(90deg,var(--cyan-d),var(--cyan));
-  animation:scan-fill 2.8s ease-in-out forwards;
+.scan-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:36px;
 }
-@keyframes scan-fill { to { width:100%; } }
-.scan-dots {
-  font-family:'Orbitron',monospace; font-size:10px; letter-spacing:4px;
-  color:rgba(0,212,255,0.3);
-  animation:dots-blink 1.2s ease-in-out infinite;
+.scan-bar-wrap{
+  width:240px;height:2px;background:rgba(0,229,255,0.12);
+  border:1px solid rgba(0,229,255,0.2);overflow:hidden;margin:0 auto;
 }
-@keyframes dots-blink { 0%,100%{opacity:0.3;} 50%{opacity:0.8;} }
+.scan-bar-fill{
+  height:100%;width:0;background:linear-gradient(90deg,var(--cyan-d),var(--cyan));
+  box-shadow:0 0 8px var(--cyan-g);
+  animation:scan-fill 2.8s ease-out forwards;
+}
+@keyframes scan-fill{0%{width:0;}100%{width:100%;}}
 
 /* ============================================================
    SCREEN 3 — QUESTION
    ============================================================ */
-#screen-question {
+#screen-question{
   justify-content:flex-start;
-  padding-top: max(env(safe-area-inset-top,8px),52px);
 }
 
-/* HUD — top strip */
-.q-hud {
-  width:100%; display:flex; align-items:center; gap:10px;
-  margin-bottom:12px; flex-shrink:0;
+/* Progress HUD */
+.q-hud{
+  background:rgba(4,6,11,0.92);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--hr-c);
+  padding:max(14px,env(safe-area-inset-top)) 16px 12px;
+  display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:20;
+  flex-shrink:0;
 }
-.q-num {
-  font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
-  letter-spacing:2px; color:var(--cyan); white-space:nowrap;
-  text-shadow:0 0 8px var(--cyan-d);
+.q-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--cyan);white-space:nowrap;flex-shrink:0;
 }
-.q-progress-wrap {
-  flex:1; height:2px;
-  background:rgba(0,212,255,0.1); border-radius:2px; overflow:hidden;
+.q-progress-wrap{
+  flex:1;height:4px;
+  background:rgba(0,229,255,0.08);
+  border:1px solid rgba(0,229,255,0.15);
+  overflow:hidden;
 }
-.q-progress-fill {
-  height:100%; width:0;
+.q-progress-fill{
+  height:100%;
   background:linear-gradient(90deg,var(--cyan-d),var(--cyan));
-  transition:width 0.4s ease; border-radius:2px;
+  box-shadow:0 0 6px var(--cyan-g);
+  transition:width .6s cubic-bezier(.2,.8,.2,1);
 }
-.q-cat {
-  font-family:'Orbitron',monospace; font-size:7px; letter-spacing:2px;
-  color:rgba(0,212,255,0.35); text-transform:uppercase; white-space:nowrap;
+.q-cat{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--ink-3);white-space:nowrap;flex-shrink:0;
 }
-
-/* Back button in HUD */
-.q-back-btn {
-  font-family:'Orbitron',monospace; font-size:8px; letter-spacing:2px;
-  color:rgba(255,255,255,0.3); text-transform:uppercase;
-  padding:6px 10px;
-  border:1px solid rgba(255,255,255,0.1); border-radius:4px;
-  background:rgba(255,255,255,0.03);
-  white-space:nowrap; flex-shrink:0;
-  display:none; /* shown after Q1 */
-}
-.q-back-btn.visible { display:block; }
-.q-back-btn:active { background:rgba(255,255,255,0.1); }
 
 /* Question body */
-.q-body {
-  width:100%; flex:1;
-  display:flex; flex-direction:column; gap:14px;
-  transition:opacity 0.25s ease, transform 0.25s ease;
+.q-body{
+  flex:1;
+  padding:28px 20px 24px;
+  display:flex;flex-direction:column;
+  max-width:540px;margin:0 auto;width:100%;
 }
 
-/* Question image */
-.q-image {
-  width:100%; border-radius:10px; overflow:hidden;
-  background:rgba(4,8,20,0.8);
-  display:none; /* shown when has-image */
-  aspect-ratio:16/9; position:relative;
+/* Optional question image */
+.q-image{
+  width:100%;
+  aspect-ratio:1/1;
+  border-radius:4px;
+  overflow:hidden;
+  margin-bottom:20px;
+  background:var(--bg-2);
+  border:1px solid var(--hr-c);
+  display:none; /* hidden until image URL is set */
+  position:relative;
 }
-.q-image.has-image { display:block; }
-.q-image img { width:100%; height:100%; object-fit:cover; }
-.q-image-overlay {
-  position:absolute; inset:0;
+.q-image.has-image{display:block;}
+.q-image img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+}
+.q-image-overlay{
+  position:absolute;inset:0;
   background:linear-gradient(180deg,transparent 60%,rgba(4,6,11,0.8) 100%);
 }
 
 /* Question text */
-.q-text-wrap { width:100%; }
-.q-label {
-  font-family:'Orbitron',monospace; font-size:8px; letter-spacing:3px;
-  color:rgba(0,212,255,0.4); text-transform:uppercase;
-  margin-bottom:8px; display:flex; align-items:center; gap:8px;
+.q-text-wrap{margin-bottom:24px;}
+.q-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--rebel);text-shadow:0 0 8px var(--rebel-g);
+  margin-bottom:10px;display:flex;align-items:center;gap:8px;
 }
-.q-label::before { content:''; width:12px; height:1px; background:var(--rebel); }
-.q-text {
-  font-family:'Rajdhani',sans-serif; font-size:clamp(17px,4.5vw,22px);
-  font-weight:600; line-height:1.35; color:rgba(255,255,255,0.92);
-  letter-spacing:0.3px;
+.q-label::before{content:'';width:12px;height:1px;background:var(--rebel);}
+.q-text{
+  font-family:'Rajdhani',sans-serif;font-weight:600;
+  font-size:clamp(20px,5.5vw,26px);
+  line-height:1.25;
+  color:var(--ink-1);
 }
 
-/* Answer buttons */
-.q-answers { width:100%; display:flex; flex-direction:column; gap:8px; }
-.q-answer {
-  width:100%; text-align:left; padding:14px 16px;
-  background:rgba(8,12,24,0.7);
-  border:1px solid rgba(0,212,255,0.12);
-  border-radius:8px;
-  font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:500;
-  color:rgba(255,255,255,0.82); letter-spacing:0.3px;
-  transition:all 0.15s ease;
-  display:flex; align-items:center; gap:12px;
-  min-height:52px;
+/* Answer choices */
+.q-answers{
+  display:flex;flex-direction:column;gap:10px;
+  flex:1;
 }
-.q-answer:active { transform:scale(0.99); }
-.q-answer-letter {
-  font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
-  color:rgba(0,212,255,0.5); min-width:16px; letter-spacing:1px;
+.q-answer{
+  padding:16px 18px;
+  background:rgba(8,12,24,0.6);
+  border:1px solid rgba(0,229,255,0.14);
+  position:relative;overflow:hidden;
+  text-align:left;
+  transition:all .2s ease;
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
 }
-.q-answer.selected {
-  background:rgba(0,212,255,0.12);
+.q-answer:active,.q-answer:hover{
+  background:rgba(0,229,255,0.08);
+  border-color:rgba(0,229,255,0.35);
+}
+.q-answer.selected{
+  background:rgba(0,229,255,0.14);
   border-color:var(--cyan);
-  color:white;
+  box-shadow:0 0 16px var(--cyan-g2);
 }
-.q-answer.selected .q-answer-letter { color:var(--cyan); }
-.q-answer.dimmed {
-  opacity:0.35;
-  border-color:rgba(0,212,255,0.05);
+.q-answer.selected .q-answer-letter{
+  background:var(--cyan);color:var(--bg);
 }
-/* Image answer grid */
-.q-answer.image-answer {
-  flex-direction:column; align-items:center;
-  padding:10px; gap:6px; text-align:center;
+.q-answer.correct{
+  background:rgba(0,229,255,0.18);
+  border-color:var(--cyan);
 }
-.q-answer.image-answer img {
-  width:100%; aspect-ratio:1; object-fit:cover;
-  border-radius:6px;
+.q-answer.dimmed{
+  opacity:0.45;
+  cursor:pointer;
 }
-.q-answer.image-answer .q-answer-caption {
-  font-family:'Rajdhani',sans-serif; font-size:12px;
-  color:rgba(255,255,255,0.7); letter-spacing:1px;
+.q-answer.dimmed:active,.q-answer.dimmed:hover{
+  opacity:0.75;
+  border-color:rgba(0,229,255,0.25);
+  background:rgba(0,229,255,0.05);
+}
+.q-answer *{pointer-events:none;}
+.q-answer-inner{
+  display:flex;align-items:flex-start;gap:12px;
+}
+.q-answer-letter{
+  font-family:'Orbitron',sans-serif;font-weight:700;
+  font-size:11px;
+  width:26px;height:26px;
+  border:1px solid rgba(0,229,255,0.3);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  color:var(--cyan);
+  transition:all .2s ease;
+}
+.q-answer-text{
+  font-family:'Rajdhani',sans-serif;font-weight:500;
+  font-size:17px;line-height:1.4;
+  color:var(--ink-1);
+  padding-top:2px;
 }
 
-/* 2x2 image grid */
-.q-answers.image-grid {
-  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+/* Corner accent */
+.q-answer::after{
+  content:'';position:absolute;bottom:-1px;right:-1px;
+  width:6px;height:6px;
+  border:1px solid rgba(0,229,255,0.2);
+  border-left:none;border-top:none;
 }
+
+/* Next button */
+.q-next-wrap{
+  padding:16px 20px max(32px,env(safe-area-inset-bottom));
+  max-width:540px;margin:0 auto;width:100%;
+}
+.q-next{
+  width:100%;padding:18px;
+  font-family:'Orbitron',sans-serif;font-weight:700;
+  font-size:11px;letter-spacing:0.22em;text-transform:uppercase;
+  background:var(--cyan);color:var(--bg);
+  box-shadow:0 0 20px var(--cyan-g);
+  transition:all .25s ease;
+  -webkit-tap-highlight-color:transparent;
+  opacity:0;pointer-events:none;
+  transform:translateY(8px);
+}
+.q-next.visible{
+  opacity:1;pointer-events:auto;transform:translateY(0);
+}
+.q-next:active{transform:scale(0.99);}
 
 /* ============================================================
    SCREEN 4 — CALCULATING
    ============================================================ */
-#screen-calc { gap:16px; }
-.calc-title {
-  font-family:'Orbitron',monospace; font-size:16px; font-weight:700;
-  letter-spacing:3px; color:var(--cyan); text-align:center;
-  text-shadow:0 0 20px var(--cyan-d);
+#screen-calc{
+  align-items:center;justify-content:center;text-align:center;
+  padding:40px 28px;
 }
-.calc-sub {
-  font-family:'Orbitron',monospace; font-size:9px; letter-spacing:3px;
-  color:rgba(0,212,255,0.4); text-transform:uppercase; text-align:center;
+.calc-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:22px;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--cyan);text-shadow:0 0 20px var(--cyan-g);
+  margin-bottom:12px;
 }
-.calc-bars { width:100%; max-width:340px; display:flex; flex-direction:column; gap:8px; }
-.calc-row {
-  display:flex; align-items:center; gap:10px;
-  animation:fadeup 0.4s ease both;
+.calc-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:40px;
 }
-@keyframes fadeup { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
-.calc-name {
-  font-family:'Orbitron',monospace; font-size:9px; letter-spacing:1px;
-  color:rgba(255,255,255,0.45); min-width:56px; text-transform:uppercase;
+.calc-bars{width:280px;margin:0 auto;}
+.calc-row{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:10px;opacity:0;
+  animation:fu .5s ease-out forwards;
 }
-.calc-track {
-  flex:1; height:6px;
-  background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.15);
-  overflow:hidden; border-radius:3px;
+.calc-name{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--ink-2);width:70px;flex-shrink:0;text-align:right;
 }
-.calc-fill {
-  height:100%; width:0; border-radius:3px;
-  transition:width 0.8s cubic-bezier(0.34,1.2,0.64,1);
-}
-
-/* ============================================================
-   YODA COMMENTARY OVERLAY
-   ============================================================ */
-#yoda-commentary {
-  position:fixed; bottom:12%; left:50%;
-  transform:translateX(-50%);
-  z-index:40; text-align:center;
-  pointer-events:none; white-space:nowrap;
-  opacity:0; transition:opacity 0.6s ease;
-}
-#yoda-commentary.show { opacity:1; }
-.yoda-c-quote {
-  font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:500;
-  letter-spacing:1px; color:rgba(0,215,255,0.6); font-style:italic;
-  text-shadow:0 0 12px rgba(0,215,255,0.3), 0 1px 4px rgba(0,0,0,0.9);
-}
-.yoda-c-attr {
-  font-family:'Orbitron',monospace; font-size:7px; letter-spacing:2px;
-  color:rgba(255,255,255,0.2); margin-top:3px; text-transform:uppercase;
+.calc-track{flex:1;height:6px;background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.18);overflow:hidden;}
+.calc-fill{
+  height:100%;width:0;
+  background:linear-gradient(90deg,var(--cyan-d),var(--cyan));
+  box-shadow:0 0 6px var(--cyan-g);
+  transition:width 1.2s cubic-bezier(.2,.8,.2,1);
 }
 
 /* ============================================================
-   MID-QUIZ DAD MESSAGE
+   SHARED ANIMATIONS
    ============================================================ */
-#dad-message {
-  position:fixed; inset:0; z-index:60;
-  display:flex; align-items:center; justify-content:center;
-  background:rgba(0,0,8,0.85); opacity:0;
-  pointer-events:none; transition:opacity 0.6s ease;
-  padding:32px;
-}
-#dad-message.show { opacity:1; pointer-events:all; }
-.dad-inner {
-  text-align:center; max-width:300px;
-}
-.dad-from {
-  font-family:'Orbitron',monospace; font-size:8px; letter-spacing:4px;
-  color:rgba(255,176,85,0.5); text-transform:uppercase; margin-bottom:12px;
-}
-.dad-text {
-  font-family:'Rajdhani',sans-serif; font-size:18px; font-weight:500;
-  line-height:1.5; color:rgba(255,255,255,0.85); font-style:italic;
-  letter-spacing:0.3px;
-}
-.dad-sig {
-  font-family:'Orbitron',monospace; font-size:9px; letter-spacing:3px;
-  color:var(--amber); margin-top:12px; text-transform:uppercase;
-}
+@keyframes fu{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fi{from{opacity:0;}to{opacity:1;}}
 
-/* ============================================================
-   LIGHTSABER PROGRESS
-   ============================================================ */
-#saber-progress {
-  position:fixed; right:12px; top:50%;
-  transform:translateY(-50%);
-  z-index:40; pointer-events:none;
-  display:flex; flex-direction:column; align-items:center; gap:4px;
-  opacity:0; transition:opacity 0.5s ease;
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;}
 }
-#saber-progress.show { opacity:1; }
-.saber-hilt {
-  width:8px; height:16px;
-  background:linear-gradient(180deg,#888,#444,#666);
-  border-radius:2px;
-  border:1px solid rgba(255,255,255,0.2);
-}
-.saber-blade-track {
-  width:3px; border-radius:2px;
-  background:rgba(255,255,255,0.06);
-  overflow:hidden; position:relative;
-}
-.saber-blade-fill {
-  position:absolute; bottom:0; left:0; right:0;
-  height:0%; border-radius:2px;
-  transition:height 0.8s ease, background 1s ease;
-}
-
-/* ============================================================
-   FORCE SENSITIVE QUESTION OVERLAY
-   ============================================================ */
-#force-overlay {
-  position:fixed; inset:0; z-index:35;
-  background:rgba(0,0,8,0.0);
-  pointer-events:none;
-  transition:background 0.6s ease;
-}
-#force-overlay.active { background:rgba(0,0,8,0.55); }
-
 </style>
 </head>
 <body>
 
-<!-- Persistent space background -->
-<div id="space-bg"></div>
-<canvas id="star-canvas"></canvas>
-<div id="ship-layer"></div>
-
-<!-- Fade overlay -->
-<div id="fade-overlay"></div>
-
-<!-- Home button — always visible when not on title -->
-<button class="home-btn" id="home-btn" onclick="goHome()" aria-label="Home">
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8 1L1 7v8h5v-4h4v4h5V7L8 1z" stroke="rgba(0,212,255,0.7)" stroke-width="1.2" stroke-linejoin="round"/>
-  </svg>
-</button>
-
-<!-- Yoda commentary -->
-<div id="yoda-commentary">
-  <div class="yoda-c-quote" id="yoda-c-text"></div>
-  <div class="yoda-c-attr">— Master Yoda</div>
-</div>
-
-<!-- Dad message -->
-<div id="dad-message">
-  <div class="dad-inner">
-    <div class="dad-from">Incoming Transmission</div>
-    <div class="dad-text" id="dad-text">"Halfway through, son. I'm proud of you for being curious about who you are."</div>
-    <div class="dad-sig">— Dad</div>
-  </div>
-</div>
-
-<!-- Lightsaber progress indicator -->
-<div id="saber-progress">
-  <div class="saber-hilt"></div>
-  <div class="saber-blade-track" id="saber-track" style="height:120px;">
-    <div class="saber-blade-fill" id="saber-fill"></div>
-  </div>
-</div>
-
-<!-- Force sensitive overlay -->
-<div id="force-overlay"></div>
+<div class="atmo"></div>
+<div class="stars"></div>
 
 <!-- ============================================================
      SCREEN 1 — TITLE
      ============================================================ -->
 <section class="screen active" id="screen-title">
+  <div class="title-rebel"></div>
   <div class="title-eyebrow">✦ Force Vision · Character Scan ✦</div>
   <h1 class="title-main">
     Which Star Wars
     <span>Character</span>
     Are You?
   </h1>
-  <div class="title-rule"></div>
-  <p class="title-sub">30 questions · force-powered results</p>
-  <button class="title-btn" id="start-btn" onclick="startQuiz()">
-    <svg class="btn-border-svg">
-      <rect class="btn-border-rect" id="start-btn-rect" rx="4" ry="4"/>
-    </svg>
-    BEGIN →
-  </button>
+  <p class="title-sub">// 30 questions · force-powered results · guapo_001</p>
+  <button class="title-btn" onclick="startQuiz()">▶ BEGIN SCAN</button>
   <div class="title-stats">
-    <em id="stat-pool">500</em> questions in the Force pool &nbsp;·&nbsp;
-    <em>16</em> possible characters
+    <em id="stat-pool">250</em> questions in the Force pool<br>
+    <em>16</em> possible characters · <em>5</em> destiny paths
   </div>
   <div class="last-result" id="last-result" style="display:none">
-    Last time: You were <strong id="last-char-name">—</strong>
+    Last session: You were <strong id="last-char-name">—</strong> · Benched this round
   </div>
 </section>
 
@@ -504,34 +464,32 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
      SCREEN 2 — SCANNING
      ============================================================ -->
 <section class="screen" id="screen-scan">
+  <div class="scan-rebel"></div>
   <div class="scan-title">Scanning the Force…</div>
   <div class="scan-sub">// Selecting your destiny path</div>
   <div class="scan-bar-wrap"><div class="scan-bar-fill"></div></div>
-  <div class="scan-dots" id="scan-dots">· · ·</div>
 </section>
 
 <!-- ============================================================
      SCREEN 3 — QUESTION
      ============================================================ -->
 <section class="screen" id="screen-question">
-
   <div class="q-hud">
     <span class="q-num" id="q-num">01 / 30</span>
     <div class="q-progress-wrap">
       <div class="q-progress-fill" id="q-progress" style="width:0%"></div>
     </div>
-    <button class="q-back-btn" id="q-back-btn" onclick="goBack()">← BACK</button>
     <span class="q-cat" id="q-cat">CATEGORY</span>
   </div>
 
-  <div class="q-body" id="q-body">
+  <div class="q-body">
     <div class="q-image" id="q-image">
       <img id="q-image-img" src="" alt="">
       <div class="q-image-overlay"></div>
     </div>
 
     <div class="q-text-wrap">
-      <div class="q-label">The Force Asks</div>
+      <div class="q-label" id="q-label">The Force Asks</div>
       <p class="q-text" id="q-text">Question text loads here</p>
     </div>
 
@@ -540,6 +498,11 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
     </div>
   </div>
 
+  <div class="q-next-wrap">
+    <button class="q-next" id="q-next" onclick="nextQuestion()">
+      NEXT →
+    </button>
+  </div>
 </section>
 
 <!-- ============================================================
@@ -548,394 +511,492 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
 <section class="screen" id="screen-calc">
   <div class="calc-title">The Force Has Decided…</div>
   <div class="calc-sub">// Analyzing your destiny</div>
-  <div class="calc-bars" id="calc-bars"></div>
+  <div class="calc-bars" id="calc-bars">
+    <!-- Injected by JS -->
+  </div>
 </section>
-
-<!-- Load questions bank -->
-<script src="./questions.js"></script>
 
 <script>
 
 /* ============================================================
-   IMAGE HELPER — tries .png then .PNG automatically
-   ============================================================ */
-function setImgSrc(el, path) {
-  var base = path.replace(/\.[Pp][Nn][Gg]$/,'').replace(/\.[Jj][Pp][Gg]$/,'');
-  var extMatch = path.match(/(\.[Pp][Nn][Gg]|\.[Jj][Pp][Gg])$/);
-  var pri = extMatch ? extMatch[1].toLowerCase() : '.png';
-  var sec = pri === '.png' ? '.PNG' : '.png';
-  el.onerror = function() {
-    el.onerror = function() {
-      el.onerror = null;
-      el.style.visibility = 'hidden';
-    };
-    el.src = base + sec;
-  };
-  el.src = base + pri;
-}
-
-/* ============================================================
    CHARACTERS
+   All 16 in the pool. Each has an id, name, screen type,
+   and the URL fragment to route to.
    ============================================================ */
-var CHARACTERS = {
-  yoda:      { name:'Yoda',            img:'./yoda.png' },
-  obiwan:    { name:'Obi-Wan',         img:'./obiwan.png' },
-  luke:      { name:'Luke',            img:'./luke.png' },
-  mace:      { name:'Mace Windu',      img:'./mace.png' },
-  poe:       { name:'Poe Dameron',     img:'./poe.png' },
-  finn:      { name:'Finn',            img:'./finn.png' },
-  quigon:    { name:'Qui-Gon Jinn',    img:'./quigon.png' },
-  mando:     { name:'The Mandalorian', img:'./mando.png' },
-  boba:      { name:'Boba Fett',       img:'./boba.png' },
-  han:       { name:'Han Solo',        img:'./han.png' },
-  chewie:    { name:'Chewbacca',       img:'./chewie.png' },
-  vader:     { name:'Darth Vader',     img:'./vader.png' },
-  palpatine: { name:'Palpatine',       img:'./palpatine.png' },
-  kylo:      { name:'Kylo Ren',        img:'./kylo.png' },
-  maul:      { name:'Darth Maul',      img:'./maul.png' },
-  grogu:     { name:'Grogu',           img:'./grogu.png' }
+const CHARACTERS = {
+  yoda:      { name:'Yoda',          screen:'cyberpunk',  path:'sw-prototypes/cyberpunk/' },
+  obiwan:    { name:'Obi-Wan',        screen:'cyberpunk',  path:'sw-prototypes/cyberpunk/' },
+  luke:      { name:'Luke',           screen:'cyberpunk',  path:'sw-prototypes/cyberpunk/' },
+  mace:      { name:'Mace Windu',     screen:'cyberpunk',  path:'sw-prototypes/cyberpunk/' },
+  poe:       { name:'Poe Dameron',    screen:'cyberpunk',  path:'sw-prototypes/cyberpunk/' },
+  finn:      { name:'Finn',           screen:'cyberpunk',  path:'sw-prototypes/cyberpunk/' },
+  quigon:    { name:'Qui-Gon Jinn',   screen:'cyberpunk',  path:'sw-prototypes/cyberpunk/' },
+  mando:     { name:'The Mandalorian',screen:'mando',      path:'sw-prototypes/mando/'     },
+  boba:      { name:'Boba Fett',      screen:'mando',      path:'sw-prototypes/mando/'     },
+  han:       { name:'Han Solo',       screen:'mando',      path:'sw-prototypes/mando/'     },
+  chewie:    { name:'Chewbacca',      screen:'mando',      path:'sw-prototypes/mando/'     },
+  vader:     { name:'Darth Vader',    screen:'imperial',   path:'sw-prototypes/imperial/'  },
+  palpatine: { name:'Palpatine',      screen:'imperial',   path:'sw-prototypes/imperial/'  },
+  kylo:      { name:'Kylo Ren',       screen:'imperial',   path:'sw-prototypes/imperial/'  },
+  maul:      { name:'Darth Maul',     screen:'imperial',   path:'sw-prototypes/imperial/'  },
+  grogu:     { name:'Grogu',          screen:'grogu',      path:'sw-prototypes/grogu/'     },
 };
 
-/* ============================================================
-   LIGHTSABER COLORS per character
-   ============================================================ */
-var SABER_COLORS = {
-  yoda:'#00FF88', obiwan:'#44AAFF', luke:'#44AAFF',
-  mace:'#CC44FF', quigon:'#00FF88', poe:'#44AAFF',
-  finn:'#44AAFF', mando:'#FFFFFF',  boba:'#FFFFFF',
-  han:'#FFFFFF',  chewie:'#FFFFFF', vader:'#FF2233',
-  palpatine:'#FF2233', kylo:'#FF2233', maul:'#FF2233',
-  grogu:'#00FF88'
-};
+const ALL_IDS = Object.keys(CHARACTERS);
+const QUESTIONS_PER_SESSION = 30;
+const ALWAYS_BENCH_LAST = true; // bench last result
 
 /* ============================================================
-   YODA COMMENTARY — per milestone
+   ROTATION SYSTEM
+   - Last result is always benched
+   - 3 additional random characters are benched
+   - Active pool = 12 characters
    ============================================================ */
-var YODA_LINES = [
-  'Beginning well, you are.',
-  'Strong with the Force, these answers are.',
-  'Hmm. Interesting, your choices are.',
-  'Halfway there, you are. Proud of you, I am.',
-  'Close to the truth, you come.',
-  'Almost, the Force reveals itself.'
-];
+function buildActivePool() {
+  const lastResult = localStorage.getItem('sw_last_result');
+  let bench = [];
 
-var FORCE_QUESTIONS = [5, 15, 25]; /* question indices that get the dark overlay */
-
-/* ============================================================
-   STATE
-   ============================================================ */
-var QUESTIONS_PER_SESSION = 30;
-var sessionQuestions = [];
-var currentIndex = 0;
-var selectedAnswer = null;
-var answers = []; /* { questionIndex, answerIndex } for back navigation */
-var scores = {};
-var activePool = [];
-var dadShown = false;
-var yodaShown = [];
-
-/* ============================================================
-   STARS
-   ============================================================ */
-(function buildStars() {
-  var canvas = document.getElementById('star-canvas');
-  if (!canvas) return;
-  var ctx = canvas.getContext('2d');
-  canvas.width  = window.innerWidth;
-  canvas.height = window.innerHeight;
-  var stars = [];
-  for (var i = 0; i < 140; i++) {
-    stars.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() < 0.1 ? (1.2 + Math.random()*1.5) : (0.2 + Math.random()*0.8),
-      lo: 0.05 + Math.random()*0.15,
-      hi: 0.3  + Math.random()*0.5,
-      phase: Math.random() * Math.PI * 2,
-      speed: 0.005 + Math.random()*0.01
-    });
+  if (lastResult && CHARACTERS[lastResult]) {
+    bench.push(lastResult);
+    // 3 more randoms from remaining pool
+    const remaining = ALL_IDS.filter(id => id !== lastResult);
+    shuffle(remaining);
+    bench = bench.concat(remaining.slice(0, 3));
+  } else {
+    // First play — fully random 4 benched
+    const shuffled = [...ALL_IDS];
+    shuffle(shuffled);
+    bench = shuffled.slice(0, 4);
   }
-  function drawStars(ts) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    stars.forEach(function(s) {
-      s.phase += s.speed;
-      var op = s.lo + (s.hi - s.lo) * (0.5 + 0.5 * Math.sin(s.phase));
-      ctx.globalAlpha = op;
-      ctx.fillStyle = 'white';
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
-      ctx.fill();
-    });
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(drawStars);
-  }
-  requestAnimationFrame(drawStars);
-})();
 
-/* ============================================================
-   PASSING SHIPS — same correct orientations as index.html
-   ============================================================ */
-var qsl = document.getElementById('ship-layer');
-function qClean(el) { if (el&&el.parentNode) el.parentNode.removeChild(el); }
-function qEio(t) { return t<0.5?2*t*t:-1+(4-2*t)*t; }
-function qSms(t) { return t*t*(3-2*t); }
-function qFd(t,r) { return Math.min(t/r,1,(1-t)/r); }
-
-function qMakeShip(file, w) {
-  var img=document.createElement('img');
-  img.style.cssText='position:absolute;pointer-events:none;opacity:0;width:'+w+'px;height:auto;will-change:transform,opacity;';
-  setImgSrc(img, file);
-  if(qsl) qsl.appendChild(img);
-  return img;
-}
-
-/* Destroyer L→R, nose LEFT so scaleX(-1) */
-function qDestroyer() {
-  var vw=window.innerWidth,vh=window.innerHeight;
-  var sz=Math.round(Math.min(vw,vh)*0.36);
-  var img=qMakeShip('./destroyer.png',sz);
-  var sy=vh*(0.03+Math.random()*0.14),sx=-sz-10,ex=vw+sz+10,dur=22000+Math.random()*10000;
-  img.style.top=sy+'px';img.style.left='0px';
-  var t0=null;
-  function f(ts){if(!t0)t0=ts;var t=Math.min((ts-t0)/dur,1);
-    img.style.opacity=(qFd(t,0.04)*0.48).toFixed(3);
-    img.style.transform='translate('+(sx+(ex-sx)*qEio(t)).toFixed(1)+'px,'+(vh*0.04*t).toFixed(1)+'px) scaleX(-1)';
-    if(t<1)requestAnimationFrame(f);else qClean(img);}requestAnimationFrame(f);
-}
-
-/* X-Wing with tilt — nose LEFT, scaleX(-1) for right travel + rotate(-15deg) */
-function qXWing(opts) {
-  opts=opts||{};
-  var vw=window.innerWidth,vh=window.innerHeight;
-  var sz=Math.round(Math.min(vw,vh)*(opts.scale||(0.12+Math.random()*0.06)));
-  var img=qMakeShip('./xwing.png',sz);
-  var gr=opts.goRight!==undefined?opts.goRight:(Math.random()>0.5);
-  var sy=vh*(opts.topFrac!==undefined?opts.topFrac:(0.05+Math.random()*0.43));
-  var sx=gr?-sz-10:vw+sz+10, ex=gr?vw+sz+10:-sz-10;
-  var xf=gr?'scaleX(-1) rotate(-15deg)':'rotate(15deg)';
-  var diag=vh*0.07*(gr?1:-1)*(opts.diagMult||1);
-  var dur=opts.dur||(1200+Math.random()*2600);
-  img.style.top=sy+'px';img.style.left='0px';
-  setTimeout(function(){
-    var t0=null;
-    function f(ts){if(!t0)t0=ts;var t=Math.min((ts-t0)/dur,1),e=qSms(t);
-      img.style.opacity=(qFd(t,0.07)*(opts.maxOp||0.70)).toFixed(3);
-      img.style.transform='translate('+(sx+(ex-sx)*e).toFixed(1)+'px,'+(diag*t).toFixed(1)+'px) '+xf;
-      if(t<1)requestAnimationFrame(f);else qClean(img);}requestAnimationFrame(f);
-  }, opts.delay||0);
-}
-
-/* Falcon — top-right to bottom-left, no flip, natural orientation */
-function qFalcon(opts) {
-  opts=opts||{};
-  var vw=window.innerWidth,vh=window.innerHeight;
-  var sz=Math.round(Math.min(vw,vh)*(opts.scale||(0.20+Math.random()*0.06)));
-  var img=qMakeShip('./falcon.png',sz);
-  var sx=vw+sz, sy=-sz, ex=-sz, ey=vh+sz;
-  var dur=opts.dur||(6000+Math.random()*4000);
-  img.style.left=sx+'px'; img.style.top=sy+'px';
-  var t0=null;
-  function f(ts){if(!t0)t0=ts;var t=Math.min((ts-t0)/dur,1),e=qEio(t);
-    var x=sx+(ex-sx)*e, y=sy+(ey-sy)*e;
-    img.style.opacity=(qFd(t,0.06)*0.70).toFixed(3);
-    img.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)';
-    if(t<1)requestAnimationFrame(f);else qClean(img);}requestAnimationFrame(f);
-}
-
-/* TIE Fighter — symmetric, any direction */
-function qTie(opts) {
-  opts=opts||{};
-  var vw=window.innerWidth,vh=window.innerHeight;
-  var sz=Math.round(Math.min(vw,vh)*(opts.scale||(0.09+Math.random()*0.05)));
-  var img=qMakeShip('./tiefighter.png',sz);
-  var gr=opts.goRight!==undefined?opts.goRight:(Math.random()>0.5);
-  var sy=vh*(opts.topFrac!==undefined?opts.topFrac:(0.04+Math.random()*0.43));
-  var sx=gr?-sz-10:vw+sz+10, ex=gr?vw+sz+10:-sz-10;
-  var dur=opts.dur!==undefined?opts.dur:(1200+Math.random()*1800);
-  var diag=opts.diag!==undefined?opts.diag:(vh*0.05*(Math.random()>0.5?1:-1));
-  img.style.top=sy+'px';img.style.left='0px';
-  setTimeout(function(){
-    var t0=null;
-    function f(ts){if(!t0)t0=ts;var t=Math.min((ts-t0)/dur,1);
-      img.style.opacity=(qFd(t,0.10)*(opts.maxOp||0.60)).toFixed(3);
-      img.style.transform='translate('+(sx+(ex-sx)*qSms(t)).toFixed(1)+'px,'+(diag*t).toFixed(1)+'px)';
-      if(t<1)requestAnimationFrame(f);else qClean(img);}requestAnimationFrame(f);
-  }, opts.delay||0);
-}
-
-function qTieFormation() {
-  var vh=window.innerHeight,gr=Math.random()>0.5,b=0.05+Math.random()*0.35,r=Math.random(),spd=1300+Math.random()*1600;
-  if(r<0.30){ qTie({goRight:gr,topFrac:b,      scale:0.11,dur:spd,      diag: vh*0.04,delay:0  });
-              qTie({goRight:gr,topFrac:b+0.07,  scale:0.09,dur:spd*1.05,diag: vh*0.03,delay:240});
-  } else if(r<0.58){ qTie({goRight:gr,topFrac:b,      scale:0.12,dur:spd,      diag:-vh*0.03,delay:0  });
-                     qTie({goRight:gr,topFrac:b+0.08,  scale:0.10,dur:spd*1.08, diag: vh*0.04,delay:200});
-                     qTie({goRight:gr,topFrac:b+0.15,  scale:0.09,dur:spd*1.15, diag:-vh*0.02,delay:420});
-  } else { qTie({goRight:gr, topFrac:b,      scale:0.12,dur:spd*0.9, diag: vh*0.05,delay:0  });
-           qTie({goRight:gr, topFrac:b+0.09, scale:0.10,dur:spd,     diag:-vh*0.03,delay:180});
-           qTie({goRight:!gr,topFrac:b+0.04, scale:0.10,dur:spd*0.85,diag: vh*0.04,delay:340});
-           qTie({goRight:gr, topFrac:b+0.16, scale:0.09,dur:spd*1.1, diag:-vh*0.04,delay:560}); }
-}
-
-function qSchedule() {
-  var r=Math.random(),vh=window.innerHeight;
-  if(r<0.26){ qTieFormation(); setTimeout(qSchedule,10000+Math.random()*10000);
-  } else if(r<0.40){ qXWing({dur:1400+Math.random()*1600}); setTimeout(qSchedule,12000+Math.random()*8000);
-  } else if(r<0.54){
-    var gr=Math.random()>0.5,b=0.06+Math.random()*0.3,cnt=2+Math.floor(Math.random()*2);
-    for(var i=0;i<cnt;i++)(function(idx){qXWing({goRight:gr,topFrac:b+idx*0.10,scale:0.12,dur:1500+Math.random()*1000,delay:idx*280});})(i);
-    setTimeout(qSchedule,13000+Math.random()*8000);
-  } else if(r<0.68){ qFalcon(); setTimeout(qSchedule,14000+Math.random()*10000);
-  } else if(r<0.80){
-    /* Squadron battle */
-    var b2=0.06+Math.random()*0.18;
-    qXWing({goRight:true,topFrac:b2,      scale:0.12,dur:1300,delay:0,  diagMult:0.7});
-    qXWing({goRight:true,topFrac:b2+0.09, scale:0.11,dur:1400,delay:260,diagMult:0.7});
-    qXWing({goRight:true,topFrac:b2+0.18, scale:0.10,dur:1500,delay:520,diagMult:0.7});
-    setTimeout(function(){
-      qTie({goRight:false,topFrac:b2+0.03,scale:0.11,dur:1500,diag:-vh*0.04,delay:0  });
-      qTie({goRight:false,topFrac:b2+0.10,scale:0.10,dur:1400,diag: vh*0.03,delay:200});
-      qTie({goRight:false,topFrac:b2+0.17,scale:0.09,dur:1600,diag:-vh*0.05,delay:400});
-    },600);
-    setTimeout(qSchedule,15000+Math.random()*9000);
-  } else if(r<0.92){
-    var goR=Math.random()>0.5,topF=0.08+Math.random()*0.28;
-    qTie({goRight:goR,topFrac:topF,    scale:0.11,dur:1900,diag:vh*0.05,delay:0});
-    qXWing({goRight:goR,topFrac:topF+0.05,scale:0.13,dur:1500,delay:350});
-    setTimeout(qSchedule,13000+Math.random()*8000);
-  } else { qDestroyer(); setTimeout(qSchedule,25000+Math.random()*8000); }
-}
-
-setTimeout(function(){ qTieFormation(); }, 4000);
-/* Falcon guaranteed at 3s — always visible early */
-setTimeout(function(){ qFalcon(); }, 3000);
-setTimeout(qSchedule, 20000);
-
-/* 5-tap anywhere forces a Falcon — for testing */
-(function() {
-  var taps = 0, tapTimer = null;
-  document.addEventListener('touchstart', function() {
-    taps++;
-    clearTimeout(tapTimer);
-    tapTimer = setTimeout(function() { taps = 0; }, 800);
-    if (taps >= 5) { taps = 0; qFalcon(); }
-  });
-})();
-
-/* ============================================================
-   ASSEMBLED BUTTON
-   ============================================================ */
-function assembleBtn(btnId, rectId) {
-  var btn  = document.getElementById(btnId);
-  var rect = document.getElementById(rectId);
-  if (!btn || !rect) return;
-  setTimeout(function() {
-    var bw = btn.offsetWidth, bh = btn.offsetHeight;
-    var perimeter = 2 * (bw + bh);
-    rect.setAttribute('width', bw);
-    rect.setAttribute('height', bh);
-    rect.setAttribute('stroke-dasharray', perimeter);
-    rect.setAttribute('stroke-dashoffset', perimeter);
-    void btn.offsetWidth;
-    btn.classList.add('assembled');
-    rect.style.transition = 'stroke-dashoffset 0.55s ease';
-    rect.setAttribute('stroke-dashoffset', '0');
-  }, 400);
+  return ALL_IDS.filter(id => !bench.includes(id));
 }
 
 /* ============================================================
-   FADE TRANSITION
+   SCORING
+   scores object: { yoda: 0, obiwan: 0, ... }
    ============================================================ */
-function fadeTransition(cb) {
-  var ov = document.getElementById('fade-overlay');
-  ov.classList.add('on');
-  setTimeout(function() {
-    if (cb) cb();
-    setTimeout(function() { ov.classList.remove('on'); }, 200);
-  }, 300);
+let scores = {};
+let activePool = [];
+let sessionQuestions = [];
+let currentIndex = 0;
+let selectedAnswer = null;
+let answers = []; // store all answers for possible review
+
+function initScores() {
+  scores = {};
+  activePool.forEach(id => scores[id] = 0);
 }
 
 /* ============================================================
-   HOME BUTTON
-   ============================================================ */
-function showHomeBtn(show) {
-  var btn = document.getElementById('home-btn');
-  if (show) { btn.classList.add('visible'); }
-  else { btn.classList.remove('visible'); }
-}
+   QUESTION BANK
+   Format:
+   {
+     id: 'unique_id',
+     category: 'CATEGORY NAME',
+     text: 'Question text?',
+     image: null, // or URL string
+     answers: [
+       { text: 'Answer A', scores: { yoda: +3, han: -1 } },
+       { text: 'Answer B', scores: { vader: +2, grogu: -2 } },
+       { text: 'Answer C', scores: { mando: +3, palpatine: -1 } },
+       { text: 'Answer D', scores: { finn: +2, maul: +1 } },
+     ]
+   }
 
-function goHome() {
-  fadeTransition(function() {
-    window.location.href = './index.html';
-  });
-}
-
-/* ============================================================
-   SCREEN MANAGEMENT
+   NOTE: Scores only apply to characters in the active pool.
+   Characters not in the active pool are simply ignored.
    ============================================================ */
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(function(s) {
-    s.classList.remove('active');
-  });
-  document.getElementById(id).classList.add('active');
-  showHomeBtn(id !== 'screen-title');
-  window.scrollTo(0,0);
-}
+const QUESTION_BANK = [
+
+  /* ── PLACEHOLDER QUESTIONS — replace with real content ──
+     These 30 questions are structural placeholders that prove
+     the engine works. Real questions go here later.
+     Each category will have 25 questions for 250 total.
+     ──────────────────────────────────────────────────────── */
+
+  // CATEGORY 1 — THE WAY YOU THINK
+  {
+    id:'think_01',category:'THE WAY YOU THINK',
+    text:'You face a big decision. What do you do first?',
+    image:null,
+    answers:[
+      {text:'Sit quietly and think it all the way through.',scores:{yoda:3,obiwan:2,quigon:2,vader:-1,han:-2}},
+      {text:'Trust your gut and move.',scores:{han:3,poe:2,maul:1,yoda:-2,quigon:-1}},
+      {text:'Ask someone you trust for their view.',scores:{finn:3,luke:2,grogu:1,maul:-2,palpatine:-2}},
+      {text:'Make a plan. Execute it perfectly.',scores:{vader:3,palpatine:2,mace:2,finn:-1,han:-1}},
+    ]
+  },
+  {
+    id:'think_02',category:'THE WAY YOU THINK',
+    text:'A problem has no obvious solution. How do you approach it?',
+    image:null,
+    answers:[
+      {text:'Study it from every angle until the answer reveals itself.',scores:{yoda:3,obiwan:3,quigon:2,kylo:-1}},
+      {text:'Try something bold and see what happens.',scores:{poe:3,han:2,finn:1,yoda:-1,obiwan:-1}},
+      {text:'Find someone who has solved it before and learn from them.',scores:{luke:3,finn:2,grogu:1,palpatine:-2}},
+      {text:'Turn the problem into an advantage.',scores:{palpatine:3,vader:2,kylo:2,grogu:-1}},
+    ]
+  },
+  {
+    id:'think_03',category:'THE WAY YOU THINK',
+    text:'Someone tells you your plan is too risky. What do you say?',
+    image:null,
+    answers:[
+      {text:'Thank them and revise the plan.',scores:{obiwan:3,mace:2,yoda:2,han:-2,poe:-1}},
+      {text:'Smile and say: never tell me the odds.',scores:{han:3,poe:2,chewie:1,mace:-2,yoda:-1}},
+      {text:'Listen carefully — maybe they see something you missed.',scores:{luke:3,finn:2,quigon:2,maul:-2}},
+      {text:'Ignore them. The plan is correct.',scores:{vader:3,palpatine:2,kylo:2,finn:-2,luke:-1}},
+    ]
+  },
+
+  // CATEGORY 2 — THE WAY YOU FIGHT
+  {
+    id:'fight_01',category:'THE WAY YOU FIGHT',
+    text:'An enemy blocks your path. What do you do?',
+    image:null,
+    answers:[
+      {text:'Find another way around. No need to fight.',scores:{yoda:3,obiwan:2,grogu:2,maul:-3,kylo:-2}},
+      {text:'Face them directly. No hesitation.',scores:{maul:3,mace:2,vader:2,yoda:-2,grogu:-2}},
+      {text:'Outsmart them before they know what hit them.',scores:{han:3,poe:2,palpatine:2,grogu:-1}},
+      {text:'Use every weapon available.',scores:{boba:3,kylo:2,vader:2,quigon:-1,yoda:-1}},
+    ]
+  },
+  {
+    id:'fight_02',category:'THE WAY YOU FIGHT',
+    text:'What is your fighting style?',
+    image:null,
+    answers:[
+      {text:'Patient and precise — wait for the perfect moment.',scores:{yoda:3,obiwan:3,boba:2,maul:-1,kylo:-1}},
+      {text:'Fast, aggressive, overwhelming.',scores:{maul:3,kylo:3,vader:2,yoda:-2,obiwan:-2}},
+      {text:'Clever — use the environment and improvise.',scores:{han:3,finn:2,poe:2,vader:-1}},
+      {text:'Powerful and controlled — never wasteful.',scores:{mace:3,vader:3,luke:2,han:-1,poe:-1}},
+    ]
+  },
+  {
+    id:'fight_03',category:'THE WAY YOU FIGHT',
+    text:'You are outnumbered three to one. What is your move?',
+    image:null,
+    answers:[
+      {text:'Stay calm. The right moment will come.',scores:{yoda:3,quigon:3,obiwan:2,kylo:-2}},
+      {text:'Attack before they can coordinate.',scores:{maul:3,poe:2,han:2,yoda:-1,quigon:-1}},
+      {text:'Escape, regroup, come back stronger.',scores:{luke:3,finn:2,han:2,vader:-2,maul:-1}},
+      {text:'Become more dangerous than all three of them.',scores:{vader:3,kylo:3,mace:2,grogu:-2,finn:-1}},
+    ]
+  },
+
+  // CATEGORY 3 — THE WAY YOU LOVE
+  {
+    id:'love_01',category:'THE WAY YOU LOVE',
+    text:'Your best friend is in trouble. What do you do?',
+    image:null,
+    answers:[
+      {text:'Drop everything. Help them first, always.',scores:{finn:3,chewie:3,mando:2,palpatine:-3,maul:-2}},
+      {text:'Help them while solving your own problem too.',scores:{luke:3,poe:2,han:2,maul:-2}},
+      {text:'Trust them to handle it — they know you have their back.',scores:{han:3,boba:2,mando:2,grogu:-1}},
+      {text:'Protect them by being powerful enough that no one dares touch them.',scores:{vader:2,kylo:2,mace:2,finn:-1}},
+    ]
+  },
+  {
+    id:'love_02',category:'THE WAY YOU LOVE',
+    text:'Who matters most to you?',
+    image:null,
+    answers:[
+      {text:'The people I have chosen as family.',scores:{mando:3,chewie:3,finn:2,palpatine:-3,maul:-3}},
+      {text:'Everyone — I fight for the whole galaxy.',scores:{luke:3,poe:3,finn:2,boba:-2,maul:-2}},
+      {text:'Myself first — then those who earn my loyalty.',scores:{han:3,boba:3,kylo:1,grogu:-1,finn:-1}},
+      {text:'One person I would burn the world for.',scores:{kylo:3,vader:3,mando:2,yoda:-1,obiwan:-1}},
+    ]
+  },
+  {
+    id:'love_03',category:'THE WAY YOU LOVE',
+    text:'Someone small and scared needs your help. What do you do?',
+    image:null,
+    answers:[
+      {text:'Kneel down. Speak gently. Be there for them.',scores:{grogu:3,finn:3,luke:2,maul:-3,palpatine:-3}},
+      {text:'Protect them without saying a word.',scores:{mando:3,chewie:3,vader:1,palpatine:-3}},
+      {text:'Teach them to protect themselves.',scores:{obiwan:3,quigon:3,mace:2,boba:-1}},
+      {text:'I have my own problems.',scores:{palpatine:3,maul:2,boba:2,grogu:-3,finn:-3}},
+    ]
+  },
+
+  // CATEGORY 4 — THE WAY YOU LEAD
+  {
+    id:'lead_01',category:'THE WAY YOU LEAD',
+    text:'You are in charge of a mission. How do you run it?',
+    image:null,
+    answers:[
+      {text:'Clear roles, clear orders, no confusion.',scores:{vader:3,mace:3,palpatine:2,finn:-1,han:-1}},
+      {text:'Lead from the front. Let your actions inspire.',scores:{poe:3,luke:2,finn:2,palpatine:-2}},
+      {text:'Give everyone freedom. Trust the team.',scores:{han:3,chewie:2,poe:2,vader:-3,mace:-1}},
+      {text:'Work alone. Fewer variables.',scores:{boba:3,maul:2,yoda:1,finn:-2,poe:-1}},
+    ]
+  },
+  {
+    id:'lead_02',category:'THE WAY YOU LEAD',
+    text:'Your team disagrees with your decision. What do you do?',
+    image:null,
+    answers:[
+      {text:'Listen first. They might see something you missed.',scores:{yoda:3,quigon:3,luke:2,vader:-3,palpatine:-2}},
+      {text:'Explain your reasoning. Bring them along.',scores:{obiwan:3,poe:2,finn:2,maul:-2}},
+      {text:'Make a joke and move forward anyway.',scores:{han:3,poe:2,chewie:1,mace:-1}},
+      {text:'The decision is made. Follow or don\'t.',scores:{vader:3,palpatine:3,kylo:2,finn:-2,luke:-2}},
+    ]
+  },
+  {
+    id:'lead_03',category:'THE WAY YOU LEAD',
+    text:'What kind of leader are you?',
+    image:null,
+    answers:[
+      {text:'The wise one everyone turns to.',scores:{yoda:3,obiwan:3,mace:2,han:-1,maul:-2}},
+      {text:'The brave one who charges first.',scores:{poe:3,finn:3,luke:2,palpatine:-2,yoda:-1}},
+      {text:'The unpredictable one no one can plan around.',scores:{han:3,kylo:2,maul:2,obiwan:-2,yoda:-2}},
+      {text:'The powerful one no one dares to cross.',scores:{vader:3,palpatine:3,mace:2,grogu:-2,finn:-1}},
+    ]
+  },
+
+  // CATEGORY 5 — THE WAY YOU FEEL
+  {
+    id:'feel_01',category:'THE WAY YOU FEEL',
+    text:'Something unfair happens to you. What is your first reaction?',
+    image:null,
+    answers:[
+      {text:'Feel it deeply, let it go, move on.',scores:{yoda:3,quigon:3,obiwan:2,kylo:-3,maul:-2}},
+      {text:'Get angry and immediately try to fix it.',scores:{kylo:3,finn:2,poe:2,yoda:-2,quigon:-2}},
+      {text:'Channel it into motivation to do better.',scores:{luke:3,finn:3,mando:2,palpatine:-1}},
+      {text:'Stay completely calm. Emotion is weakness.',scores:{vader:3,palpatine:3,boba:2,finn:-2,grogu:-2}},
+    ]
+  },
+  {
+    id:'feel_02',category:'THE WAY YOU FEEL',
+    text:'When you are alone, you feel…',
+    image:null,
+    answers:[
+      {text:'At peace. This is when I think most clearly.',scores:{yoda:3,quigon:3,boba:2,finn:-1,poe:-1}},
+      {text:'Ready. Always ready.',scores:{mace:3,vader:2,boba:2,grogu:-1}},
+      {text:'A little restless. I need people around me.',scores:{finn:3,poe:3,chewie:2,vader:-2,boba:-2}},
+      {text:'Powerful. No one to hold me back.',scores:{kylo:3,palpatine:2,maul:2,grogu:-2,finn:-2}},
+    ]
+  },
+  {
+    id:'feel_03',category:'THE WAY YOU FEEL',
+    text:'You make a mistake that costs your team. What happens inside you?',
+    image:null,
+    answers:[
+      {text:'I sit with it, learn, and carry it forward.',scores:{yoda:3,luke:3,obiwan:2,kylo:-2}},
+      {text:'I feel terrible but immediately focus on fixing it.',scores:{finn:3,poe:3,luke:2,palpatine:-2,vader:-1}},
+      {text:'I shake it off. Everyone makes mistakes.',scores:{han:3,chewie:2,poe:2,vader:-1,yoda:-1}},
+      {text:'I never make that mistake again. Ever.',scores:{vader:3,mace:2,palpatine:2,finn:-1,han:-1}},
+    ]
+  },
+
+  // CATEGORY 6 — THE WAY YOU MOVE
+  {
+    id:'move_01',category:'THE WAY YOU MOVE',
+    text:'How do you prefer to travel?',
+    image:null,
+    answers:[
+      {text:'Fastest ship in the galaxy, fly it myself.',scores:{poe:3,han:3,chewie:2,yoda:-1,quigon:-1}},
+      {text:'Safe route, careful planning, no surprises.',scores:{mando:3,boba:2,obiwan:2,han:-1,poe:-1}},
+      {text:'Slow down. Enjoy the journey.',scores:{yoda:3,quigon:3,grogu:2,poe:-2,han:-1}},
+      {text:'Whatever gets me there without being seen.',scores:{maul:3,palpatine:2,boba:2,poe:-2,finn:-1}},
+    ]
+  },
+  {
+    id:'move_02',category:'THE WAY YOU MOVE',
+    text:'Your instinct in a crisis is to…',
+    image:null,
+    answers:[
+      {text:'Go still. Observe. Then act with precision.',scores:{yoda:3,obiwan:3,boba:2,finn:-1,poe:-1}},
+      {text:'Move immediately. Speed is survival.',scores:{poe:3,maul:2,han:2,yoda:-2,obiwan:-2}},
+      {text:'Pull the team together and coordinate.',scores:{finn:3,poe:2,luke:2,boba:-2,maul:-1}},
+      {text:'Become the crisis for everyone else.',scores:{vader:3,palpatine:2,kylo:2,grogu:-2,finn:-2}},
+    ]
+  },
+  {
+    id:'move_03',category:'THE WAY YOU MOVE',
+    text:'Someone describes you in a single word. What is it?',
+    image:null,
+    answers:[
+      {text:'Calm.',scores:{yoda:3,quigon:3,obiwan:2,kylo:-2,maul:-2}},
+      {text:'Fast.',scores:{poe:3,maul:2,han:2,yoda:-2,quigon:-1}},
+      {text:'Loyal.',scores:{chewie:3,finn:3,mando:2,palpatine:-3,maul:-2}},
+      {text:'Unstoppable.',scores:{vader:3,mace:2,maul:2,grogu:-2,han:-1}},
+    ]
+  },
+
+  // CATEGORY 7 — THE WAY YOU CHOOSE
+  {
+    id:'choose_01',category:'THE WAY YOU CHOOSE',
+    text:'The rules say no. Your heart says yes. What do you do?',
+    image:null,
+    answers:[
+      {text:'Follow the rules. They exist for a reason.',scores:{mace:3,obiwan:2,vader:2,han:-3,finn:-1}},
+      {text:'Follow your heart. Always.',scores:{finn:3,luke:3,quigon:2,mace:-2,vader:-1}},
+      {text:'Figure out which situation this actually is.',scores:{han:3,quigon:2,obiwan:2,kylo:-1}},
+      {text:'Make your own rules.',scores:{kylo:3,han:2,maul:2,mace:-3,obiwan:-2}},
+    ]
+  },
+  {
+    id:'choose_02',category:'THE WAY YOU CHOOSE',
+    text:'A shortcut exists. It involves bending your values slightly. Do you take it?',
+    image:null,
+    answers:[
+      {text:'Never. My values are not negotiable.',scores:{mace:3,obiwan:3,quigon:2,han:-2,palpatine:-3}},
+      {text:'If the cause is good enough, yes.',scores:{luke:3,finn:2,vader:1,mace:-1}},
+      {text:'If no one gets hurt and it saves time, sure.',scores:{han:3,poe:2,chewie:1,mace:-2,obiwan:-2}},
+      {text:'I define my own values. The shortcut is fine.',scores:{palpatine:3,kylo:2,maul:1,mace:-3,obiwan:-3}},
+    ]
+  },
+  {
+    id:'choose_03',category:'THE WAY YOU CHOOSE',
+    text:'You discover the person you trusted most has been lying to you. What do you do?',
+    image:null,
+    answers:[
+      {text:'Feel the hurt, seek understanding, then decide.',scores:{luke:3,finn:2,quigon:2,kylo:-1}},
+      {text:'Cut them off completely. Trust is everything.',scores:{mando:3,boba:3,mace:2,grogu:-1}},
+      {text:'Use what you learned about them as information.',scores:{palpatine:3,han:2,vader:2,finn:-2}},
+      {text:'Rage. Then channel it into something.',scores:{kylo:3,vader:2,finn:1,yoda:-2,quigon:-2}},
+    ]
+  },
+
+  // CATEGORY 8 — THE WAY YOU PROTECT
+  {
+    id:'protect_01',category:'THE WAY YOU PROTECT',
+    text:'What are you willing to fight for?',
+    image:null,
+    answers:[
+      {text:'Everyone. Justice for all.',scores:{finn:3,poe:3,luke:2,palpatine:-3,maul:-3}},
+      {text:'One person. The one who matters most to me.',scores:{mando:3,vader:3,kylo:2,palpatine:-2}},
+      {text:'Peace. I fight so others don\'t have to.',scores:{yoda:3,obiwan:3,quigon:2,maul:-2,kylo:-2}},
+      {text:'Myself. And occasionally those who earn it.',scores:{boba:3,han:2,maul:1,finn:-2,poe:-2}},
+    ]
+  },
+  {
+    id:'protect_02',category:'THE WAY YOU PROTECT',
+    text:'The galaxy is in danger. What is your role?',
+    image:null,
+    answers:[
+      {text:'The one in the cockpit when everyone else is afraid.',scores:{poe:3,han:3,chewie:2,palpatine:-2}},
+      {text:'The one who holds everything together behind the scenes.',scores:{obiwan:3,quigon:2,yoda:2,poe:-1}},
+      {text:'The one who inspires others to rise.',scores:{luke:3,finn:3,poe:2,vader:-2,kylo:-2}},
+      {text:'The one the galaxy should fear.',scores:{vader:3,palpatine:3,maul:2,grogu:-2,finn:-2}},
+    ]
+  },
+  {
+    id:'protect_03',category:'THE WAY YOU PROTECT',
+    text:'A stranger is being threatened. No one else is helping. What do you do?',
+    image:null,
+    answers:[
+      {text:'Step in immediately. Someone has to.',scores:{finn:3,mando:3,chewie:2,palpatine:-3,maul:-3}},
+      {text:'Assess the situation first, then act.',scores:{obiwan:3,mace:2,boba:2,finn:-1}},
+      {text:'Help them disappear. Safer for everyone.',scores:{han:3,boba:2,quigon:2,vader:-2}},
+      {text:'Not my problem.',scores:{palpatine:3,maul:2,boba:1,finn:-3,mando:-2}},
+    ]
+  },
+
+  // CATEGORY 9 — THE WAY YOU DREAM
+  {
+    id:'dream_01',category:'THE WAY YOU DREAM',
+    text:'If you could do anything in the galaxy, what would it be?',
+    image:null,
+    answers:[
+      {text:'Explore every planet, see everything.',scores:{poe:3,finn:2,grogu:2,palpatine:-2,vader:-1}},
+      {text:'Understand the Force completely.',scores:{yoda:3,quigon:3,luke:2,han:-2,boba:-1}},
+      {text:'Have power over my own destiny.',scores:{palpatine:3,kylo:2,mace:1,grogu:-1,finn:-1}},
+      {text:'Find somewhere peaceful and belong there.',scores:{grogu:3,mando:3,chewie:2,palpatine:-3,kylo:-2}},
+    ]
+  },
+  {
+    id:'dream_02',category:'THE WAY YOU DREAM',
+    text:'Your greatest dream is…',
+    image:null,
+    answers:[
+      {text:'A galaxy where no one has to be afraid.',scores:{finn:3,luke:3,poe:2,palpatine:-3,vader:-2}},
+      {text:'To be the best at what I do.',scores:{poe:3,maul:2,mace:2,grogu:-1}},
+      {text:'To be truly known and accepted.',scores:{grogu:3,finn:2,kylo:2,palpatine:-2,boba:-1}},
+      {text:'To never owe anyone anything.',scores:{han:3,boba:3,maul:1,grogu:-1,finn:-1}},
+    ]
+  },
+  {
+    id:'dream_03',category:'THE WAY YOU DREAM',
+    text:'What does success look like to you?',
+    image:null,
+    answers:[
+      {text:'Knowing I did the right thing, whatever the cost.',scores:{mace:3,obiwan:2,finn:2,palpatine:-3}},
+      {text:'The people I love, safe and together.',scores:{mando:3,chewie:3,vader:2,maul:-2,palpatine:-3}},
+      {text:'Complete mastery. No one better.',scores:{vader:3,palpatine:2,maul:2,grogu:-2,finn:-1}},
+      {text:'A good story to tell.',scores:{han:3,poe:2,chewie:1,vader:-2,palpatine:-2}},
+    ]
+  },
+
+  // CATEGORY 10 — THE WAY OF THE FORCE
+  {
+    id:'force_01',category:'THE WAY OF THE FORCE',
+    text:'Do you believe in destiny?',
+    image:null,
+    answers:[
+      {text:'Yes — everything happens for a reason.',scores:{quigon:3,grogu:2,obiwan:2,han:-3,boba:-2}},
+      {text:'Yes — and I will shape mine.',scores:{luke:3,kylo:2,vader:2,han:-1,boba:-1}},
+      {text:'No — I make my own luck.',scores:{han:3,boba:3,poe:2,quigon:-3,grogu:-1}},
+      {text:'I believe in something bigger but I can\'t name it.',scores:{finn:3,mando:2,chewie:2,palpatine:-2}},
+    ]
+  },
+  {
+    id:'force_02',category:'THE WAY OF THE FORCE',
+    text:'The Force is strongest in those who…',
+    image:null,
+    answers:[
+      {text:'Are patient and present.',scores:{yoda:3,quigon:3,obiwan:2,maul:-2,kylo:-2}},
+      {text:'Are willing to sacrifice everything.',scores:{luke:3,vader:3,finn:2,palpatine:-1}},
+      {text:'Act without hesitation.',scores:{maul:3,poe:2,mace:2,yoda:-2,quigon:-2}},
+      {text:'The Force? I prefer a good blaster.',scores:{han:3,boba:2,chewie:2,quigon:-3,yoda:-2}},
+    ]
+  },
+  {
+    id:'force_03',category:'THE WAY OF THE FORCE',
+    text:'Your place in the story of the galaxy is…',
+    image:null,
+    answers:[
+      {text:'The wise guide who helps others find their way.',scores:{yoda:3,obiwan:3,quigon:2,maul:-2,kylo:-2}},
+      {text:'The hero who does what has to be done.',scores:{luke:3,finn:3,poe:2,palpatine:-2}},
+      {text:'The force of nature no one can stop.',scores:{vader:3,maul:2,mace:2,grogu:-2,finn:-1}},
+      {text:'The wild card that changes everything.',scores:{han:3,kylo:2,grogu:2,mace:-2,obiwan:-1}},
+    ]
+  },
+
+]; // end QUESTION_BANK
 
 /* ============================================================
    SESSION SETUP
    ============================================================ */
-function initScores() {
-  scores = {};
-  Object.keys(CHARACTERS).forEach(function(id) { scores[id] = 0; });
-  activePool = Object.keys(CHARACTERS);
-}
-
-function shuffle(arr) {
-  for (var i = arr.length-1; i > 0; i--) {
-    var j = Math.floor(Math.random()*(i+1));
-    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
-  }
-  return arr;
-}
-
 function buildSession() {
+  activePool = buildActivePool();
   initScores();
-  dadShown = false;
-  yodaShown = [];
-  answers = [];
 
-  /* Use QUESTION_BANK from questions.js if available, else fallback */
-  var bank = (typeof QUESTION_BANK !== 'undefined') ? QUESTION_BANK : [];
-  if (bank.length === 0) {
-    console.warn('questions.js not loaded — using empty bank');
-    sessionQuestions = [];
-    return;
-  }
-
-  /* Group by category */
-  var byCategory = {};
-  bank.forEach(function(q) {
+  // Group questions by category
+  const byCategory = {};
+  QUESTION_BANK.forEach(q => {
     if (!byCategory[q.category]) byCategory[q.category] = [];
     byCategory[q.category].push(q);
   });
-  var categories = Object.keys(byCategory);
-  var perCat     = Math.floor(QUESTIONS_PER_SESSION / categories.length);
-  var remainder  = QUESTIONS_PER_SESSION % categories.length;
-  var selected   = [];
 
-  categories.forEach(function(cat, i) {
-    var pool = byCategory[cat].slice();
+  const categories = Object.keys(byCategory);
+  const perCat = Math.floor(QUESTIONS_PER_SESSION / categories.length);
+  const remainder = QUESTIONS_PER_SESSION % categories.length;
+
+  let selected = [];
+  categories.forEach((cat, i) => {
+    const pool = [...byCategory[cat]];
     shuffle(pool);
-    var take = perCat + (i < remainder ? 1 : 0);
+    const take = perCat + (i < remainder ? 1 : 0);
     selected = selected.concat(pool.slice(0, Math.min(take, pool.length)));
   });
 
-  /* Pad if needed */
+  // If we didn't get enough questions, pad with randoms
   if (selected.length < QUESTIONS_PER_SESSION) {
-    var used = {};
-    selected.forEach(function(q) { used[q.id] = true; });
-    var remaining = bank.filter(function(q) { return !used[q.id]; });
+    const used = new Set(selected.map(q => q.id));
+    const remaining = QUESTION_BANK.filter(q => !used.has(q.id));
     shuffle(remaining);
     selected = selected.concat(remaining.slice(0, QUESTIONS_PER_SESSION - selected.length));
   }
@@ -944,6 +1005,77 @@ function buildSession() {
   sessionQuestions = selected.slice(0, QUESTIONS_PER_SESSION);
   currentIndex = 0;
   selectedAnswer = null;
+  answers = [];
+}
+
+/* ============================================================
+   SCORING ENGINE
+   ============================================================ */
+function applyScores(answerScores) {
+  Object.entries(answerScores).forEach(([charId, delta]) => {
+    if (scores.hasOwnProperty(charId)) {
+      scores[charId] += delta;
+    }
+    // Characters not in active pool are silently ignored
+  });
+}
+
+function getResult() {
+  // Find the winner from the active pool
+  let winner = null;
+  let winnerScore = -Infinity;
+
+  activePool.forEach(id => {
+    if (scores[id] > winnerScore) {
+      winnerScore = scores[id];
+      winner = id;
+    }
+  });
+
+  // Tiebreaker — if multiple characters share the top score,
+  // pick the one whose screen type appears most across all tied chars
+  const tied = activePool.filter(id => scores[id] === winnerScore);
+  if (tied.length > 1) {
+    // Count screen types among tied
+    const screenCounts = {};
+    tied.forEach(id => {
+      const s = CHARACTERS[id].screen;
+      screenCounts[s] = (screenCounts[s] || 0) + 1;
+    });
+    // Pick the tied char from the most common screen type
+    // (secondary tiebreaker: random among truly equal)
+    const mostCommonScreen = Object.entries(screenCounts)
+      .sort((a,b) => b[1]-a[1])[0][0];
+    const finalTied = tied.filter(id => CHARACTERS[id].screen === mostCommonScreen);
+    shuffle(finalTied);
+    winner = finalTied[0];
+  }
+
+  return winner;
+}
+
+/* ============================================================
+   ROUTING — sends user to the correct reveal screen
+   ============================================================ */
+function routeToResult(characterId) {
+  const char = CHARACTERS[characterId];
+  if (!char) return;
+
+  // Save for next session's rotation
+  localStorage.setItem('sw_last_result', characterId);
+
+  // Build the URL — path to the screen + character param
+  const url = `${char.path}?character=${characterId}&name=${encodeURIComponent(char.name)}`;
+  window.location.href = url;
+}
+
+/* ============================================================
+   UI — SCREEN MANAGEMENT
+   ============================================================ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
 }
 
 /* ============================================================
@@ -951,339 +1083,202 @@ function buildSession() {
    ============================================================ */
 function startQuiz() {
   showScreen('screen-scan');
+
+  // Build session during the scan animation
   buildSession();
-  setTimeout(function() {
+
+  // Wait for scan animation then show first question
+  setTimeout(() => {
     renderQuestion();
     showScreen('screen-question');
-  }, 3000);
+  }, 3200);
 }
 
 /* ============================================================
    FLOW — RENDER QUESTION
    ============================================================ */
 function renderQuestion() {
-  if (!sessionQuestions.length) return;
-  var q     = sessionQuestions[currentIndex];
-  var total = sessionQuestions.length;
-  var num   = currentIndex + 1;
+  const q = sessionQuestions[currentIndex];
+  const total = sessionQuestions.length;
+  const num = currentIndex + 1;
 
-  /* HUD */
+  // Update HUD
   document.getElementById('q-num').textContent =
-    (num < 10 ? '0'+num : num) + ' / ' + (total < 10 ? '0'+total : total);
+    String(num).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
   document.getElementById('q-progress').style.width = ((num-1)/total*100) + '%';
-  document.getElementById('q-cat').textContent = q.category || '';
+  document.getElementById('q-cat').textContent = q.category;
 
-  /* Back button — hide on Q1 */
-  var backBtn = document.getElementById('q-back-btn');
-  if (currentIndex > 0) { backBtn.classList.add('visible'); }
-  else { backBtn.classList.remove('visible'); }
-
-  /* Image */
-  var imgWrap = document.getElementById('q-image');
-  var imgEl   = document.getElementById('q-image-img');
+  // Question image
+  const imgWrap = document.getElementById('q-image');
+  const imgEl = document.getElementById('q-image-img');
   if (q.image) {
-    setImgSrc(imgEl, q.image);
+    imgEl.src = q.image;
     imgWrap.classList.add('has-image');
   } else {
     imgEl.src = '';
-    imgEl.style.visibility = 'visible';
     imgWrap.classList.remove('has-image');
   }
 
-  /* Question text */
+  // Question text
   document.getElementById('q-text').textContent = q.text;
 
-  /* Answers */
-  var answersEl = document.getElementById('q-answers');
+  // Answers
+  const answersEl = document.getElementById('q-answers');
   answersEl.innerHTML = '';
-  var letters = ['A','B','C','D'];
+  const letters = ['A','B','C','D'];
+  q.answers.forEach((ans, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-answer';
+    btn.onclick = () => selectAnswer(i);
+    btn.innerHTML = `
+      <div class="q-answer-inner">
+        <span class="q-answer-letter">${letters[i]}</span>
+        <span class="q-answer-text">${ans.text}</span>
+      </div>
+    `;
+    answersEl.appendChild(btn);
+  });
 
-  if (q.type === 'image-answer') {
-    /* 2x2 image grid */
-    answersEl.classList.add('image-grid');
-    q.answers.forEach(function(ans, i) {
-      var btn = document.createElement('button');
-      btn.className = 'q-answer image-answer';
-      var img = document.createElement('img');
-      if (ans.image) { setImgSrc(img, ans.image); } else { img.src = ''; }
-      img.alt = ans.caption || ans.text || '';
-      var cap = document.createElement('div');
-      cap.className = 'q-answer-caption';
-      cap.textContent = ans.caption || ans.text || letters[i];
-      btn.appendChild(img);
-      btn.appendChild(cap);
-      /* Closure to capture i */
-      (function(idx) {
-        btn.onclick = function() { selectAnswer(idx); };
-      })(i);
-      answersEl.appendChild(btn);
-    });
-  } else {
-    /* Standard text answers */
-    answersEl.classList.remove('image-grid');
-    q.answers.forEach(function(ans, i) {
-      var btn = document.createElement('button');
-      btn.className = 'q-answer';
-      btn.innerHTML =
-        '<span class="q-answer-letter">' + letters[i] + '</span>' +
-        '<span class="q-answer-text">' + (ans.text || '') + '</span>';
-      (function(idx) {
-        btn.onclick = function() { selectAnswer(idx); };
-      })(i);
-      answersEl.appendChild(btn);
-    });
-  }
+  // Hide next button
+  const nextBtn = document.getElementById('q-next');
+  nextBtn.classList.remove('visible');
+  nextBtn.textContent = num === total ? 'SEE MY RESULT →' : 'NEXT →';
 
   selectedAnswer = null;
-
-  /* Force-sensitive question overlay */
-  var forceOv = document.getElementById('force-overlay');
-  if (FORCE_QUESTIONS.indexOf(currentIndex) !== -1) {
-    forceOv.classList.add('active');
-    setTimeout(function() { forceOv.classList.remove('active'); }, 3000);
-  }
-
-  /* Lightsaber progress */
-  updateSaberProgress();
-
-  /* Dad message at Q15 */
-  if (num === 15 && !dadShown) {
-    showDadMessage();
-  }
-
-  /* Yoda commentary every 5 questions */
-  var yodaIdx = Math.floor((num-1) / 5);
-  if (num % 5 === 1 && num > 1 && yodaShown.indexOf(yodaIdx) === -1) {
-    yodaShown.push(yodaIdx);
-    showYodaCommentary(YODA_LINES[Math.min(yodaIdx, YODA_LINES.length-1)]);
-  }
 }
 
 /* ============================================================
-   FLOW — SELECT ANSWER (auto-advance)
+   FLOW — SELECT ANSWER
    ============================================================ */
 function selectAnswer(index) {
-  var q = sessionQuestions[currentIndex];
+  const q = sessionQuestions[currentIndex];
 
-  /* Undo previous answer if re-selecting */
+  // If already answered, reverse the previous score first
   if (selectedAnswer !== null) {
-    var prev = q.answers[selectedAnswer].scores;
-    Object.keys(prev).forEach(function(charId) {
-      if (scores.hasOwnProperty(charId)) scores[charId] -= prev[charId];
+    const prevScores = q.answers[selectedAnswer].scores;
+    Object.entries(prevScores).forEach(([charId, delta]) => {
+      if (scores.hasOwnProperty(charId)) scores[charId] -= delta;
     });
-    /* Remove old saved answer */
-    answers = answers.filter(function(a) { return a.questionIndex !== currentIndex; });
   }
 
   selectedAnswer = index;
 
-  /* Apply scores */
-  var s = q.answers[index].scores;
-  Object.keys(s).forEach(function(charId) {
-    if (scores.hasOwnProperty(charId)) scores[charId] += s[charId];
+  // Apply new scores
+  applyScores(q.answers[index].scores);
+
+  // Update UI — clear all, mark new selection
+  const answerBtns = document.querySelectorAll('.q-answer');
+  answerBtns.forEach((btn, i) => {
+    btn.classList.remove('selected', 'dimmed');
+    if (i === index) {
+      btn.classList.add('selected');
+    } else {
+      btn.classList.add('dimmed');
+    }
   });
 
-  /* Save answer for back navigation */
-  answers.push({ questionIndex: currentIndex, answerIndex: index });
-
-  /* Visual feedback — highlight selected, dim others */
-  var btns = document.querySelectorAll('.q-answer');
-  btns.forEach(function(btn, i) {
-    btn.classList.remove('selected','dimmed');
-    if (i === index) btn.classList.add('selected');
-    else             btn.classList.add('dimmed');
-  });
-
-  /* Auto-advance after brief pause */
-  setTimeout(function() {
-    advanceQuestion();
-  }, 600);
+  // Show next button
+  document.getElementById('q-next').classList.add('visible');
 }
 
 /* ============================================================
-   FLOW — ADVANCE
+   FLOW — NEXT QUESTION
    ============================================================ */
-function advanceQuestion() {
+function nextQuestion() {
+  if (selectedAnswer === null) return;
+
   currentIndex++;
+
   if (currentIndex >= sessionQuestions.length) {
+    // All questions answered — go to result
     showResult();
   } else {
-    animateToNext();
+    // Animate transition then render next question
+    const body = document.querySelector('.q-body');
+    body.style.opacity = '0';
+    body.style.transform = 'translateY(12px)';
+    setTimeout(() => {
+      renderQuestion();
+      body.style.transition = 'opacity .4s ease, transform .4s ease';
+      body.style.opacity = '1';
+      body.style.transform = 'translateY(0)';
+      setTimeout(() => {
+        body.style.transition = '';
+      }, 400);
+      // Scroll to top of question
+      document.getElementById('screen-question').scrollTo(0, 0);
+    }, 200);
   }
 }
 
 /* ============================================================
-   FLOW — BACK
-   ============================================================ */
-function goBack() {
-  if (currentIndex === 0) return;
-  currentIndex--;
-
-  /* Restore previous answer state */
-  var prev = answers.filter(function(a) { return a.questionIndex === currentIndex; });
-  if (prev.length) {
-    var prevAns = prev[prev.length-1];
-    /* Undo score that was applied for current Q (now being revisited) */
-    var q = sessionQuestions[currentIndex];
-    var s = q.answers[prevAns.answerIndex].scores;
-    Object.keys(s).forEach(function(charId) {
-      if (scores.hasOwnProperty(charId)) scores[charId] -= s[charId];
-    });
-    selectedAnswer = prevAns.answerIndex;
-    /* Remove from answers array so it can be re-applied */
-    answers = answers.filter(function(a) { return a.questionIndex !== currentIndex; });
-  } else {
-    selectedAnswer = null;
-  }
-
-  animateToNext('back');
-}
-
-function animateToNext(dir) {
-  var body = document.getElementById('q-body');
-  var fromDir = (dir === 'back') ? '-12px' : '12px';
-  body.style.opacity = '0';
-  body.style.transform = 'translateY(' + fromDir + ')';
-  setTimeout(function() {
-    renderQuestion();
-    body.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-    body.style.opacity = '1';
-    body.style.transform = 'translateY(0)';
-    document.getElementById('screen-question').scrollTo(0,0);
-    setTimeout(function() { body.style.transition = ''; }, 250);
-  }, 180);
-}
-
-/* ============================================================
-   LIGHTSABER PROGRESS
-   ============================================================ */
-function updateSaberProgress() {
-  var total = sessionQuestions.length;
-  var pct   = Math.round((currentIndex / total) * 100);
-  var fill  = document.getElementById('saber-fill');
-  var prog  = document.getElementById('saber-progress');
-
-  if (currentIndex >= 5) prog.classList.add('show');
-
-  /* Determine dominant saber color from current scores */
-  var topChar = null, topScore = -Infinity;
-  Object.keys(scores).forEach(function(id) {
-    if (scores[id] > topScore) { topScore = scores[id]; topChar = id; }
-  });
-  var color = topChar ? (SABER_COLORS[topChar] || '#44AAFF') : '#44AAFF';
-
-  fill.style.height = pct + '%';
-  fill.style.background = color;
-  fill.style.boxShadow = '0 0 6px ' + color + ', 0 0 12px ' + color;
-}
-
-/* ============================================================
-   YODA COMMENTARY
-   ============================================================ */
-function showYodaCommentary(text) {
-  var el = document.getElementById('yoda-commentary');
-  document.getElementById('yoda-c-text').textContent = '\u201c' + text + '\u201d';
-  el.classList.add('show');
-  setTimeout(function() { el.classList.remove('show'); }, 4000);
-}
-
-/* ============================================================
-   DAD MESSAGE
-   ============================================================ */
-function showDadMessage() {
-  dadShown = true;
-  var el = document.getElementById('dad-message');
-  el.classList.add('show');
-  setTimeout(function() { el.classList.remove('show'); }, 4500);
-}
-
-/* ============================================================
-   SCORING
-   ============================================================ */
-function getResult() {
-  var winner = null, winnerScore = -Infinity;
-  activePool.forEach(function(id) {
-    if (scores[id] > winnerScore) { winnerScore = scores[id]; winner = id; }
-  });
-  /* Tiebreaker */
-  var tied = activePool.filter(function(id) { return scores[id] === winnerScore; });
-  if (tied.length > 1) { shuffle(tied); winner = tied[0]; }
-  return winner;
-}
-
-function getSaberColor() {
-  var topChar = null, topScore = -Infinity;
-  Object.keys(scores).forEach(function(id) {
-    if (scores[id] > topScore) { topScore = scores[id]; topChar = id; }
-  });
-  return topChar ? (SABER_COLORS[topChar] || '#44AAFF') : '#44AAFF';
-}
-
-/* ============================================================
-   SHOW RESULT — calculating screen then reveal
+   FLOW — SHOW RESULT
    ============================================================ */
 function showResult() {
   showScreen('screen-calc');
 
-  var winner    = getResult();
-  var sorted    = activePool.slice().sort(function(a,b) { return scores[b]-scores[a]; });
-  var topScore  = scores[sorted[0]] || 1;
-  var barsEl    = document.getElementById('calc-bars');
+  const winner = getResult();
+
+  // Build the animated score bars
+  const barsEl = document.getElementById('calc-bars');
   barsEl.innerHTML = '';
 
-  sorted.slice(0,8).forEach(function(id, i) {
-    var pct  = Math.max(4, Math.round((scores[id]/topScore)*100));
-    var isW  = id === winner;
-    var row  = document.createElement('div');
+  // Sort active pool by score descending
+  const sorted = [...activePool].sort((a,b) => scores[b] - scores[a]);
+  const topScore = scores[sorted[0]] || 1;
+
+  sorted.slice(0, 8).forEach((id, i) => {
+    const row = document.createElement('div');
     row.className = 'calc-row';
-    row.style.animationDelay = (i*0.12) + 's';
-    var color = isW ? 'linear-gradient(90deg,rgba(0,212,255,0.4),var(--cyan))' : 'rgba(255,255,255,0.15)';
-    var SHORT = {yoda:'Yoda',obiwan:'Obi-Wan',luke:'Luke',mace:'Mace',poe:'Poe',finn:'Finn',
-      quigon:'Qui-Gon',mando:'Mando',boba:'Boba',han:'Han',chewie:'Chewie',
-      vader:'Vader',palpatine:'Palpatine',kylo:'Kylo Ren',maul:'Maul',grogu:'Grogu'};
-    var displayName = SHORT[id] || CHARACTERS[id].name;
-    row.innerHTML =
-      '<span class="calc-name" style="' + (isW ? 'color:var(--cyan)' : '') + '">' +
-        displayName +
-      '</span>' +
-      '<div class="calc-track">' +
-        '<div class="calc-fill" style="background:' + color + ';--w:' + pct + '%;"></div>' +
-      '</div>';
+    row.style.animationDelay = (i * 0.12) + 's';
+
+    const pct = Math.max(4, Math.round((scores[id] / topScore) * 100));
+    const isWinner = id === winner;
+
+    row.innerHTML = `
+      <span class="calc-name" style="${isWinner ? 'color:var(--cyan)' : ''}">${CHARACTERS[id].name.split(' ')[0]}</span>
+      <div class="calc-track">
+        <div class="calc-fill" style="--w:${pct}%;${isWinner ? 'background:linear-gradient(90deg,var(--cyan-d),var(--cyan));' : 'background:rgba(255,255,255,0.2);'}"></div>
+      </div>
+    `;
     barsEl.appendChild(row);
-    setTimeout(function() {
+
+    // Animate fill after brief delay
+    setTimeout(() => {
       row.querySelector('.calc-fill').style.width = pct + '%';
-    }, i*120 + 300);
+    }, i * 120 + 300);
   });
 
-  /* Navigate to result after animation */
-  setTimeout(function() {
-    localStorage.setItem('sw_last_result', winner);
-    localStorage.setItem('sw_last_scores', JSON.stringify(scores));
-    localStorage.setItem('sw_saber_color', getSaberColor());
-    /* For now, stays on calc screen — result screen is Session 4 */
-    /* TODO: navigate to result.html once built */
-  }, 3500);
+  // Route to result after animation
+  setTimeout(() => {
+    routeToResult(winner);
+  }, 3200);
 }
 
 /* ============================================================
-   INIT
+   UTILITY
+   ============================================================ */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/* ============================================================
+   INIT — Show last result on title screen
    ============================================================ */
 (function init() {
-  /* Show last result on title */
-  var last = localStorage.getItem('sw_last_result');
+  const last = localStorage.getItem('sw_last_result');
   if (last && CHARACTERS[last]) {
-    var el = document.getElementById('last-result');
+    const el = document.getElementById('last-result');
     document.getElementById('last-char-name').textContent = CHARACTERS[last].name;
     el.style.display = 'block';
   }
 
-  /* Update question count */
-  if (typeof QUESTION_BANK !== 'undefined') {
-    document.getElementById('stat-pool').textContent = QUESTION_BANK.length;
-  }
-
-  /* Assemble title button */
-  assembleBtn('start-btn', 'start-btn-rect');
+  // Update pool size stat
+  document.getElementById('stat-pool').textContent = QUESTION_BANK.length;
 })();
 
 </script>

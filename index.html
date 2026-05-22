@@ -33,12 +33,12 @@ html, body {
 }
 #nebula-layer { position:fixed; inset:0; z-index:2; pointer-events:none; will-change:transform; }
 #stars-far    { position:fixed; inset:0; z-index:3; pointer-events:none; will-change:transform; }
-/* Ship layer — BEHIND planets and constellations */
-#ship-layer   { position:fixed; inset:0; z-index:4; pointer-events:none; overflow:hidden; }
-#stars-near   { position:fixed; inset:0; z-index:5; pointer-events:none; will-change:transform; }
+#stars-near   { position:fixed; inset:0; z-index:4; pointer-events:none; will-change:transform; }
 /* Layer 5 — constellation lines canvas */
-#constellation-layer { position:fixed; inset:0; z-index:6; pointer-events:none; }
-#planet-layer { position:fixed; inset:0; z-index:7; pointer-events:none; will-change:transform; }
+#constellation-layer { position:fixed; inset:0; z-index:5; pointer-events:none; }
+#planet-layer { position:fixed; inset:0; z-index:6; pointer-events:none; will-change:transform; }
+/* Layer 7 — ships */
+#ship-layer   { position:fixed; inset:0; z-index:7; pointer-events:none; overflow:hidden; }
 #ui-layer     { position:fixed; inset:0; z-index:9; pointer-events:none; }
 #vignette     { position:fixed; inset:0; z-index:8; pointer-events:none;
   background:
@@ -141,8 +141,8 @@ html, body {
   animation: gp var(--gd,3.5s) ease-in-out infinite alternate;
 }
 @keyframes gp {
-  from { opacity:0.2; transform:translate(-50%,-50%) scale(0.82); }
-  to   { opacity:0.5; transform:translate(-50%,-50%) scale(1.12); }
+  from { opacity:0.35; transform:translate(-50%,-50%) scale(0.78); }
+  to   { opacity:0.85; transform:translate(-50%,-50%) scale(1.22); }
 }
 
 /* planet image — rotation applied here */
@@ -198,13 +198,16 @@ html, body {
   to   { opacity:0;   transform:translate(-50%,-50%) scale(2.6); }
 }
 
-/* Tatooine — gentle warm breathe, invites tap without screaming */
+/* Tatooine heartbeat — extra pulse to invite first tap */
 #pw-tatooine .pg {
-  animation: tatooine-breathe 4.5s ease-in-out infinite alternate;
+  animation: tatooine-heartbeat 2.4s ease-in-out infinite;
 }
-@keyframes tatooine-breathe {
-  from { opacity:0.25; transform:translate(-50%,-50%) scale(0.88); }
-  to   { opacity:0.5;  transform:translate(-50%,-50%) scale(1.06); }
+@keyframes tatooine-heartbeat {
+  0%   { opacity:0.4; transform:translate(-50%,-50%) scale(0.82); }
+  30%  { opacity:1;   transform:translate(-50%,-50%) scale(1.28); }
+  50%  { opacity:0.6; transform:translate(-50%,-50%) scale(1.0); }
+  70%  { opacity:0.95; transform:translate(-50%,-50%) scale(1.22); }
+  100% { opacity:0.4; transform:translate(-50%,-50%) scale(0.82); }
 }
 
 /* planet label */
@@ -318,17 +321,34 @@ html, body {
 }
 
 /* ============================================================
-   SCREEN TRANSITION — clean fade through black
+   LIGHTSABER BLADE WIPE — global transition overlay
    ============================================================ */
-#fade-overlay {
+#blade-wipe {
   position:fixed; inset:0; z-index:200;
   pointer-events:none;
-  background:#000008;
-  opacity:0;
-  transition:opacity 0.3s ease;
+  overflow:hidden;
 }
-#fade-overlay.fade-in  { opacity:1; pointer-events:all; }
-#fade-overlay.fade-out { opacity:0; pointer-events:none; }
+.blade-line {
+  position:absolute; top:0; bottom:0;
+  width:3px;
+  background:linear-gradient(180deg,
+    transparent 0%,
+    rgba(255,255,255,0.1) 10%,
+    white 50%,
+    rgba(255,255,255,0.1) 90%,
+    transparent 100%
+  );
+  box-shadow:0 0 12px 4px var(--blade-color, #44AAFF), 0 0 30px 8px var(--blade-color, #44AAFF);
+  left:-4px;
+  transform:scaleY(0);
+}
+.blade-left, .blade-right {
+  position:absolute; top:0; bottom:0; width:50%;
+  background:var(--wipe-bg, #000008);
+  transform:scaleX(0);
+  transform-origin:left center;
+}
+.blade-right { left:50%; transform-origin:right center; }
 
 /* ============================================================
    LIGHTSPEED OVERLAY
@@ -446,7 +466,12 @@ html, body {
   </svg>
 </div>
 
-<div id="fade-overlay"></div>
+<!-- Blade wipe transition overlay -->
+<div id="blade-wipe">
+  <div class="blade-line" id="blade-line"></div>
+  <div class="blade-left" id="blade-left"></div>
+  <div class="blade-right" id="blade-right"></div>
+</div>
 
 <!-- Lightspeed -->
 <div id="ls">
@@ -470,36 +495,6 @@ html, body {
 /* ============================================================
    GUAPO — visit count + personalized greeting
    ============================================================ */
-/* ============================================================
-   IMAGE HELPER — tries .png then .PNG automatically
-   Solves the uppercase/lowercase extension problem forever.
-   Usage: setImgSrc(imgElement, './tatooine') — no extension needed
-   Or:    setImgSrc(imgElement, './tatooine.PNG') — strips and retries
-   ============================================================ */
-function setImgSrc(el, path) {
-  /* Strip any existing extension so we always start clean */
-  var base = path.replace(/\.[Pp][Nn][Gg]$/,'').replace(/\.[Jj][Pp][Gg]$/,'').replace(/\.[Ww][Ee][Bb][Pp]$/,'');
-  /* Determine original extension if present */
-  var extMatch = path.match(/(\.[Pp][Nn][Gg]|\.[Jj][Pp][Gg]|\.[Ww][Ee][Bb][Pp])$/);
-  var primaryExt   = extMatch ? extMatch[1].toLowerCase() : '.png';
-  var secondaryExt = primaryExt === '.png' ? '.PNG' : '.png';
-
-  el.onerror = function() {
-    /* First attempt failed — try the other casing */
-    el.onerror = function() {
-      /* Both failed — try .jpg and .JPG as last resort */
-      el.onerror = function() {
-        el.onerror = null;
-        /* Give up silently — broken image hidden */
-        el.style.display = 'none';
-      };
-      el.src = base + '.JPG';
-    };
-    el.src = base + secondaryExt;
-  };
-  el.src = base + primaryExt;
-}
-
 var GUAPO_NAME = 'Guapo';
 var visitKey   = 'sw_visit_count';
 var visits     = 0;
@@ -567,7 +562,7 @@ function getYodaQuote() {
    ============================================================ */
 var PD = {
   tatooine: {
-    img:'./tatooine.png', label:'TAKE THE QUIZ',
+    img:'./tatooine.PNG', label:'TAKE THE QUIZ',
     planet:'TATOOINE', sub:'Which character are you?',
     color:'#FFB055', glowColor:'rgba(255,150,40,0.55)',
     g1:'rgba(255,150,40,1)', g2:'rgba(200,80,0,0.5)',
@@ -579,7 +574,7 @@ var PD = {
     bladeColor:'#FF9933'
   },
   coruscant: {
-    img:'./coruscant.png', label:'FORCE MAP',
+    img:'./coruscant.PNG', label:'FORCE MAP',
     planet:'CORUSCANT', sub:'Your galaxy',
     color:'#44CCFF', glowColor:'rgba(0,180,255,0.45)',
     g1:'rgba(0,190,255,1)', g2:'rgba(0,100,220,0.5)',
@@ -591,7 +586,7 @@ var PD = {
     bladeColor:'#44CCFF'
   },
   dagobah: {
-    img:'./dagobah.png', label:'TRANSMISSIONS',
+    img:'./dagobah.PNG', label:'TRANSMISSIONS',
     planet:'DAGOBAH', sub:'Messages from Dad',
     color:'#44EE88', glowColor:'rgba(0,200,100,0.45)',
     g1:'rgba(0,210,110,1)', g2:'rgba(0,130,60,0.5)',
@@ -603,7 +598,7 @@ var PD = {
     bladeColor:'#44EE88'
   },
   hoth: {
-    img:'./hoth.png', label:'ARCHIVE',
+    img:'./hoth.PNG', label:'ARCHIVE',
     planet:'HOTH', sub:'Past results',
     color:'#AADDFF', glowColor:'rgba(150,210,255,0.4)',
     g1:'rgba(160,215,255,1)', g2:'rgba(80,160,230,0.45)',
@@ -645,7 +640,7 @@ Object.keys(PD).forEach(function(key) {
 
   var img = document.createElement('img');
   img.className = 'pi';
-  setImgSrc(img, d.img);
+  img.src = d.img;
   /* Planet rotation — direction via animation-direction */
   img.style.setProperty('--rot-dur', d.rotDur);
   img.style.animationDirection = (d.rotDir === '-1') ? 'reverse' : 'normal';
@@ -906,348 +901,65 @@ function floatTick() {
 }
 
 /* ============================================================
-   SHIP ANIMATION SYSTEM
-   
-   ACTUAL IMAGE ORIENTATIONS (verified from uploaded files):
-   
-   destroyer.png  — nose points LEFT, engines on RIGHT
-                    Fly L→R: scaleX(-1) flips nose to face right
-                    Fly R→L: no flip
-   
-   xwing.png      — nose points LEFT (lower-left), engines fire RIGHT
-                    Fly L→R: scaleX(-1) flips nose to face right  
-                    Fly R→L: no flip
-   
-   falcon.png     — engines on LEFT (rear), nose upper-right
-                    Fly L→R: no flip (naturally faces right)
-                    Fly R→L: scaleX(-1)
-   
-   tiefighter.png — front-facing/symmetric, no flip needed ever
-   
-   ALL ships travel BEHIND planets (z-index set on ship-layer)
+   PASSING SHIPS — X-Wing and Star Destroyer silhouettes
    ============================================================ */
+var SHIP_SVGS = {
+  xwing: '<svg viewBox="0 0 60 30" fill="none" xmlns="http://www.w3.org/2000/svg" width="60" height="30"><g opacity="0.55" fill="rgba(180,210,255,0.8)"><!-- Body --><rect x="24" y="12" width="12" height="6" rx="1"/><rect x="28" y="10" width="4" height="10" rx="1"/><!-- Wings --><polygon points="12,4 26,13 24,17 8,20"/><!-- Wing 2 --><polygon points="12,26 26,17 24,13 8,10"/><!-- Wing 3 --><polygon points="48,4 34,13 36,17 52,20"/><!-- Wing 4 --><polygon points="48,26 34,17 36,13 52,10"/><!-- Engines --><circle cx="18" cy="12" r="1.5" fill="rgba(255,150,80,0.9)"/><circle cx="18" cy="18" r="1.5" fill="rgba(255,150,80,0.9)"/><circle cx="42" cy="12" r="1.5" fill="rgba(255,150,80,0.9)"/><circle cx="42" cy="18" r="1.5" fill="rgba(255,150,80,0.9)"/></g></svg>',
+  destroyer: '<svg viewBox="0 0 80 30" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="30"><g opacity="0.4" fill="rgba(160,180,200,0.7)"><!-- Hull --><polygon points="0,15 30,5 80,12 80,18 30,25"/><!-- Bridge --><polygon points="62,12 70,10 75,15 70,20 62,18"/><!-- Detail lines --><line x1="10" y1="13" x2="60" y2="11" stroke="rgba(200,220,255,0.3)" stroke-width="0.5"/><line x1="10" y1="17" x2="60" y2="19" stroke="rgba(200,220,255,0.3)" stroke-width="0.5"/></g></svg>',
+  falcon: '<svg viewBox="0 0 50 35" fill="none" xmlns="http://www.w3.org/2000/svg" width="50" height="35"><g opacity="0.5" fill="rgba(180,190,200,0.8)"><!-- Main disc --><ellipse cx="22" cy="18" rx="18" ry="14"/><!-- Cockpit arm --><rect x="32" y="14" width="14" height="8" rx="4"/><!-- Cockpit --><ellipse cx="46" cy="18" rx="4" ry="4" fill="rgba(80,120,180,0.6)"/><!-- Engine glow --><circle cx="5" cy="18" r="3" fill="rgba(100,180,255,0.5)"/></g></svg>'
+};
 
 var shipLayer = document.getElementById('ship-layer');
+var shipQueue = [];
 
-/* ── Core helpers ── */
-function shipCleanup(el) { if (el && el.parentNode) el.parentNode.removeChild(el); }
-
-function makeShip(file, pxWidth, pxHeight) {
-  var img = document.createElement('img');
-  img.style.cssText =
-    'position:absolute;pointer-events:none;opacity:0;' +
-    'width:' + pxWidth + 'px;' +
-    (pxHeight ? 'height:' + pxHeight + 'px;' : 'height:auto;') +
-    'will-change:transform,opacity;';
-  setImgSrc(img, file);
-  shipLayer.appendChild(img);
-  return img;
-}
-
-function eio(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; } /* ease-in-out */
-function sms(t) { return t*t*(3-2*t); }                      /* smoothstep */
-function fade(t, r) { return Math.min(t/r, 1, (1-t)/r); }   /* fade at edges */
-
-/* ============================================================
-   DESTROYER — slow, majestic, fills you with dread
-   Flies LEFT → RIGHT. Image nose faces LEFT so we scaleX(-1).
-   ============================================================ */
-function animDestroyer() {
-  var vw  = window.innerWidth;
-  var vh  = window.innerHeight;
-  var sz  = Math.round(Math.min(vw, vh) * 0.42); /* big — commands attention */
-  var img = makeShip('./destroyer.png', sz);
-
-  /* Upper 20% of screen, random vertical position */
-  var topY = vh * (0.03 + Math.random() * 0.17);
-  /* Start fully off left edge, end fully off right edge */
-  var sx   = -sz - 20;
-  var ex   = vw + sz + 20;
-  /* Slow: 22-32 seconds to cross */
-  var dur  = 22000 + Math.random() * 10000;
-  /* Slight downward drift — matches the diagonal angle of the ship */
-  var drift = vh * 0.05;
-
-  img.style.top  = topY + 'px';
-  img.style.left = '0px';
-
-  var t0 = null;
-  function frame(ts) {
-    if (!t0) t0 = ts;
-    var t  = Math.min((ts-t0)/dur, 1);
-    var e  = eio(t);
-    var x  = sx + (ex-sx)*e;
-    var dy = drift * t;
-    var op = fade(t, 0.04) * 0.52;
-    img.style.opacity   = op.toFixed(3);
-    /* scaleX(-1): flips image so nose (originally left) now faces RIGHT = direction of travel */
-    img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) scaleX(-1)';
-    if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
-  }
-  requestAnimationFrame(frame);
-}
-
-/* ============================================================
-   X-WING
-   Image: nose points LOWER-LEFT at ~15° diagonal angle.
-   To fly LEFT→RIGHT: scaleX(-1) flips nose to lower-right,
-     then rotate(-15deg) tilts it to match horizontal travel.
-   To fly RIGHT→LEFT: no flip, rotate(+15deg).
-   Fast: 1.2s–4s. Multiple can fly at once.
-   ============================================================ */
-function animXWing(opts) {
-  opts = opts || {};
-  var vw  = window.innerWidth;
-  var vh  = window.innerHeight;
-  var sz  = Math.round(Math.min(vw,vh) * (opts.scale || (0.13 + Math.random()*0.07)));
-  var img = makeShip('./xwing.png', sz);
-  var goRight = opts.goRight !== undefined ? opts.goRight : (Math.random() > 0.5);
-  var delay   = opts.delay   !== undefined ? opts.delay   : 0;
-  var topY    = vh * (opts.topFrac !== undefined ? opts.topFrac : (0.05 + Math.random()*0.44));
-
-  var sx, ex, xform;
-  if (goRight) {
-    sx    = -sz - 10;
-    ex    = vw + sz + 10;
-    /* flip nose right, tilt to align with travel direction */
-    xform = 'scaleX(-1) rotate(-15deg)';
-  } else {
-    sx    = vw + sz + 10;
-    ex    = -sz - 10;
-    /* nose already left, tilt up slightly for left travel */
-    xform = 'rotate(15deg)';
-  }
-
-  /* Diagonal drift that matches the tilt — feels physically correct */
-  var diag = vh * 0.07 * (goRight ? 1 : -1) * (opts.diagMult || 1);
-  var dur  = opts.dur || (1200 + Math.random() * 2800);
-
-  img.style.top  = topY + 'px';
-  img.style.left = '0px';
-
-  setTimeout(function() {
-    var t0 = null;
-    function frame(ts) {
-      if (!t0) t0 = ts;
-      var t  = Math.min((ts-t0)/dur, 1);
-      var e  = sms(t);
-      var x  = sx + (ex-sx)*e;
-      var dy = diag * t;
-      var op = fade(t, 0.07) * (opts.maxOp || 0.72);
-      img.style.opacity   = op.toFixed(3);
-      img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + dy.toFixed(1) + 'px) ' + xform;
-      if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
-    }
-    requestAnimationFrame(frame);
-  }, delay);
-}
-
-/* FALCON — enters top-right, exits bottom-left
-   Image nose points lower-right, engines upper-left.
-   This IS the natural flight path — no flip needed.
-   ============================================================ */
-function animFalcon(opts) {
-  opts = opts || {};
-  var vw  = window.innerWidth;
-  var vh  = window.innerHeight;
-  var sz  = Math.round(Math.min(vw,vh) * (opts.scale || (0.22 + Math.random()*0.06)));
-  var img = makeShip('./falcon.png', sz);
-
-  /* Start: off-screen top-right. End: off-screen bottom-left */
-  var sx = vw + sz;
-  var sy = -sz;
-  var ex = -sz;
-  var ey = vh + sz;
-  var dur = opts.dur || (6000 + Math.random() * 4000);
-
-  img.style.left = sx + 'px';
-  img.style.top  = sy + 'px';
-
-  var t0 = null;
-  function frame(ts) {
-    if (!t0) t0 = ts;
-    var t  = Math.min((ts-t0)/dur, 1);
-    var e  = eio(t);
-    var x  = sx + (ex-sx)*e;
-    var y  = sy + (ey-sy)*e;
-    var op = fade(t, 0.06) * 0.72;
-    img.style.opacity   = op.toFixed(3);
-    img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
-    if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
-  }
-  requestAnimationFrame(frame);
-}
-
-/* ============================================================
-   TIE FIGHTER — symmetric, no flip needed, fast darts
-   ============================================================ */
-function animTie(opts) {
-  opts = opts || {};
-  var vw  = window.innerWidth;
-  var vh  = window.innerHeight;
-  var sz  = Math.round(Math.min(vw,vh) * (opts.scale || (0.10 + Math.random()*0.05)));
-  var img = makeShip('./tiefighter.png', sz);
-  var goRight = opts.goRight !== undefined ? opts.goRight : (Math.random() > 0.5);
-  var topY    = vh * (opts.topFrac !== undefined ? opts.topFrac : (0.04 + Math.random()*0.44));
-  var sx = goRight ? -sz-10 : vw+sz+10;
-  var ex = goRight ? vw+sz+10 : -sz-10;
-  var dur  = opts.dur  !== undefined ? opts.dur  : (1200 + Math.random()*2000);
-  var diag = opts.diag !== undefined ? opts.diag : (vh * 0.05 * (Math.random()>0.5?1:-1));
-
-  img.style.top  = topY + 'px';
-  img.style.left = '0px';
-
-  setTimeout(function() {
-    var t0 = null;
-    function frame(ts) {
-      if (!t0) t0 = ts;
-      var t  = Math.min((ts-t0)/dur, 1);
-      var x  = sx + (ex-sx)*sms(t);
-      var dy = diag * t;
-      var op = fade(t, 0.10) * (opts.maxOp || 0.62);
-      img.style.opacity   = op.toFixed(3);
-      img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
-      if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
-    }
-    requestAnimationFrame(frame);
-  }, opts.delay || 0);
-}
-
-/* ============================================================
-   TIE FORMATIONS
-   ============================================================ */
-function tieFormation() {
-  var vh      = window.innerHeight;
+function spawnShip() {
+  var vw = window.innerWidth;
+  var vh = window.innerHeight;
+  var types = ['xwing','falcon','destroyer','xwing','xwing']; /* xwing most common */
+  var type = types[Math.floor(Math.random()*types.length)];
   var goRight = Math.random() > 0.5;
-  var roll    = Math.random();
-  var base    = 0.05 + Math.random() * 0.35;
-  var spd     = 1300 + Math.random() * 1600;
 
-  if (roll < 0.28) {
-    /* 2-ship patrol */
-    animTie({ goRight:goRight, topFrac:base,       scale:0.12, dur:spd,      diag: vh*0.04, delay:0   });
-    animTie({ goRight:goRight, topFrac:base+0.07,  scale:0.10, dur:spd*1.05, diag: vh*0.03, delay:250 });
+  var ship = document.createElement('div');
+  ship.className = 'ship';
+  ship.innerHTML = SHIP_SVGS[type];
 
-  } else if (roll < 0.55) {
-    /* 3-ship wedge */
-    animTie({ goRight:goRight, topFrac:base,       scale:0.13, dur:spd,       diag:-vh*0.03, delay:0   });
-    animTie({ goRight:goRight, topFrac:base+0.08,  scale:0.11, dur:spd*1.08,  diag: vh*0.04, delay:200 });
-    animTie({ goRight:goRight, topFrac:base+0.15,  scale:0.09, dur:spd*1.15,  diag:-vh*0.02, delay:420 });
+  /* Random vertical position — upper 65% of screen */
+  var topPct = 5 + Math.random() * 55;
+  var startX = goRight ? -100 : (vw + 100);
+  var endX   = goRight ? (vw + 100) : -100;
+  var duration = 6000 + Math.random() * 8000; /* 6-14 seconds */
+  var yWobble = (Math.random() - 0.5) * 30;
 
-  } else if (roll < 0.78) {
-    /* 4-ship scramble */
-    animTie({ goRight:goRight,  topFrac:base,      scale:0.13, dur:spd*0.9,  diag: vh*0.05, delay:0   });
-    animTie({ goRight:goRight,  topFrac:base+0.09, scale:0.11, dur:spd,      diag:-vh*0.03, delay:180 });
-    animTie({ goRight:!goRight, topFrac:base+0.04, scale:0.11, dur:spd*0.85, diag: vh*0.04, delay:340 });
-    animTie({ goRight:goRight,  topFrac:base+0.16, scale:0.09, dur:spd*1.1,  diag:-vh*0.04, delay:560 });
+  ship.style.cssText =
+    'position:absolute;top:' + topPct + '%;left:0;opacity:0;' +
+    'transform:translateX(' + startX + 'px) scaleX(' + (goRight ? 1 : -1) + ')';
 
-  } else {
-    /* 5-ship full sky scramble */
-    for (var i = 0; i < 5; i++) {
-      (function(idx) {
-        animTie({
-          goRight: Math.random() > 0.4,
-          topFrac: 0.04 + idx * 0.09 + Math.random()*0.03,
-          scale:   0.09 + Math.random()*0.05,
-          dur:     900  + Math.random()*1800,
-          diag:    vh * 0.05 * (Math.random()>0.5?1:-1),
-          delay:   idx * 180 + Math.random()*120
-        });
-      })(i);
+  if (type === 'destroyer') ship.style.opacity = '0.35';
+  shipLayer.appendChild(ship);
+
+  var start = null;
+  function animShip(ts) {
+    if (!start) start = ts;
+    var el = ts - start;
+    var t  = Math.min(el / duration, 1);
+    /* ease in-out */
+    var e  = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+    var x  = startX + (endX - startX) * e;
+    var y  = Math.sin(t * Math.PI) * yWobble;
+    /* Fade in/out at edges */
+    var op = Math.min(t * 8, 1, (1 - t) * 8) * 0.7;
+    ship.style.opacity = op.toFixed(3);
+    ship.style.transform = 'translateX(' + x.toFixed(1) + 'px) translateY(' + y.toFixed(1) + 'px) scaleX(' + (goRight ? 1 : -1) + ')';
+    if (t < 1) {
+      requestAnimationFrame(animShip);
+    } else {
+      if (ship.parentNode) ship.parentNode.removeChild(ship);
     }
   }
-}
+  requestAnimationFrame(animShip);
 
-/* ============================================================
-   SQUADRON BATTLE — X-Wings right, TIEs left, simultaneous
-   The premium Star Wars moment.
-   ============================================================ */
-function squadronBattle() {
-  var vh   = window.innerHeight;
-  var base = 0.05 + Math.random() * 0.18;
-  var xCount = 3 + Math.floor(Math.random()*2); /* 3-4 X-Wings */
-
-  /* X-Wings flying right */
-  for (var i = 0; i < xCount; i++) {
-    (function(idx) {
-      animXWing({
-        goRight:  true,
-        topFrac:  base + idx * 0.09,
-        scale:    0.12 + Math.random()*0.04,
-        dur:      1300 + Math.random()*700,
-        delay:    idx * 260,
-        diagMult: 0.7
-      });
-    })(i);
-  }
-
-  /* TIEs flying left — head-on conflict, staggered 600ms after first X-Wing */
-  setTimeout(function() {
-    var tBase = base + 0.03;
-    animTie({ goRight:false, topFrac:tBase,       scale:0.12, dur:1500, diag:-vh*0.04, delay:0   });
-    animTie({ goRight:false, topFrac:tBase+0.08,  scale:0.11, dur:1400, diag: vh*0.03, delay:200 });
-    animTie({ goRight:false, topFrac:tBase+0.16,  scale:0.10, dur:1600, diag:-vh*0.05, delay:400 });
-    animTie({ goRight:false, topFrac:tBase-0.04,  scale:0.09, dur:1350, diag: vh*0.04, delay:600 });
-  }, 600);
-}
-
-/* ============================================================
-   MASTER SCHEDULER
-   Falcon appears every cycle now — not optional.
-   ============================================================ */
-function scheduleNextShip() {
-  var roll = Math.random();
-
-  if (roll < 0.26) {
-    /* TIE formation */
-    tieFormation();
-    setTimeout(scheduleNextShip, 10000 + Math.random()*10000);
-
-  } else if (roll < 0.40) {
-    /* Single X-Wing fast pass */
-    animXWing({ dur: 1400 + Math.random()*1600 });
-    setTimeout(scheduleNextShip, 12000 + Math.random()*8000);
-
-  } else if (roll < 0.53) {
-    /* Multiple X-Wings — 2-3 in loose formation */
-    var gr  = Math.random() > 0.5;
-    var b   = 0.06 + Math.random()*0.3;
-    var cnt = 2 + Math.floor(Math.random()*2);
-    for (var i = 0; i < cnt; i++) {
-      (function(idx) {
-        animXWing({ goRight:gr, topFrac:b+idx*0.10, scale:0.13, dur:1500+Math.random()*1000, delay:idx*300 });
-      })(i);
-    }
-    setTimeout(scheduleNextShip, 13000 + Math.random()*9000);
-
-  } else if (roll < 0.68) {
-    /* Falcon — every cycle has a ~25% chance */
-    animFalcon();
-    setTimeout(scheduleNextShip, 14000 + Math.random()*10000);
-
-  } else if (roll < 0.80) {
-    /* Squadron battle — X-Wings vs TIEs head on */
-    squadronBattle();
-    setTimeout(scheduleNextShip, 16000 + Math.random()*10000);
-
-  } else if (roll < 0.92) {
-    /* X-Wing chases a TIE */
-    var goR  = Math.random() > 0.5;
-    var topF = 0.08 + Math.random()*0.28;
-    animTie({ goRight:goR, topFrac:topF,      scale:0.11, dur:2000, diag:window.innerHeight*0.05, delay:0   });
-    animXWing({ goRight:goR, topFrac:topF+0.05, scale:0.14, dur:1600, delay:350 });
-    setTimeout(scheduleNextShip, 14000 + Math.random()*8000);
-
-  } else {
-    /* Destroyer — rare, majestic */
-    animDestroyer();
-    /* TIE escort follows 5s later */
-    setTimeout(function() {
-      animTie({ goRight:true, topFrac:0.09, scale:0.10, dur:3500, diag:window.innerHeight*0.04, delay:0    });
-      animTie({ goRight:true, topFrac:0.15, scale:0.09, dur:3200, diag:window.innerHeight*0.03, delay:1600 });
-    }, 5000);
-    setTimeout(scheduleNextShip, 26000 + Math.random()*8000);
-  }
+  /* Schedule next ship — 20-45 seconds */
+  setTimeout(spawnShip, 20000 + Math.random() * 25000);
 }
 
 /* ============================================================
@@ -1409,25 +1121,73 @@ function startYodaTimer() {
 }
 
 /* ============================================================
-   FADE TRANSITION — clean, simple, premium
-   Usage: fadeTransition(callback)
+   LIGHTSABER BLADE WIPE TRANSITION
+   Usage: bladeWipe(color, callback)
    ============================================================ */
-function fadeTransition(callback) {
-  var overlay = document.getElementById('fade-overlay');
-  overlay.classList.add('fade-in');
-  setTimeout(function() {
-    if (callback) callback();
-    setTimeout(function() {
-      overlay.classList.remove('fade-in');
-    }, 200);
-  }, 300);
+function bladeWipe(color, callback) {
+  var line  = document.getElementById('blade-line');
+  var left  = document.getElementById('blade-left');
+  var right = document.getElementById('blade-right');
+
+  line.style.setProperty('--blade-color', color || '#44AAFF');
+  left.style.setProperty('--wipe-bg',  '#000008');
+  right.style.setProperty('--wipe-bg', '#000008');
+
+  /* Phase 1 — blade line sweeps across */
+  line.style.transition = 'none';
+  line.style.left = '-4px';
+  line.style.transform = 'scaleY(1)';
+  line.style.opacity = '1';
+
+  /* Animate blade across screen */
+  var start = null;
+  var vw = window.innerWidth;
+  var DURATION = 350;
+
+  function sweepBlade(ts) {
+    if (!start) start = ts;
+    var t = Math.min((ts - start) / DURATION, 1);
+    var e = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+    line.style.left = (e * (vw + 8) - 4) + 'px';
+
+    /* At midpoint, expand panels to cover screen */
+    if (t > 0.45 && !left._expanding) {
+      left._expanding = true;
+      left.style.transition = 'transform ' + (DURATION * 0.6) + 'ms ease';
+      right.style.transition = 'transform ' + (DURATION * 0.6) + 'ms ease';
+      left.style.transform  = 'scaleX(1)';
+      right.style.transform = 'scaleX(1)';
+    }
+
+    if (t < 1) {
+      requestAnimationFrame(sweepBlade);
+    } else {
+      /* Screen covered — fire callback, then reverse */
+      if (callback) callback();
+      setTimeout(function() {
+        line.style.opacity = '0';
+        left.style.transition  = 'transform 0.4s ease';
+        right.style.transition = 'transform 0.4s ease';
+        left.style.transform   = 'scaleX(0)';
+        right.style.transform  = 'scaleX(0)';
+        left._expanding = false;
+        /* Reset for next use */
+        setTimeout(function() {
+          line.style.left = '-4px';
+          line.style.opacity = '';
+        }, 500);
+      }, 200);
+    }
+  }
+  requestAnimationFrame(sweepBlade);
 }
 
 /* ============================================================
-   FADE THEN LAUNCH
+   BLADE THEN LAUNCH
    ============================================================ */
 function bladeThenLaunch(key) {
-  fadeTransition(function() {
+  var d = PD[key];
+  bladeWipe(d.bladeColor, function() {
     launchLS(key);
   });
 }
@@ -1467,7 +1227,7 @@ function launchLS(key) {
   lsCanvas.width = window.innerWidth; lsCanvas.height = window.innerHeight;
 
   var pimg = document.getElementById('ls-pimg');
-  setImgSrc(pimg, d.img);
+  pimg.src = d.img;
   pimg.style.setProperty('--pg1', d.g1);
   pimg.style.setProperty('--pg2', d.g2);
   document.getElementById('ls-pname').textContent = d.planet;
@@ -1546,10 +1306,8 @@ function closeLS() {
     lockedKey=null;
     document.getElementById('info-card').classList.remove('visible');
   },400);
-  if (lsDest && PD[lsDest].href !== '#') {
-    setTimeout(function() {
-      fadeTransition(function() { window.location.href = PD[lsDest].href; });
-    }, 300);
+  if (lsDest && PD[lsDest].href!=='#') {
+    setTimeout(function(){ bladeWipe(PD[lsDest].bladeColor, function(){ window.location.href=PD[lsDest].href; }); },300);
   }
 }
 
@@ -1567,21 +1325,7 @@ function init() {
   startYodaTimer();
   animateConstellations();
   /* First ship appears after 8 seconds */
-  setTimeout(function() { tieFormation(); }, 5000);
-  /* Falcon guaranteed at 3s — always visible early */
-  setTimeout(function() { animFalcon(); }, 3000);
-  setTimeout(scheduleNextShip, 22000);
-
-  /* 5-tap forces a Falcon — for testing */
-  (function() {
-    var taps = 0, tapTimer = null;
-    document.addEventListener('touchstart', function() {
-      taps++;
-      clearTimeout(tapTimer);
-      tapTimer = setTimeout(function() { taps = 0; }, 800);
-      if (taps >= 5) { taps = 0; animFalcon(); }
-    });
-  })();
+  setTimeout(spawnShip, 8000);
 }
 
 window.addEventListener('load', init);
