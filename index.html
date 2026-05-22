@@ -1053,18 +1053,14 @@ function animFalcon(opts) {
   var sz  = Math.round(Math.min(vw,vh) * (opts.scale || (0.22 + Math.random()*0.06)));
   var img = makeShip('./falcon.png', sz);
 
-  /* Start: off-screen top-right. End: off-screen bottom-left */
-  var sx = vw + sz;
-  var sy = -sz;
-  var ex = -sz;
-  var ey = vh + sz;
-  var dur = opts.dur || (6000 + Math.random() * 4000);
+  /* Horizontal pass, right-to-left (matches the Falcon image's natural orientation) */
+  var sx   = vw + sz + 10;
+  var ex   = -sz - 10;
+  var topY = vh * (opts.topFrac !== undefined ? opts.topFrac : (0.20 + Math.random()*0.35));
+  var dur  = opts.dur || (5000 + Math.random() * 3000);
 
-  /* Anchor at origin — translate() will handle ALL positioning.
-     Do NOT also set left/top to sx/sy or the ship is positioned twice
-     and ends up offscreen for the entire animation. */
   img.style.left = '0px';
-  img.style.top  = '0px';
+  img.style.top  = topY + 'px';
 
   var t0 = null;
   function frame(ts) {
@@ -1072,10 +1068,9 @@ function animFalcon(opts) {
     var t  = Math.min((ts-t0)/dur, 1);
     var e  = eio(t);
     var x  = sx + (ex-sx)*e;
-    var y  = sy + (ey-sy)*e;
     var op = fade(t, 0.06) * 0.72;
     img.style.opacity   = op.toFixed(3);
-    img.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
+    img.style.transform = 'translate(' + x.toFixed(1) + 'px,0px)';
     if (t < 1) { requestAnimationFrame(frame); } else { shipCleanup(img); }
   }
   requestAnimationFrame(frame);

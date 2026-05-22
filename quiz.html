@@ -732,15 +732,16 @@ function qFalcon(opts) {
   var vw=window.innerWidth,vh=window.innerHeight;
   var sz=Math.round(Math.min(vw,vh)*(opts.scale||(0.20+Math.random()*0.06)));
   var img=qMakeShip('./falcon.png',sz);
-  var sx=vw+sz, sy=-sz, ex=-sz, ey=vh+sz;
-  var dur=opts.dur||(6000+Math.random()*4000);
-  /* Anchor at origin so translate() handles ALL positioning. */
-  img.style.left='0px'; img.style.top='0px';
+  /* Horizontal right-to-left pass */
+  var sx=vw+sz+10, ex=-sz-10;
+  var topY=vh*(opts.topFrac!==undefined?opts.topFrac:(0.20+Math.random()*0.35));
+  var dur=opts.dur||(5000+Math.random()*3000);
+  img.style.left='0px'; img.style.top=topY+'px';
   var t0=null;
   function f(ts){if(!t0)t0=ts;var t=Math.min((ts-t0)/dur,1),e=qEio(t);
-    var x=sx+(ex-sx)*e, y=sy+(ey-sy)*e;
+    var x=sx+(ex-sx)*e;
     img.style.opacity=(qFd(t,0.06)*0.70).toFixed(3);
-    img.style.transform='translate('+x.toFixed(1)+'px,'+y.toFixed(1)+'px)';
+    img.style.transform='translate('+x.toFixed(1)+'px,0px)';
     if(t<1)requestAnimationFrame(f);else qClean(img);}requestAnimationFrame(f);
 }
 
