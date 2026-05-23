@@ -2052,6 +2052,9 @@ function showAurebesh() {
 function closeAurebesh() {
   document.getElementById('aurebesh-overlay').style.display = 'none';
 }
+
+window.addEventListener('load', init);
+window.addEventListener('resize', function() { layout(); });
 </script>
 </body>
 </html>
