@@ -593,8 +593,17 @@ var CHARACTERS = {
   palpatine: { name:'Palpatine',       img:'./palpatine.png', path:'sw-prototypes/imperial/'   },
   kylo:      { name:'Kylo Ren',        img:'./kylo.png',      path:'sw-prototypes/imperial/'   },
   maul:      { name:'Darth Maul',      img:'./maul.png',      path:'sw-prototypes/imperial/'   },
-  grogu:     { name:'Grogu',           img:'./grogu.png',     path:'sw-prototypes/grogu/'      }
+  grogu:     { name:'Grogu',           img:'./grogu.png',     path:'sw-prototypes/grogu/'      },
+  /* ── Unlockable after all 16 found ── */
+  rey:       { name:'Rey',             img:'./rey.png',       path:'sw-prototypes/cyberpunk/', locked:true },
+  ahsoka:    { name:'Ahsoka Tano',     img:'./ahsoka.png',    path:'sw-prototypes/cyberpunk/', locked:true },
+  leia:      { name:'Leia Organa',     img:'./leia.png',      path:'sw-prototypes/cyberpunk/', locked:true },
+  padme:     { name:'Padmé Amidala',   img:'./padme.png',     path:'sw-prototypes/cyberpunk/', locked:true }
 };
+
+/* Original 16 — used for unlock detection */
+var ORIGINAL_16 = ['yoda','obiwan','luke','mace','poe','finn','quigon',
+  'mando','boba','han','chewie','vader','palpatine','kylo','maul','grogu'];
 
 /* ============================================================
    LIGHTSABER COLORS per character
@@ -605,7 +614,9 @@ var SABER_COLORS = {
   finn:'#44AAFF', mando:'#FFFFFF',  boba:'#FFFFFF',
   han:'#FFFFFF',  chewie:'#FFFFFF', vader:'#FF2233',
   palpatine:'#FF2233', kylo:'#FF2233', maul:'#FF2233',
-  grogu:'#00FF88'
+  grogu:'#00FF88',
+  /* Unlockable */
+  rey:'#44AAFF', ahsoka:'#44FF99', leia:'#44AAFF', padme:'#FF88CC'
 };
 
 /* ============================================================
@@ -1286,8 +1297,47 @@ function routeToResult(characterId) {
     localStorage.setItem('sw_results_history', JSON.stringify(history));
   } catch(e) {}
 
-  var url = './' + char.path + '?character=' + characterId + '&name=' + encodeURIComponent(playerName || char.name);
-  window.location.href = url;
+  /* Check if all 16 original characters have been discovered */
+  var justUnlocked = checkUnlock();
+
+  if (justUnlocked) {
+    /* Navigate to unlock reveal before result */
+    var url = './unlocked.html?next=' + encodeURIComponent(
+      './' + char.path + '?character=' + characterId + '&name=' + encodeURIComponent(playerName || char.name)
+    );
+    window.location.href = url;
+  } else {
+    var url = './' + char.path + '?character=' + characterId + '&name=' + encodeURIComponent(playerName || char.name);
+    window.location.href = url;
+  }
+}
+
+function checkUnlock() {
+  /* Already unlocked before? */
+  var alreadyUnlocked = false;
+  try { alreadyUnlocked = localStorage.getItem('sw_new_chars_unlocked') === '1'; } catch(e) {}
+  if (alreadyUnlocked) return false;
+
+  /* Check if all 16 are in history now */
+  var history = [];
+  try {
+    var raw = localStorage.getItem('sw_results_history');
+    if (raw) history = JSON.parse(raw);
+  } catch(e) {}
+
+  var found = {};
+  history.forEach(function(r) { found[r.id] = true; });
+
+  var allFound = true;
+  for (var i = 0; i < ORIGINAL_16.length; i++) {
+    if (!found[ORIGINAL_16[i]]) { allFound = false; break; }
+  }
+
+  if (allFound) {
+    try { localStorage.setItem('sw_new_chars_unlocked', '1'); } catch(e) {}
+    return true;
+  }
+  return false;
 }
 
 /* ============================================================
