@@ -1275,6 +1275,17 @@ function routeToResult(characterId) {
   if (!char || !char.path) return;
   var playerName = '';
   try { playerName = localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+
+  /* Save to results history for Archive */
+  try {
+    var history = [];
+    var raw = localStorage.getItem('sw_results_history');
+    if (raw) history = JSON.parse(raw);
+    history.unshift({ id: characterId, date: new Date().toISOString() });
+    if (history.length > 20) history = history.slice(0, 20);
+    localStorage.setItem('sw_results_history', JSON.stringify(history));
+  } catch(e) {}
+
   var url = './' + char.path + '?character=' + characterId + '&name=' + encodeURIComponent(playerName || char.name);
   window.location.href = url;
 }

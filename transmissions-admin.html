@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transmissions Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Orbitron:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;min-height:100%;background:#08080C;color:#fff;font-family:'Orbitron',sans-serif;-webkit-font-smoothing:antialiased;}
+
+.page{max-width:640px;margin:0 auto;padding:40px 24px 80px;}
+
+/* Header */
+.hdr{text-align:center;margin-bottom:48px;}
+.hdr-title{font-family:'Cinzel',serif;font-size:28px;letter-spacing:0.1em;color:#BB66FF;text-shadow:0 0 20px rgba(187,102,255,0.4);margin-bottom:8px;}
+.hdr-sub{font-size:9px;letter-spacing:0.35em;color:rgba(255,255,255,0.35);}
+
+/* Auth gate */
+#auth-gate{text-align:center;padding:80px 0;}
+.auth-label{font-size:10px;letter-spacing:0.3em;color:rgba(255,255,255,0.5);margin-bottom:16px;}
+.auth-input{
+  width:100%;max-width:280px;padding:14px 20px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(187,102,255,0.3);
+  border-radius:4px;color:#fff;font-family:'Orbitron',sans-serif;
+  font-size:16px;text-align:center;letter-spacing:0.3em;
+  outline:none;display:block;margin:0 auto 16px;
+  -webkit-appearance:none;
+}
+.auth-input:focus{border-color:rgba(187,102,255,0.7);}
+.auth-btn{
+  padding:12px 32px;font-family:'Orbitron',sans-serif;
+  font-size:10px;letter-spacing:0.3em;
+  color:#BB66FF;background:transparent;
+  border:1px solid rgba(187,102,255,0.4);
+  border-radius:4px;cursor:pointer;
+  transition:all 0.2s;-webkit-appearance:none;
+}
+.auth-btn:hover{background:rgba(187,102,255,0.1);}
+.auth-error{font-size:10px;letter-spacing:0.2em;color:rgba(255,80,80,0.8);margin-top:12px;}
+
+/* Main UI */
+#main-ui{display:none;}
+
+/* Section */
+.sec{margin-bottom:40px;}
+.sec-title{font-size:9px;letter-spacing:0.4em;color:rgba(187,102,255,0.7);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid rgba(187,102,255,0.15);}
+
+/* Form fields */
+.field{margin-bottom:20px;}
+.field-label{font-size:8px;letter-spacing:0.35em;color:rgba(255,255,255,0.45);margin-bottom:8px;}
+.field-input, .field-textarea{
+  width:100%;padding:12px 16px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:4px;color:#fff;
+  font-family:'Orbitron',sans-serif;font-size:13px;
+  outline:none;-webkit-appearance:none;transition:border-color 0.2s;
+}
+.field-input:focus, .field-textarea:focus{border-color:rgba(187,102,255,0.5);}
+.field-textarea{
+  font-family:'Cormorant Garamond',serif;font-size:16px;
+  line-height:1.75;resize:vertical;min-height:200px;
+}
+
+/* Submit */
+.submit-btn{
+  width:100%;padding:16px;
+  font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:0.35em;
+  color:#000;background:#BB66FF;
+  border:none;border-radius:4px;cursor:pointer;
+  transition:all 0.2s;-webkit-appearance:none;
+}
+.submit-btn:hover{background:#CC88FF;box-shadow:0 0 24px rgba(187,102,255,0.4);}
+.submit-btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* Status */
+#status{
+  margin-top:16px;padding:14px 16px;border-radius:4px;
+  font-size:10px;letter-spacing:0.25em;text-align:center;
+  display:none;
+}
+#status.success{background:rgba(68,255,153,0.1);border:1px solid rgba(68,255,153,0.3);color:rgba(68,255,153,0.9);}
+#status.error{background:rgba(255,80,80,0.1);border:1px solid rgba(255,80,80,0.3);color:rgba(255,80,80,0.9);}
+
+/* Existing transmissions */
+.tx-list{display:flex;flex-direction:column;gap:10px;}
+.tx-item{
+  padding:14px 16px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:4px;
+  display:flex;align-items:center;gap:12px;
+}
+.tx-subject{flex:1;font-family:'Cinzel',serif;font-size:13px;color:rgba(255,255,255,0.8);}
+.tx-date{font-size:8px;letter-spacing:0.2em;color:rgba(255,255,255,0.3);}
+.tx-del{
+  padding:6px 12px;font-size:8px;letter-spacing:0.2em;
+  color:rgba(255,80,80,0.6);background:transparent;
+  border:1px solid rgba(255,80,80,0.2);border-radius:3px;
+  cursor:pointer;-webkit-appearance:none;transition:all 0.2s;flex-shrink:0;
+}
+.tx-del:hover{color:rgba(255,80,80,0.9);border-color:rgba(255,80,80,0.5);}
+
+/* Token instructions */
+.instructions{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:4px;padding:16px;
+  font-size:11px;line-height:1.7;
+  color:rgba(255,255,255,0.45);
+  margin-bottom:20px;
+}
+.instructions a{color:rgba(187,102,255,0.8);}
+.config-field{
+  display:flex;gap:8px;align-items:center;margin-bottom:12px;
+}
+.config-label{font-size:8px;letter-spacing:0.3em;color:rgba(255,255,255,0.4);width:80px;flex-shrink:0;}
+.config-input{
+  flex:1;padding:8px 12px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:3px;color:#fff;font-family:monospace;font-size:12px;
+  outline:none;-webkit-appearance:none;
+}
+.save-config-btn{
+  padding:8px 16px;font-size:9px;letter-spacing:0.2em;
+  color:rgba(187,102,255,0.8);background:transparent;
+  border:1px solid rgba(187,102,255,0.3);border-radius:3px;
+  cursor:pointer;-webkit-appearance:none;
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="hdr">
+    <div class="hdr-title">TRANSMISSION CONTROL</div>
+    <div class="hdr-sub">HOLONET ADMIN TERMINAL</div>
+  </div>
+
+  <!-- Auth gate -->
+  <div id="auth-gate">
+    <div class="auth-label">ENTER ACCESS CODE</div>
+    <input class="auth-input" type="password" id="auth-input" placeholder="••••••" onkeydown="if(event.key==='Enter')checkAuth()">
+    <button class="auth-btn" onclick="checkAuth()">AUTHENTICATE</button>
+    <div class="auth-error" id="auth-error" style="display:none">ACCESS DENIED</div>
+  </div>
+
+  <!-- Main UI (shown after auth) -->
+  <div id="main-ui">
+
+    <!-- GitHub Config -->
+    <div class="sec">
+      <div class="sec-title">GITHUB CONFIGURATION</div>
+      <div class="instructions">
+        You need a GitHub Personal Access Token with <strong>repo</strong> scope.
+        Get one at <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a>.
+        Token is saved locally in this browser only.
+      </div>
+      <div class="config-field">
+        <div class="config-label">TOKEN</div>
+        <input class="config-input" type="password" id="cfg-token" placeholder="ghp_xxxxxxxxxxxx">
+      </div>
+      <button class="save-config-btn" onclick="saveConfig()">SAVE CONFIG</button>
+    </div>
+
+    <!-- New transmission -->
+    <div class="sec">
+      <div class="sec-title">NEW TRANSMISSION</div>
+      <div class="field">
+        <div class="field-label">SUBJECT LINE</div>
+        <input class="field-input" type="text" id="tx-subject" placeholder="A message from across the stars">
+      </div>
+      <div class="field">
+        <div class="field-label">DATE (leave blank for today)</div>
+        <input class="field-input" type="date" id="tx-date">
+      </div>
+      <div class="field">
+        <div class="field-label">MESSAGE</div>
+        <textarea class="field-textarea" id="tx-body" placeholder="Write your message here..."></textarea>
+      </div>
+      <button class="submit-btn" id="submit-btn" onclick="sendTransmission()">TRANSMIT →</button>
+      <div id="status"></div>
+    </div>
+
+    <!-- Existing transmissions -->
+    <div class="sec">
+      <div class="sec-title">SENT TRANSMISSIONS</div>
+      <div id="tx-list"><div style="font-size:10px;letter-spacing:0.2em;color:rgba(255,255,255,0.3);">Loading…</div></div>
+    </div>
+
+  </div>
+</div>
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+var GITHUB_USER = 'beutlerde';
+var GITHUB_REPO = 'Which-Star-Wars-Are-You';
+var TRANSMISSIONS_PATH = 'transmissions';
+var BRANCH = 'main';
+
+/* Admin password — change this */
+var ADMIN_PASSWORD = 'force2024';
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+function checkAuth() {
+  var val = document.getElementById('auth-input').value;
+  if (val === ADMIN_PASSWORD) {
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('main-ui').style.display = 'block';
+    loadConfig();
+    loadExisting();
+  } else {
+    document.getElementById('auth-error').style.display = 'block';
+    setTimeout(function() {
+      document.getElementById('auth-error').style.display = 'none';
+    }, 2000);
+  }
+}
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+function loadConfig() {
+  try {
+    var token = localStorage.getItem('sw_admin_token') || '';
+    document.getElementById('cfg-token').value = token;
+  } catch(e) {}
+}
+
+function saveConfig() {
+  try {
+    var token = document.getElementById('cfg-token').value.trim();
+    localStorage.setItem('sw_admin_token', token);
+    showStatus('Config saved.', 'success');
+  } catch(e) {
+    showStatus('Save failed.', 'error');
+  }
+}
+
+function getToken() {
+  try { return localStorage.getItem('sw_admin_token') || ''; } catch(e) { return ''; }
+}
+
+/* ============================================================
+   SEND TRANSMISSION
+   ============================================================ */
+function sendTransmission() {
+  var token = getToken();
+  if (!token) { showStatus('No GitHub token configured.', 'error'); return; }
+
+  var subject = document.getElementById('tx-subject').value.trim();
+  var body = document.getElementById('tx-body').value.trim();
+  var dateVal = document.getElementById('tx-date').value;
+
+  if (!subject) { showStatus('Subject required.', 'error'); return; }
+  if (!body) { showStatus('Message required.', 'error'); return; }
+
+  var date = dateVal ? new Date(dateVal).toISOString() : new Date().toISOString();
+  var id = 'tx_' + Date.now();
+
+  document.getElementById('submit-btn').disabled = true;
+  showStatus('Transmitting…', 'success');
+
+  /* First commit the message text file */
+  commitFile(
+    TRANSMISSIONS_PATH + '/' + id + '.txt',
+    body,
+    'Add transmission: ' + subject,
+    token,
+    function(ok) {
+      if (!ok) {
+        document.getElementById('submit-btn').disabled = false;
+        showStatus('Failed to commit message file.', 'error');
+        return;
+      }
+      /* Then update the index */
+      updateIndex({ id: id, subject: subject, date: date, preview: body.slice(0, 120) }, token, function(ok2) {
+        document.getElementById('submit-btn').disabled = false;
+        if (ok2) {
+          showStatus('Transmission sent successfully! ✦', 'success');
+          document.getElementById('tx-subject').value = '';
+          document.getElementById('tx-body').value = '';
+          document.getElementById('tx-date').value = '';
+          loadExisting();
+        } else {
+          showStatus('Index update failed. Message file was committed.', 'error');
+        }
+      });
+    }
+  );
+}
+
+function commitFile(path, content, message, token, cb) {
+  var apiBase = 'https://api.github.com/repos/' + GITHUB_USER + '/' + GITHUB_REPO + '/contents/' + path;
+  /* Check if file exists first (for SHA) */
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', apiBase + '?ref=' + BRANCH);
+  xhr.setRequestHeader('Authorization', 'token ' + token);
+  xhr.onload = function() {
+    var sha = null;
+    if (xhr.status === 200) {
+      try { sha = JSON.parse(xhr.responseText).sha; } catch(e) {}
+    }
+    var body = {
+      message: message,
+      content: btoa(unescape(encodeURIComponent(content))),
+      branch: BRANCH
+    };
+    if (sha) body.sha = sha;
+    var xhr2 = new XMLHttpRequest();
+    xhr2.open('PUT', apiBase);
+    xhr2.setRequestHeader('Authorization', 'token ' + token);
+    xhr2.setRequestHeader('Content-Type', 'application/json');
+    xhr2.onload = function() { cb(xhr2.status === 200 || xhr2.status === 201); };
+    xhr2.onerror = function() { cb(false); };
+    xhr2.send(JSON.stringify(body));
+  };
+  xhr.onerror = function() { cb(false); };
+  xhr.send();
+}
+
+function updateIndex(newEntry, token, cb) {
+  var path = TRANSMISSIONS_PATH + '/index.json';
+  var rawUrl = 'https://raw.githubusercontent.com/' + GITHUB_USER + '/' + GITHUB_REPO + '/' + BRANCH + '/' + path + '?t=' + Date.now();
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', rawUrl);
+  xhr.onload = function() {
+    var existing = [];
+    if (xhr.status === 200) {
+      try { existing = JSON.parse(xhr.responseText); } catch(e) {}
+    }
+    existing.push(newEntry);
+    commitFile(path, JSON.stringify(existing, null, 2), 'Update transmission index', token, cb);
+  };
+  xhr.onerror = function() {
+    commitFile(path, JSON.stringify([newEntry], null, 2), 'Create transmission index', token, cb);
+  };
+  xhr.send();
+}
+
+/* ============================================================
+   LOAD EXISTING
+   ============================================================ */
+function loadExisting() {
+  var url = 'https://raw.githubusercontent.com/' + GITHUB_USER + '/' + GITHUB_REPO + '/' + BRANCH + '/' + TRANSMISSIONS_PATH + '/index.json?t=' + Date.now();
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+  xhr.onload = function() {
+    var container = document.getElementById('tx-list');
+    if (xhr.status !== 200) {
+      container.innerHTML = '<div style="font-size:10px;letter-spacing:0.2em;color:rgba(255,255,255,0.3);">No transmissions yet.</div>';
+      return;
+    }
+    var index;
+    try { index = JSON.parse(xhr.responseText); } catch(e) {
+      container.innerHTML = '<div style="font-size:10px;color:rgba(255,80,80,0.6);">Index parse error.</div>';
+      return;
+    }
+    if (!index.length) {
+      container.innerHTML = '<div style="font-size:10px;letter-spacing:0.2em;color:rgba(255,255,255,0.3);">No transmissions yet.</div>';
+      return;
+    }
+    index.sort(function(a,b){ return new Date(b.date) - new Date(a.date); });
+    var html = '<div class="tx-list">';
+    index.forEach(function(t) {
+      var dateStr = '';
+      try { dateStr = new Date(t.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch(e) {}
+      html += '<div class="tx-item">' +
+        '<div class="tx-subject">' + (t.subject||'Untitled') + '</div>' +
+        '<div class="tx-date">' + dateStr + '</div>' +
+        '<button class="tx-del" onclick="deleteTransmission(\'' + t.id + '\')">DEL</button>' +
+        '</div>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  };
+  xhr.onerror = function() {
+    document.getElementById('tx-list').innerHTML = '<div style="font-size:10px;color:rgba(255,80,80,0.6);">Load failed.</div>';
+  };
+  xhr.send();
+}
+
+function deleteTransmission(id) {
+  if (!confirm('Delete this transmission?')) return;
+  var token = getToken();
+  if (!token) { showStatus('No token.', 'error'); return; }
+
+  var url = 'https://raw.githubusercontent.com/' + GITHUB_USER + '/' + GITHUB_REPO + '/' + BRANCH + '/' + TRANSMISSIONS_PATH + '/index.json?t=' + Date.now();
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+  xhr.onload = function() {
+    var index;
+    try { index = JSON.parse(xhr.responseText); } catch(e) { showStatus('Parse error.', 'error'); return; }
+    index = index.filter(function(t) { return t.id !== id; });
+    commitFile(TRANSMISSIONS_PATH + '/index.json', JSON.stringify(index, null, 2), 'Delete transmission ' + id, token, function(ok) {
+      if (ok) { showStatus('Deleted.', 'success'); loadExisting(); }
+      else { showStatus('Delete failed.', 'error'); }
+    });
+  };
+  xhr.onerror = function() { showStatus('Load failed.', 'error'); };
+  xhr.send();
+}
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+function showStatus(msg, type) {
+  var el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = type;
+  el.style.display = 'block';
+  setTimeout(function() { el.style.display = 'none'; }, 4000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>The Archive</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Orbitron:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Orbitron',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* Starfield */
+#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 30%,#0a0d2a 0%,#04050d 60%,#000 100%);}
+.star{position:absolute;background:#fff;border-radius:50%;pointer-events:none;}
+
+/* Layout */
+.page{position:relative;z-index:2;min-height:100vh;padding:max(24px,env(safe-area-inset-top)) 0 max(48px,env(safe-area-inset-bottom));}
+
+/* Header */
+.hdr{text-align:center;padding:0 24px 40px;}
+.hdr-eye{font-size:9px;letter-spacing:0.45em;color:rgba(68,255,153,0.6);margin-bottom:16px;}
+.hdr-title{font-family:'Cinzel',serif;font-size:clamp(28px,8vw,44px);letter-spacing:0.08em;color:#44FF99;text-shadow:0 0 24px rgba(68,255,153,0.5);margin-bottom:8px;}
+.hdr-sub{font-size:10px;letter-spacing:0.3em;color:rgba(255,255,255,0.4);}
+
+/* Empty state */
+.empty{text-align:center;padding:80px 32px;}
+.empty-icon{font-size:48px;margin-bottom:24px;opacity:0.4;}
+.empty-text{font-family:'Cinzel',serif;font-style:italic;font-size:18px;color:rgba(255,255,255,0.4);line-height:1.6;}
+
+/* Result cards */
+.cards{padding:0 20px;display:flex;flex-direction:column;gap:16px;max-width:520px;margin:0 auto;}
+
+.card{
+  background:rgba(68,255,153,0.04);
+  border:1px solid rgba(68,255,153,0.15);
+  border-radius:8px;
+  padding:20px;
+  display:grid;
+  grid-template-columns:64px 1fr auto;
+  gap:16px;
+  align-items:center;
+  cursor:pointer;
+  transition:all 0.3s;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(68,255,153,0.06),transparent);
+  opacity:0;transition:opacity 0.3s;
+}
+.card:active::before{opacity:1;}
+.card:active{transform:scale(0.98);}
+
+/* Latest card gets special treatment */
+.card.latest{
+  border-color:rgba(68,255,153,0.4);
+  background:rgba(68,255,153,0.08);
+}
+.card.latest::after{
+  content:'LATEST';
+  position:absolute;top:10px;right:10px;
+  font-size:7px;letter-spacing:0.3em;
+  color:rgba(68,255,153,0.7);
+  background:rgba(68,255,153,0.1);
+  padding:3px 8px;border-radius:2px;
+  border:1px solid rgba(68,255,153,0.2);
+}
+
+.card-img{
+  width:64px;height:64px;border-radius:4px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.card-img img{width:100%;height:100%;object-fit:cover;}
+
+.card-info{}
+.card-char{font-family:'Cinzel',serif;font-size:16px;color:#fff;letter-spacing:0.05em;margin-bottom:4px;}
+.card-alignment{font-size:9px;letter-spacing:0.3em;color:rgba(68,255,153,0.7);margin-bottom:6px;}
+.card-date{font-size:9px;letter-spacing:0.2em;color:rgba(255,255,255,0.35);}
+
+.card-arrow{font-size:18px;color:rgba(68,255,153,0.5);}
+
+/* Stats row */
+.stats-row{
+  display:flex;gap:20px;justify-content:center;
+  padding:32px 20px 40px;
+  border-top:1px solid rgba(255,255,255,0.06);
+  margin-top:16px;
+  max-width:520px;
+  margin-left:auto;margin-right:auto;
+}
+.stat-box{text-align:center;}
+.stat-num{font-family:'Cinzel',serif;font-size:32px;color:#44FF99;line-height:1;}
+.stat-lbl{font-size:8px;letter-spacing:0.3em;color:rgba(255,255,255,0.4);margin-top:4px;}
+
+/* Back button */
+.back-btn{
+  display:block;text-align:center;
+  margin:24px auto 0;
+  padding:14px 32px;
+  font-family:'Orbitron',sans-serif;
+  font-size:10px;letter-spacing:0.3em;
+  color:rgba(255,255,255,0.5);
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:4px;cursor:pointer;
+  width:fit-content;
+  transition:all 0.3s;
+  -webkit-appearance:none;
+}
+.back-btn:active{color:#fff;border-color:rgba(255,255,255,0.4);}
+
+/* Clear button */
+.clear-btn{
+  display:block;text-align:center;
+  margin:12px auto 0;
+  padding:10px 24px;
+  font-family:'Orbitron',sans-serif;
+  font-size:9px;letter-spacing:0.25em;
+  color:rgba(255,80,80,0.5);
+  background:transparent;
+  border:1px solid rgba(255,80,80,0.15);
+  border-radius:4px;cursor:pointer;
+  width:fit-content;
+  transition:all 0.3s;
+  -webkit-appearance:none;
+}
+.clear-btn:active{color:rgba(255,80,80,0.9);border-color:rgba(255,80,80,0.4);}
+
+/* Alignment colors */
+.align-rebel{color:rgba(68,221,255,0.8);}
+.align-bounty{color:rgba(255,176,85,0.8);}
+.align-imperial{color:rgba(200,80,255,0.8);}
+.align-force{color:rgba(255,200,80,0.8);}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div class="page">
+  <div class="hdr">
+    <div class="hdr-eye">✦ HOLOCRON RECORDS ✦</div>
+    <div class="hdr-title">THE ARCHIVE</div>
+    <div class="hdr-sub" id="hdr-sub">Your journey so far</div>
+  </div>
+  <div id="content"></div>
+  <div style="text-align:center;padding:0 20px;">
+    <button class="back-btn" onclick="window.location.href='./index.html'">← RETURN TO COCKPIT</button>
+    <button class="clear-btn" id="clear-btn" style="display:none" onclick="clearHistory()">CLEAR HISTORY</button>
+  </div>
+</div>
+<script>
+/* ============================================================
+   CHARACTER DATA — alignment + display name
+   ============================================================ */
+var CHAR_META = {
+  yoda:      { name:'Yoda',            align:'rebel',    alignLabel:'JEDI ORDER',      path:'sw-prototypes/cyberpunk/' },
+  obiwan:    { name:'Obi-Wan',         align:'rebel',    alignLabel:'JEDI ORDER',      path:'sw-prototypes/cyberpunk/' },
+  luke:      { name:'Luke',            align:'rebel',    alignLabel:'REBEL ALLIANCE',  path:'sw-prototypes/cyberpunk/' },
+  mace:      { name:'Mace Windu',      align:'rebel',    alignLabel:'JEDI COUNCIL',    path:'sw-prototypes/cyberpunk/' },
+  poe:       { name:'Poe Dameron',     align:'rebel',    alignLabel:'RESISTANCE',      path:'sw-prototypes/cyberpunk/' },
+  finn:      { name:'Finn',            align:'rebel',    alignLabel:'RESISTANCE',      path:'sw-prototypes/cyberpunk/' },
+  quigon:    { name:'Qui-Gon Jinn',    align:'rebel',    alignLabel:'JEDI ORDER',      path:'sw-prototypes/cyberpunk/' },
+  mando:     { name:'The Mandalorian', align:'bounty',   alignLabel:'GUILD HUNTER',    path:'sw-prototypes/mando/'     },
+  boba:      { name:'Boba Fett',       align:'bounty',   alignLabel:'GUILD HUNTER',    path:'sw-prototypes/mando/'     },
+  han:       { name:'Han Solo',        align:'bounty',   alignLabel:'REBEL GENERAL',   path:'sw-prototypes/mando/'     },
+  chewie:    { name:'Chewbacca',       align:'bounty',   alignLabel:'CO-PILOT',        path:'sw-prototypes/mando/'     },
+  vader:     { name:'Darth Vader',     align:'imperial', alignLabel:'DARK SIDE',       path:'sw-prototypes/imperial/'  },
+  palpatine: { name:'Palpatine',       align:'imperial', alignLabel:'DARK SIDE',       path:'sw-prototypes/imperial/'  },
+  kylo:      { name:'Kylo Ren',        align:'imperial', alignLabel:'DARK SIDE',       path:'sw-prototypes/imperial/'  },
+  maul:      { name:'Darth Maul',      align:'imperial', alignLabel:'DARK SIDE',       path:'sw-prototypes/imperial/'  },
+  grogu:     { name:'Grogu',           align:'force',    alignLabel:'FORCE ADEPT',     path:'sw-prototypes/grogu/'     }
+};
+
+var ALIGN_COLORS = {
+  rebel:    'align-rebel',
+  bounty:   'align-bounty',
+  imperial: 'align-imperial',
+  force:    'align-force'
+};
+
+/* ============================================================
+   LOAD HISTORY
+   ============================================================ */
+function loadHistory() {
+  var history = [];
+  try {
+    var raw = localStorage.getItem('sw_results_history');
+    if (raw) history = JSON.parse(raw);
+  } catch(e) {}
+
+  /* Also check single last result for backwards compat */
+  var last = '';
+  try { last = localStorage.getItem('sw_last_result') || ''; } catch(e) {}
+  if (last && (history.length === 0 || history[0].id !== last)) {
+    history.unshift({ id: last, date: new Date().toISOString() });
+  }
+
+  /* Get player name */
+  var playerName = '';
+  try { playerName = localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+
+  renderContent(history, playerName);
+}
+
+function renderContent(history, playerName) {
+  var content = document.getElementById('content');
+  var sub = document.getElementById('hdr-sub');
+
+  if (history.length === 0) {
+    content.innerHTML =
+      '<div class="empty">' +
+      '<div class="empty-icon">📡</div>' +
+      '<div class="empty-text">No results recorded yet.<br>Complete the Force Scan to begin your archive.</div>' +
+      '</div>';
+    return;
+  }
+
+  /* Update subtitle */
+  var name = playerName ? playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase() : '';
+  sub.textContent = name ? name + '\'s journey so far' : 'Your journey so far';
+
+  /* Count unique characters */
+  var unique = {};
+  history.forEach(function(r) { unique[r.id] = true; });
+  var uniqueCount = Object.keys(unique).length;
+
+  /* Stats row */
+  var statsHtml =
+    '<div class="stats-row">' +
+    '<div class="stat-box"><div class="stat-num">' + history.length + '</div><div class="stat-lbl">SCANS RUN</div></div>' +
+    '<div class="stat-box"><div class="stat-num">' + uniqueCount + '</div><div class="stat-lbl">CHARACTERS</div></div>' +
+    '<div class="stat-box"><div class="stat-num">' + Object.keys(CHAR_META).length + '</div><div class="stat-lbl">TO DISCOVER</div></div>' +
+    '</div>';
+
+  /* Cards */
+  var cardsHtml = '<div class="cards">';
+  history.slice(0, 10).forEach(function(r, idx) {
+    var meta = CHAR_META[r.id];
+    if (!meta) return;
+    var dateStr = '';
+    try {
+      var d = new Date(r.date);
+      dateStr = d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    } catch(e) {}
+    var alignClass = ALIGN_COLORS[meta.align] || '';
+    var isLatest = (idx === 0) ? 'latest' : '';
+    cardsHtml +=
+      '<div class="card ' + isLatest + '" onclick="viewResult(\'' + r.id + '\', \'' + encodeURIComponent(name) + '\')">' +
+      '<div class="card-img"><img src="./assets/characters/' + r.id + '.png" onerror="this.src=\'./assets/characters/' + r.id + '.PNG\'" alt="' + meta.name + '"></div>' +
+      '<div class="card-info">' +
+      '<div class="card-char">' + meta.name + '</div>' +
+      '<div class="card-alignment ' + alignClass + '">' + meta.alignLabel + '</div>' +
+      (dateStr ? '<div class="card-date">' + dateStr + '</div>' : '') +
+      '</div>' +
+      '<div class="card-arrow">›</div>' +
+      '</div>';
+  });
+  cardsHtml += '</div>';
+
+  content.innerHTML = cardsHtml + statsHtml;
+  document.getElementById('clear-btn').style.display = 'block';
+}
+
+function viewResult(id, name) {
+  var meta = CHAR_META[id];
+  if (!meta) return;
+  window.location.href = './' + meta.path + '?character=' + id + '&name=' + name;
+}
+
+function clearHistory() {
+  if (!confirm('Clear all archive records?')) return;
+  try {
+    localStorage.removeItem('sw_results_history');
+    localStorage.removeItem('sw_last_result');
+  } catch(e) {}
+  loadHistory();
+}
+
+/* Save result to history — called from quiz result flow */
+function saveResult(id) {
+  var history = [];
+  try {
+    var raw = localStorage.getItem('sw_results_history');
+    if (raw) history = JSON.parse(raw);
+  } catch(e) {}
+  history.unshift({ id: id, date: new Date().toISOString() });
+  if (history.length > 20) history = history.slice(0, 20);
+  try { localStorage.setItem('sw_results_history', JSON.stringify(history)); } catch(e) {}
+}
+
+/* Stars */
+(function() {
+  var bg = document.getElementById('bg');
+  for (var i = 0; i < 80; i++) {
+    var s = document.createElement('div');
+    s.className = 'star';
+    var sz = Math.random() * 2 + 0.5;
+    s.style.cssText = 'width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;opacity:'+(Math.random()*0.6+0.2).toFixed(2);
+    bg.appendChild(s);
+  }
+})();
+
+window.addEventListener('load', loadHistory);
+</script>
+</body>
+</html>

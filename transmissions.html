@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Transmissions</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Orbitron:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Orbitron',sans-serif;-webkit-font-smoothing:antialiased;}
+#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 30%,#12082a 0%,#06030f 60%,#000 100%);}
+.star{position:absolute;background:#fff;border-radius:50%;pointer-events:none;}
+.page{position:relative;z-index:2;min-height:100vh;padding:max(24px,env(safe-area-inset-top)) 0 max(64px,env(safe-area-inset-bottom));}
+
+/* Header */
+.hdr{text-align:center;padding:0 24px 40px;}
+.hdr-eye{font-size:9px;letter-spacing:0.45em;color:rgba(187,102,255,0.6);margin-bottom:16px;}
+.hdr-title{font-family:'Cinzel',serif;font-size:clamp(26px,7vw,40px);letter-spacing:0.08em;color:#BB66FF;text-shadow:0 0 24px rgba(187,102,255,0.5);margin-bottom:8px;}
+.hdr-sub{font-size:10px;letter-spacing:0.3em;color:rgba(255,255,255,0.35);}
+
+/* Loading */
+#loading{text-align:center;padding:80px 32px;font-size:11px;letter-spacing:0.3em;color:rgba(255,255,255,0.4);}
+
+/* Message list */
+.msgs{max-width:520px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:16px;}
+
+/* Individual message card */
+.msg-card{
+  background:rgba(187,102,255,0.04);
+  border:1px solid rgba(187,102,255,0.15);
+  border-radius:8px;overflow:hidden;cursor:pointer;
+  transition:all 0.3s;
+}
+.msg-card.unread{border-color:rgba(187,102,255,0.45);background:rgba(187,102,255,0.08);}
+.msg-card:active{transform:scale(0.98);}
+
+.msg-header{
+  padding:16px 20px;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.msg-indicator{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(187,102,255,0.3);flex-shrink:0;margin-top:4px;
+}
+.msg-card.unread .msg-indicator{background:#BB66FF;box-shadow:0 0 8px rgba(187,102,255,0.7);}
+.msg-meta{flex:1;}
+.msg-from{font-size:9px;letter-spacing:0.3em;color:rgba(187,102,255,0.7);margin-bottom:4px;}
+.msg-subject{font-family:'Cinzel',serif;font-size:15px;color:#fff;letter-spacing:0.03em;margin-bottom:4px;}
+.msg-date{font-size:8px;letter-spacing:0.25em;color:rgba(255,255,255,0.3);}
+.msg-arrow{color:rgba(187,102,255,0.5);font-size:18px;flex-shrink:0;}
+
+/* Message body — expands on tap */
+.msg-body{
+  max-height:0;overflow:hidden;
+  transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.msg-body.open{max-height:600px;}
+.msg-body-inner{
+  padding:0 20px 24px;
+  border-top:1px solid rgba(187,102,255,0.1);
+}
+.msg-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(16px,4vw,18px);
+  line-height:1.75;
+  color:rgba(255,255,255,0.85);
+  padding-top:16px;
+  white-space:pre-wrap;
+}
+.msg-sig{
+  margin-top:20px;
+  font-family:'Cinzel',serif;font-style:italic;
+  font-size:13px;color:rgba(187,102,255,0.7);
+  letter-spacing:0.05em;
+}
+
+/* Empty state */
+.empty{text-align:center;padding:80px 32px;}
+.empty-icon{font-size:48px;margin-bottom:24px;opacity:0.35;}
+.empty-text{font-family:'Cinzel',serif;font-style:italic;font-size:17px;color:rgba(255,255,255,0.35);line-height:1.65;}
+
+/* Static transmission visual effect */
+@keyframes static-in{from{opacity:0;filter:blur(4px);}to{opacity:1;filter:blur(0);}}
+.msg-card{animation:static-in 0.5s ease-out both;}
+
+/* Back button */
+.back-btn{
+  display:block;text-align:center;margin:32px auto 0;
+  padding:14px 32px;font-family:'Orbitron',sans-serif;
+  font-size:10px;letter-spacing:0.3em;
+  color:rgba(255,255,255,0.45);background:transparent;
+  border:1px solid rgba(255,255,255,0.12);border-radius:4px;
+  cursor:pointer;width:fit-content;transition:all 0.3s;-webkit-appearance:none;
+}
+.back-btn:active{color:#fff;border-color:rgba(255,255,255,0.35);}
+
+/* Unread badge */
+.unread-badge{
+  display:inline-block;
+  background:#BB66FF;color:#000;
+  font-size:8px;font-weight:700;letter-spacing:0.1em;
+  padding:2px 7px;border-radius:10px;
+  margin-left:8px;vertical-align:middle;
+}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div class="page">
+  <div class="hdr">
+    <div class="hdr-eye">📡 INCOMING SIGNAL ✦</div>
+    <div class="hdr-title">TRANSMISSIONS <span id="unread-badge"></span></div>
+    <div class="hdr-sub" id="hdr-sub">Messages from across the galaxy</div>
+  </div>
+  <div id="loading">ESTABLISHING HOLONET CONNECTION…</div>
+  <div class="msgs" id="msgs" style="display:none"></div>
+  <div style="text-align:center;padding:0 20px;">
+    <button class="back-btn" onclick="window.location.href='./index.html'">← RETURN TO COCKPIT</button>
+  </div>
+</div>
+<script>
+/* ============================================================
+   CONFIG — point to your GitHub repo
+   ============================================================ */
+var GITHUB_USER = 'beutlerde';
+var GITHUB_REPO = 'Which-Star-Wars-Are-You';
+var TRANSMISSIONS_PATH = 'transmissions';
+var BRANCH = 'main';
+
+/* ============================================================
+   LOAD TRANSMISSIONS
+   ============================================================ */
+var readIds = {};
+try {
+  var raw = localStorage.getItem('sw_transmissions_read');
+  if (raw) readIds = JSON.parse(raw);
+} catch(e) {}
+
+function markRead(id) {
+  readIds[id] = true;
+  try { localStorage.setItem('sw_transmissions_read', JSON.stringify(readIds)); } catch(e) {}
+}
+
+function loadTransmissions() {
+  var indexUrl = 'https://raw.githubusercontent.com/' + GITHUB_USER + '/' + GITHUB_REPO + '/' + BRANCH + '/' + TRANSMISSIONS_PATH + '/index.json';
+
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', indexUrl + '?t=' + Date.now());
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      try {
+        var index = JSON.parse(xhr.responseText);
+        renderTransmissions(index);
+      } catch(e) {
+        showEmpty('Signal corrupted. Try again later.');
+      }
+    } else if (xhr.status === 404) {
+      showEmpty('No transmissions received yet.\nCheck back soon, young one.');
+    } else {
+      showEmpty('Unable to reach HoloNet.\nCheck your connection.');
+    }
+  };
+  xhr.onerror = function() {
+    showEmpty('Unable to reach HoloNet.\nCheck your connection.');
+  };
+  xhr.send();
+}
+
+function renderTransmissions(index) {
+  document.getElementById('loading').style.display = 'none';
+  var container = document.getElementById('msgs');
+  container.style.display = 'flex';
+
+  if (!index || !index.length) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">📡</div><div class="empty-text">No transmissions received yet.\nCheck back soon, young one.</div></div>';
+    return;
+  }
+
+  /* Sort newest first */
+  index.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+
+  var unreadCount = 0;
+  var html = '';
+
+  index.forEach(function(t, i) {
+    var isUnread = !readIds[t.id];
+    if (isUnread) unreadCount++;
+    var dateStr = '';
+    try {
+      var d = new Date(t.date);
+      dateStr = d.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+    } catch(e) {}
+    html +=
+      '<div class="msg-card' + (isUnread ? ' unread' : '') + '" id="card-' + t.id + '" style="animation-delay:' + (i*0.08) + 's" onclick="toggleMsg(\'' + t.id + '\', \'' + encodeURIComponent(JSON.stringify(t)) + '\')">' +
+      '<div class="msg-header">' +
+      '<div class="msg-indicator"></div>' +
+      '<div class="msg-meta">' +
+      '<div class="msg-from">TRANSMISSION FROM: DAD</div>' +
+      '<div class="msg-subject">' + (t.subject || 'Incoming Transmission') + '</div>' +
+      (dateStr ? '<div class="msg-date">' + dateStr + '</div>' : '') +
+      '</div>' +
+      '<div class="msg-arrow">›</div>' +
+      '</div>' +
+      '<div class="msg-body" id="body-' + t.id + '">' +
+      '<div class="msg-body-inner">' +
+      '<div class="msg-text" id="text-' + t.id + '"></div>' +
+      '<div class="msg-sig">— Dad</div>' +
+      '</div>' +
+      '</div>' +
+      '</div>';
+  });
+
+  container.innerHTML = html;
+
+  /* Load message texts */
+  index.forEach(function(t) {
+    loadMessageText(t);
+  });
+
+  /* Update unread badge */
+  if (unreadCount > 0) {
+    document.getElementById('unread-badge').innerHTML = '<span class="unread-badge">' + unreadCount + '</span>';
+  }
+
+  /* Personalize header */
+  var name = '';
+  try { name = localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+  if (name) {
+    var dn = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+    document.getElementById('hdr-sub').textContent = 'For ' + dn + ', from across the galaxy';
+  }
+}
+
+function loadMessageText(t) {
+  var url = 'https://raw.githubusercontent.com/' + GITHUB_USER + '/' + GITHUB_REPO + '/' + BRANCH + '/' + TRANSMISSIONS_PATH + '/' + t.id + '.txt';
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url + '?t=' + Date.now());
+  xhr.onload = function() {
+    var el = document.getElementById('text-' + t.id);
+    if (el) el.textContent = xhr.status === 200 ? xhr.responseText : (t.preview || '');
+  };
+  xhr.onerror = function() {
+    var el = document.getElementById('text-' + t.id);
+    if (el) el.textContent = t.preview || '';
+  };
+  xhr.send();
+}
+
+function toggleMsg(id, dataStr) {
+  var body = document.getElementById('body-' + id);
+  var card = document.getElementById('card-' + id);
+  if (!body) return;
+
+  if (body.classList.contains('open')) {
+    body.classList.remove('open');
+  } else {
+    /* Close all others */
+    document.querySelectorAll('.msg-body.open').forEach(function(b) { b.classList.remove('open'); });
+    body.classList.add('open');
+    /* Mark read */
+    markRead(id);
+    if (card) card.classList.remove('unread');
+    /* Update badge */
+    var unread = document.querySelectorAll('.msg-card.unread').length;
+    var badge = document.getElementById('unread-badge');
+    if (badge) badge.innerHTML = unread > 0 ? '<span class="unread-badge">' + unread + '</span>' : '';
+  }
+}
+
+function showEmpty(msg) {
+  document.getElementById('loading').style.display = 'none';
+  var container = document.getElementById('msgs');
+  container.style.display = 'flex';
+  container.innerHTML = '<div class="empty"><div class="empty-icon">📡</div><div class="empty-text">' + msg.replace('\n','<br>') + '</div></div>';
+}
+
+/* Stars */
+(function() {
+  var bg = document.getElementById('bg');
+  for (var i = 0; i < 80; i++) {
+    var s = document.createElement('div');
+    s.className = 'star';
+    var sz = Math.random() * 2 + 0.5;
+    s.style.cssText = 'width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;opacity:'+(Math.random()*0.5+0.2).toFixed(2);
+    bg.appendChild(s);
+  }
+})();
+
+window.addEventListener('load', loadTransmissions);
+</script>
+</body>
+</html>

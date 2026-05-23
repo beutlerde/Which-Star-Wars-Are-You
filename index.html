@@ -393,11 +393,153 @@ html, body {
 }
 .ls-btn.assembled .btn-border rect { stroke-dashoffset:0; }
 
+/* ============================================================
+   SESSION 6 — WELCOME BACK OVERLAY
+   ============================================================ */
+#welcome-back {
+  position:fixed; inset:0; z-index:200;
+  background:rgba(0,0,0,0.92);
+  display:flex; align-items:center; justify-content:center;
+  animation:wb-in 0.6s ease-out;
+}
+@keyframes wb-in { from{opacity:0;} to{opacity:1;} }
+#wb-content { text-align:center; padding:40px 32px; }
+#wb-eye {
+  font-size:9px; letter-spacing:0.5em; color:rgba(255,180,60,0.7);
+  margin-bottom:20px;
+}
+#wb-name {
+  font-family:'Cinzel',serif; font-size:clamp(36px,10vw,60px);
+  letter-spacing:0.1em; color:#FFB055;
+  text-shadow:0 0 40px rgba(255,176,85,0.6);
+  margin-bottom:12px;
+}
+#wb-sub {
+  font-family:'Cinzel',serif; font-style:italic;
+  font-size:clamp(14px,4vw,18px); color:rgba(255,255,255,0.5);
+  letter-spacing:0.05em; margin-bottom:48px;
+}
+#wb-btns { display:flex; flex-direction:column; gap:14px; max-width:280px; margin:0 auto; }
+#wb-quiz {
+  padding:16px 28px; font-family:'Orbitron',sans-serif;
+  font-size:11px; letter-spacing:0.3em; color:#000;
+  background:#FFB055; border:none; border-radius:4px;
+  cursor:pointer; -webkit-appearance:none;
+  box-shadow:0 0 24px rgba(255,176,85,0.5);
+  transition:all 0.2s;
+}
+#wb-quiz:active { background:#FFC880; }
+#wb-ceremony {
+  padding:14px 28px; font-family:'Orbitron',sans-serif;
+  font-size:10px; letter-spacing:0.3em; color:rgba(255,255,255,0.6);
+  background:transparent; border:1px solid rgba(255,255,255,0.15);
+  border-radius:4px; cursor:pointer; -webkit-appearance:none;
+  transition:all 0.2s;
+}
+#wb-ceremony:active { color:#fff; border-color:rgba(255,255,255,0.4); }
+
+/* ============================================================
+   SESSION 6 — VISITED PLANET INDICATOR
+   ============================================================ */
+.planet-visited-ring {
+  position:absolute; border-radius:50%;
+  border:1px solid rgba(255,255,255,0.25);
+  animation:visited-pulse 3s ease-in-out infinite;
+  pointer-events:none; z-index:2;
+}
+@keyframes visited-pulse {
+  0%,100% { opacity:0.25; transform:scale(1); }
+  50% { opacity:0.5; transform:scale(1.08); }
+}
+.planet-visited-dot {
+  position:absolute; top:-2px; right:-2px;
+  width:8px; height:8px; border-radius:50%;
+  background:#44FF99;
+  box-shadow:0 0 6px rgba(68,255,153,0.8);
+  pointer-events:none; z-index:3;
+}
+
+/* ============================================================
+   SESSION 6 — AUREBESH EASTER EGG
+   ============================================================ */
+#aurebesh-overlay {
+  position:fixed; inset:0; z-index:300;
+  background:rgba(0,0,0,0.95);
+  display:flex; align-items:center; justify-content:center;
+}
+#aur-inner {
+  text-align:center; padding:40px 32px; max-width:400px;
+}
+#aur-title {
+  font-size:8px; letter-spacing:0.5em; color:rgba(255,180,60,0.6);
+  margin-bottom:32px;
+}
+#aur-text {
+  font-size:clamp(28px,8vw,44px); letter-spacing:0.15em;
+  color:rgba(255,255,255,0.15); margin-bottom:24px;
+  font-family:'Orbitron',sans-serif; line-height:1.4;
+}
+#aur-translation {
+  font-family:'Cinzel',serif; font-style:italic;
+  font-size:clamp(16px,4vw,22px); color:#FFB055;
+  text-shadow:0 0 20px rgba(255,176,85,0.4);
+  margin-bottom:40px; line-height:1.5;
+}
+#aur-close {
+  padding:12px 32px; font-family:'Orbitron',sans-serif;
+  font-size:9px; letter-spacing:0.3em; color:rgba(255,255,255,0.5);
+  background:transparent; border:1px solid rgba(255,255,255,0.15);
+  border-radius:4px; cursor:pointer; -webkit-appearance:none;
+}
+
+/* ============================================================
+   SESSION 6 — BIRTHDAY MODE
+   ============================================================ */
+#birthday-overlay {
+  position:fixed; inset:0; z-index:250;
+  background:rgba(0,0,0,0.96);
+  display:flex; align-items:center; justify-content:center;
+}
+#bday-canvas { position:absolute; inset:0; pointer-events:none; }
+#bday-msg { position:relative; z-index:2; text-align:center; padding:40px 32px; }
+#bday-eye {
+  font-size:9px; letter-spacing:0.4em; color:rgba(255,210,80,0.7);
+  margin-bottom:24px;
+}
+#bday-name {
+  font-family:'Cinzel',serif; font-size:clamp(32px,9vw,54px);
+  letter-spacing:0.1em; color:#FFD040;
+  text-shadow:0 0 40px rgba(255,208,64,0.7), 0 0 80px rgba(255,208,64,0.3);
+  margin-bottom:16px;
+}
+#bday-sub {
+  font-family:'Cinzel',serif; font-style:italic;
+  font-size:clamp(15px,4vw,20px); color:rgba(255,255,255,0.6);
+  margin-bottom:48px;
+}
+#bday-close {
+  padding:16px 40px; font-family:'Orbitron',sans-serif;
+  font-size:11px; letter-spacing:0.35em;
+  color:#000; background:#FFD040; border:none; border-radius:4px;
+  cursor:pointer; -webkit-appearance:none;
+  box-shadow:0 0 32px rgba(255,208,64,0.5);
+}
+
+/* ============================================================
+   SESSION 6 — TIME OF DAY TINT
+   ============================================================ */
+#time-tint {
+  position:fixed; inset:0; z-index:1;
+  pointer-events:none;
+  transition:background 3s ease;
+}
+
 </style>
 </head>
 <body>
 
 <div id="bg"></div>
+<div id="time-tint"></div>
 <div id="nebula-layer"></div>
 <div id="stars-far"></div>
 <div id="stars-near"></div>
@@ -423,6 +565,42 @@ html, body {
   <div id="yoda-hint">
     <div class="yh-quote" id="yh-quote"></div>
     <div class="yh-attr">&mdash; Master Yoda</div>
+  </div>
+</div>
+
+<!-- ============================================================
+     WELCOME BACK OVERLAY (Session 6)
+     ============================================================ -->
+<div id="welcome-back" style="display:none">
+  <div id="wb-content">
+    <div id="wb-eye"></div>
+    <div id="wb-name"></div>
+    <div id="wb-sub">The Force remembers you.</div>
+    <div id="wb-btns">
+      <button id="wb-quiz" onclick="welcomeChooseQuiz()">⚡ TAKE THE QUIZ</button>
+      <button id="wb-ceremony" onclick="welcomeChooseCeremony()">✦ RE-DO CEREMONY</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUREBESH EASTER EGG (Session 6) -->
+<div id="aurebesh-overlay" style="display:none">
+  <div id="aur-inner">
+    <div id="aur-title">AUREBESH DECODED</div>
+    <div id="aur-text"></div>
+    <div id="aur-translation"></div>
+    <button id="aur-close" onclick="closeAurebesh()">CLOSE</button>
+  </div>
+</div>
+
+<!-- BIRTHDAY MODE OVERLAY (Session 6) -->
+<div id="birthday-overlay" style="display:none">
+  <canvas id="bday-canvas"></canvas>
+  <div id="bday-msg">
+    <div id="bday-eye">✦ TODAY IS A SPECIAL DAY ✦</div>
+    <div id="bday-name"></div>
+    <div id="bday-sub">May the Force be with you, always.</div>
+    <button id="bday-close" onclick="closeBirthday()">BEGIN →</button>
   </div>
 </div>
 
@@ -587,8 +765,7 @@ var PD = {
     glowDur:'4.0s',
     rotDur:'120s', rotDir:'-1',  /* slow counter-clockwise */
     conColor:'rgba(0,180,255,',
-    href:'#', main:false,
-    bladeColor:'#44CCFF'
+    href:'force-map.html', main:false,
   },
   dagobah: {
     img:'./dagobah.png', label:'TRANSMISSIONS',
@@ -599,7 +776,7 @@ var PD = {
     glowDur:'3.8s',
     rotDur:'95s', rotDir:'1',
     conColor:'rgba(0,200,100,',
-    href:'#', main:false,
+    href:'transmissions.html', main:false,
     bladeColor:'#44EE88'
   },
   hoth: {
@@ -611,7 +788,7 @@ var PD = {
     glowDur:'4.5s',
     rotDur:'110s', rotDir:'-1',
     conColor:'rgba(150,210,255,',
-    href:'#', main:false,
+    href:'archive.html', main:false,
     bladeColor:'#AADDFF'
   }
 };
@@ -1545,6 +1722,7 @@ function closeLS() {
     document.getElementById('info-card').classList.remove('visible');
   },400);
   if (lsDest && PD[lsDest].href !== '#') {
+    trackVisit(lsDest);
     setTimeout(function() {
       fadeTransition(function() { window.location.href = PD[lsDest].href; });
     }, 300);
@@ -1580,13 +1758,300 @@ function init() {
       if (taps >= 5) { taps = 0; animFalcon(); }
     });
   })();
+
+  /* Session 6 — run after planets are in place */
+  applyTimeOfDay();
+  initAurebeshEgg();
+  setTimeout(applyVisitedIndicators, 3000);
+  var isBday = checkBirthday();
+  if (!isBday) { checkWelcomeBack(); }
 }
 
-window.addEventListener('load', init);
-window.addEventListener('resize', function() {
-  layout();
-});
+/* ============================================================
+   SESSION 6 — APP REMEMBERS HIM
+   ============================================================ */
+var BIRTHDAY_MONTH = 11; /* November = 11 */
+var BIRTHDAY_DAY   = 13;
 
+function applyTimeOfDay() {
+  var h = new Date().getHours();
+  var tint = document.getElementById('time-tint');
+  if (!tint) return;
+  /* Deep night (11pm-5am): deep blue tint */
+  if (h >= 23 || h < 5) {
+    tint.style.background = 'rgba(10,20,60,0.18)';
+  /* Dawn (5-8am): warm amber hint */
+  } else if (h < 8) {
+    tint.style.background = 'rgba(80,40,10,0.10)';
+  /* Day (8am-6pm): neutral */
+  } else if (h < 18) {
+    tint.style.background = 'transparent';
+  /* Dusk (6-9pm): warm purple */
+  } else if (h < 21) {
+    tint.style.background = 'rgba(60,20,80,0.12)';
+  /* Evening (9-11pm): deep indigo */
+  } else {
+    tint.style.background = 'rgba(20,10,60,0.16)';
+  }
+}
+
+function checkBirthday() {
+  var now = new Date();
+  if (now.getMonth() + 1 === BIRTHDAY_MONTH && now.getDate() === BIRTHDAY_DAY) {
+    /* Check if already shown today */
+    var shown = '';
+    try { shown = localStorage.getItem('sw_bday_shown') || ''; } catch(e) {}
+    var today = now.toDateString();
+    if (shown !== today) {
+      showBirthday();
+      try { localStorage.setItem('sw_bday_shown', today); } catch(e) {}
+      return true;
+    }
+  }
+  return false;
+}
+
+function showBirthday() {
+  var playerName = '';
+  try { playerName = localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+  var dn = playerName ? playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase() : 'Young Jedi';
+
+  document.getElementById('bday-name').textContent = 'Happy Birthday, ' + dn + '!';
+  document.getElementById('birthday-overlay').style.display = 'flex';
+  startBirthdayParticles();
+}
+
+function closeBirthday() {
+  document.getElementById('birthday-overlay').style.display = 'none';
+  checkWelcomeBack();
+}
+
+function startBirthdayParticles() {
+  var canvas = document.getElementById('bday-canvas');
+  var ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  var particles = [];
+  var colors = ['#FFD040','#FF8800','#FF44AA','#44DDFF','#AA66FF','#44FF99'];
+  for (var i = 0; i < 80; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height - canvas.height,
+      vx: (Math.random() - 0.5) * 2,
+      vy: 1.5 + Math.random() * 2.5,
+      r: 3 + Math.random() * 5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI * 2,
+      rotV: (Math.random() - 0.5) * 0.15
+    });
+  }
+
+  function bdayFrame() {
+    if (!document.getElementById('birthday-overlay') ||
+        document.getElementById('birthday-overlay').style.display === 'none') return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(function(p) {
+      p.x += p.vx; p.y += p.vy; p.rot += p.rotV;
+      if (p.y > canvas.height + 20) {
+        p.y = -20; p.x = Math.random() * canvas.width;
+      }
+      ctx.save();
+      ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = 0.85;
+      ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r * 2);
+      ctx.restore();
+    });
+    requestAnimationFrame(bdayFrame);
+  }
+  bdayFrame();
+}
+
+/* ============================================================
+   SESSION 6 — WELCOME BACK
+   ============================================================ */
+function checkWelcomeBack() {
+  var playerName = '';
+  try { playerName = localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+  if (!playerName) return; /* First time — no welcome back */
+
+  var dn = playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase();
+
+  /* Personalize the static greeting too */
+  var greetEl = document.getElementById('t-greeting');
+  if (greetEl) {
+    greetEl.textContent = 'The Force is strong with you, ' + dn + '.';
+  }
+
+  /* Show welcome back overlay */
+  document.getElementById('wb-eye').textContent = '\u2756 WELCOME BACK \u2756';
+  document.getElementById('wb-name').textContent = dn.toUpperCase();
+  document.getElementById('welcome-back').style.display = 'flex';
+}
+
+function dismissWelcomeBack() {
+  var wb = document.getElementById('welcome-back');
+  wb.style.transition = 'opacity 0.4s ease';
+  wb.style.opacity = '0';
+  setTimeout(function() {
+    wb.style.display = 'none';
+    wb.style.opacity = '';
+  }, 400);
+}
+
+function welcomeChooseQuiz() {
+  dismissWelcomeBack();
+  /* Trigger Tatooine directly after dismiss */
+  setTimeout(function() {
+    bladeThenLaunch('tatooine');
+  }, 500);
+}
+
+function welcomeChooseCeremony() {
+  dismissWelcomeBack();
+  /* Navigate to ceremony */
+  setTimeout(function() {
+    fadeTransition(function() {
+      window.location.href = './ceremony.html';
+    });
+  }, 500);
+}
+
+/* ============================================================
+   SESSION 6 — VISITED PLANET INDICATORS
+   ============================================================ */
+function applyVisitedIndicators() {
+  var history = [];
+  try {
+    var raw = localStorage.getItem('sw_results_history');
+    if (raw) history = JSON.parse(raw);
+  } catch(e) {}
+
+  /* Map characters to their home planets */
+  var charPlanet = {
+    yoda:'dagobah', obiwan:'tatooine', luke:'tatooine', mace:'coruscant',
+    poe:'coruscant', finn:'coruscant', quigon:'tatooine',
+    mando:'tatooine', boba:'tatooine', han:'coruscant', chewie:'coruscant',
+    vader:'coruscant', palpatine:'coruscant', kylo:'coruscant', maul:'tatooine',
+    grogu:'tatooine'
+  };
+
+  /* Which planets have been visited */
+  var visitedPlanets = {};
+  history.forEach(function(r) {
+    var p = charPlanet[r.id];
+    if (p) visitedPlanets[p] = true;
+  });
+
+  /* Also mark cockpit destinations directly */
+  var visited = [];
+  try {
+    var raw2 = localStorage.getItem('sw_visited_pages') || '[]';
+    visited = JSON.parse(raw2);
+  } catch(e) {}
+  visited.forEach(function(v) { visitedPlanets[v] = true; });
+
+  /* Apply rings */
+  Object.keys(visitedPlanets).forEach(function(pk) {
+    var pel = pels[pk];
+    if (!pel) return;
+    if (pel.wrap.querySelector('.planet-visited-ring')) return; /* already added */
+
+    var ring = document.createElement('div');
+    ring.className = 'planet-visited-ring';
+    var sz = parseInt(pel.body.style.width) || 60;
+    ring.style.width = (sz + 14) + 'px';
+    ring.style.height = (sz + 14) + 'px';
+    ring.style.left = '-7px';
+    ring.style.top = '-7px';
+
+    var dot = document.createElement('div');
+    dot.className = 'planet-visited-dot';
+
+    pel.wrap.appendChild(ring);
+    pel.wrap.appendChild(dot);
+  });
+}
+
+/* Track page visits — called on navigation */
+function trackVisit(planetKey) {
+  var visited = [];
+  try {
+    var raw = localStorage.getItem('sw_visited_pages') || '[]';
+    visited = JSON.parse(raw);
+  } catch(e) {}
+  if (visited.indexOf(planetKey) === -1) {
+    visited.push(planetKey);
+    try { localStorage.setItem('sw_visited_pages', JSON.stringify(visited)); } catch(e) {}
+  }
+}
+
+/* ============================================================
+   SESSION 6 — AUREBESH EASTER EGG
+   triple-tap the title area to activate
+   ============================================================ */
+var aurebeshTaps = 0;
+var aurebeshTimer = null;
+
+/* Messages cycle randomly */
+var AUREBESH_MSGS = [
+  { aur: 'LLLL LLL LLLLL',  trans: 'The Force is with you.' },
+  { aur: 'LLLLL LLLL LLLL', trans: 'Your destiny awaits.' },
+  { aur: 'LLL LL LLLL',     trans: 'Trust the Force.' },
+  { aur: 'LLLL LLLL LLLLL', trans: 'Fear leads to the dark side.' },
+  { aur: 'LLL LLLL LLLL',   trans: 'Do or do not.' },
+];
+
+/* Actual Aurebesh substitution (simplified Star Wars alphabet) */
+var AUREBESH = {
+  'A':'\u16D0','B':'\u16D1','C':'\u16D2','D':'\u16D3','E':'\u16D4',
+  'F':'\u16D5','G':'\u16D6','H':'\u16D7','I':'\u16D8','J':'\u16D9',
+  'K':'\u16DA','L':'\u16DB','M':'\u16DC','N':'\u16DD','O':'\u16DE',
+  'P':'\u16DF','Q':'\u16E0','R':'\u16E1','S':'\u16E2','T':'\u16E3',
+  'U':'\u16E4','V':'\u16E5','W':'\u16E6','X':'\u16E7','Y':'\u16E8','Z':'\u16E9'
+};
+
+function toAurebesh(str) {
+  /* Use runic unicode as stand-in for Aurebesh glyphs — visually alien */
+  return str.split('').map(function(c) {
+    return AUREBESH[c.toUpperCase()] || c;
+  }).join('');
+}
+
+function initAurebeshEgg() {
+  var titleWrap = document.getElementById('title-wrap');
+  if (!titleWrap) return;
+  titleWrap.addEventListener('touchstart', function() {
+    aurebeshTaps++;
+    clearTimeout(aurebeshTimer);
+    aurebeshTimer = setTimeout(function() { aurebeshTaps = 0; }, 600);
+    if (aurebeshTaps >= 5) {
+      aurebeshTaps = 0;
+      showAurebesh();
+    }
+  });
+}
+
+function showAurebesh() {
+  var msg = AUREBESH_MSGS[Math.floor(Math.random() * AUREBESH_MSGS.length)];
+  var playerName = '';
+  try { playerName = localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+
+  var trans = msg.trans;
+  if (playerName) {
+    var dn = playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase();
+    trans = trans + '\n— For ' + dn;
+  }
+
+  document.getElementById('aur-text').textContent = toAurebesh(msg.trans.replace(/[^A-Za-z ]/g,'').toUpperCase());
+  document.getElementById('aur-translation').textContent = trans;
+  document.getElementById('aurebesh-overlay').style.display = 'flex';
+}
+
+function closeAurebesh() {
+  document.getElementById('aurebesh-overlay').style.display = 'none';
+}
 </script>
 </body>
 </html>

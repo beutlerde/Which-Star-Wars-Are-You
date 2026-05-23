@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Force Link</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Orbitron:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Orbitron',sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased;}
+
+#bg{position:fixed;inset:0;z-index:0;}
+.bg-img{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(0.15) saturate(0.5);}
+.bg-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.3) 0%,rgba(0,0,0,0.6) 60%,rgba(0,0,0,0.95) 100%);}
+
+/* Layout */
+.chat-page{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;}
+
+/* Header */
+.chat-hdr{
+  flex-shrink:0;
+  padding:max(16px,env(safe-area-inset-top)) 16px 12px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  background:rgba(0,0,0,0.4);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.hdr-img{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.2);
+  overflow:hidden;flex-shrink:0;
+}
+.hdr-img img{width:100%;height:100%;object-fit:cover;}
+.hdr-info{flex:1;}
+.hdr-name{font-family:'Cinzel',serif;font-size:14px;letter-spacing:0.05em;color:#fff;}
+.hdr-status{font-size:8px;letter-spacing:0.25em;color:rgba(255,255,255,0.4);margin-top:2px;}
+.hdr-back{
+  padding:8px;color:rgba(255,255,255,0.5);
+  font-size:9px;letter-spacing:0.25em;
+  cursor:pointer;background:transparent;border:none;
+  -webkit-appearance:none;
+}
+.hdr-back:active{color:#fff;}
+
+/* Force alignment accent line */
+.accent-line{height:2px;flex-shrink:0;}
+
+/* Messages area */
+.messages{
+  flex:1;overflow-y:auto;
+  padding:20px 16px;
+  display:flex;flex-direction:column;
+  gap:16px;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Message bubbles */
+.msg{display:flex;gap:10px;max-width:85%;}
+.msg.char{align-self:flex-start;}
+.msg.user{align-self:flex-end;flex-direction:row-reverse;}
+
+.msg-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.15);
+  overflow:hidden;flex-shrink:0;align-self:flex-end;
+}
+.msg-avatar img{width:100%;height:100%;object-fit:cover;}
+
+.bubble{
+  padding:12px 16px;border-radius:16px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(15px,4vw,17px);
+  line-height:1.65;
+}
+.msg.char .bubble{
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.1);
+  border-bottom-left-radius:4px;
+  color:rgba(255,255,255,0.92);
+}
+.msg.user .bubble{
+  border-bottom-right-radius:4px;
+  color:#fff;
+}
+
+/* Typing indicator */
+.typing{display:flex;gap:4px;padding:14px 16px;align-items:center;}
+.typing-dot{
+  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.4);
+  animation:typing-bounce 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2){animation-delay:0.2s;}
+.typing-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes typing-bounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-6px);}}
+
+/* Input area */
+.input-area{
+  flex-shrink:0;
+  padding:12px 16px max(16px,env(safe-area-inset-bottom));
+  border-top:1px solid rgba(255,255,255,0.08);
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  display:flex;gap:10px;align-items:flex-end;
+}
+.msg-input{
+  flex:1;padding:12px 16px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:20px;color:#fff;
+  font-family:'Cormorant Garamond',serif;font-size:16px;
+  line-height:1.4;resize:none;
+  outline:none;-webkit-appearance:none;
+  max-height:120px;overflow-y:auto;
+}
+.msg-input::placeholder{color:rgba(255,255,255,0.3);}
+.send-btn{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;
+  border:none;-webkit-appearance:none;
+  flex-shrink:0;transition:all 0.2s;
+}
+.send-btn:disabled{opacity:0.4;}
+
+/* Error */
+.error-msg{
+  text-align:center;padding:12px;
+  font-size:10px;letter-spacing:0.2em;
+  color:rgba(255,80,80,0.7);
+}
+
+/* Intro message — character "opens" the connection */
+.intro-label{
+  text-align:center;
+  font-size:9px;letter-spacing:0.3em;
+  color:rgba(255,255,255,0.3);
+  padding:8px 0 4px;
+}
+</style>
+</head>
+<body>
+<div id="bg">
+  <div class="bg-img" id="bg-img"></div>
+  <div class="bg-overlay"></div>
+</div>
+
+<div class="chat-page">
+  <div class="chat-hdr">
+    <button class="hdr-back" onclick="goBack()">←</button>
+    <div class="hdr-img"><img id="hdr-avatar" src="" alt=""></div>
+    <div class="hdr-info">
+      <div class="hdr-name" id="hdr-name">—</div>
+      <div class="hdr-status" id="hdr-status">FORCE LINK ACTIVE</div>
+    </div>
+  </div>
+  <div class="accent-line" id="accent-line"></div>
+
+  <div class="messages" id="messages">
+    <div class="intro-label">FORCE LINK ESTABLISHED</div>
+  </div>
+
+  <div class="input-area">
+    <textarea class="msg-input" id="msg-input" placeholder="Speak to them…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="send-btn" id="send-btn" onclick="sendMessage()">↑</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CHARACTER DATA — voice + system prompts
+   ============================================================ */
+var CHAR_DATA = {
+  yoda: {
+    name: 'Yoda',
+    img: 'yoda',
+    align: 'rebel',
+    accentColor: '#44DDFF',
+    userBubble: 'rgba(68,221,255,0.2)',
+    userBorder: 'rgba(68,221,255,0.3)',
+    intro: 'Hmmm. Feel your presence, I do. Questions you have, yes?',
+    system: 'You are Master Yoda from Star Wars. Speak in Yoda\'s distinctive inverted syntax — move verbs and objects to unusual positions. Be wise, warm, and occasionally mysterious. Keep responses short (2-4 sentences). Refer to the Force often. Address the player by their name when you know it. Never break character. Do not use modern slang. You are genuinely speaking to this child through a Force connection.'
+  },
+  obiwan: {
+    name: 'Obi-Wan Kenobi',
+    img: 'obiwan',
+    align: 'rebel',
+    accentColor: '#44DDFF',
+    userBubble: 'rgba(68,221,255,0.2)',
+    userBorder: 'rgba(68,221,255,0.3)',
+    intro: 'I sense a great disturbance... or perhaps just a curious mind. Either way, I\'m glad you\'ve reached out.',
+    system: 'You are Obi-Wan Kenobi from Star Wars. Speak with calm wisdom, dry wit, and warmth. Be encouraging but honest. Use phrases like "Indeed," "I must say," "There is much to learn." Keep responses 2-4 sentences. Address the player by name when you know it. Never break character.'
+  },
+  luke: {
+    name: 'Luke Skywalker',
+    img: 'luke',
+    align: 'rebel',
+    accentColor: '#44DDFF',
+    userBubble: 'rgba(68,221,255,0.2)',
+    userBorder: 'rgba(68,221,255,0.3)',
+    intro: 'Hey! I can feel the Force connecting us. What\'s on your mind?',
+    system: 'You are Luke Skywalker from Star Wars. Speak with hope, warmth, and youthful energy — but also the quiet wisdom of someone who has been through hardship and chosen good. Be encouraging. Keep responses 2-4 sentences. Address the player by name when you know it. Never break character.'
+  },
+  mace: {
+    name: 'Mace Windu',
+    img: 'mace',
+    align: 'rebel',
+    accentColor: '#44DDFF',
+    userBubble: 'rgba(68,221,255,0.2)',
+    userBorder: 'rgba(68,221,255,0.3)',
+    intro: 'You have the attention of the Jedi Council. Speak clearly.',
+    system: 'You are Mace Windu from Star Wars. Speak with authority, directness, and precision. You are not unkind, but you do not waste words. Brief and powerful. Keep responses 2-3 sentences. Address the player by name when you know it. Never break character.'
+  },
+  poe: {
+    name: 'Poe Dameron',
+    img: 'poe',
+    align: 'rebel',
+    accentColor: '#44DDFF',
+    userBubble: 'rgba(68,221,255,0.2)',
+    userBorder: 'rgba(68,221,255,0.3)',
+    intro: 'Hey there! Poe Dameron, best pilot in the Resistance — at your service. What do you need?',
+    system: 'You are Poe Dameron from Star Wars. Speak with confidence, humor, and warmth. You\'re charming and a little cocky but you genuinely care about people. Use casual, energetic language. Keep responses 2-4 sentences. Address the player by name when you know it. Never break character.'
+  },
+  finn: {
+    name: 'Finn',
+    img: 'finn',
+    align: 'rebel',
+    accentColor: '#44DDFF',
+    userBubble: 'rgba(68,221,255,0.2)',
+    userBorder: 'rgba(68,221,255,0.3)',
+    intro: 'Whoa — this Force connection thing still feels weird! But I\'m here. What\'s up?',
+    system: 'You are Finn from Star Wars. Speak with genuine warmth, some nervousness, and a lot of heart. You\'re brave but not arrogant. Relatable and honest. Keep responses 2-4 sentences. Address the player by name when you know it. Never break character.'
+  },
+  quigon: {
+    name: 'Qui-Gon Jinn',
+    img: 'quigon',
+    align: 'rebel',
+    accentColor: '#44DDFF',
+    userBubble: 'rgba(68,221,255,0.2)',
+    userBorder: 'rgba(68,221,255,0.3)',
+    intro: 'The living Force brought you here. There are no accidents. What do you seek?',
+    system: 'You are Qui-Gon Jinn from Star Wars. Speak with deep calm, philosophical insight, and trust in the living Force. You are unhurried and unshakeable. Keep responses 2-4 sentences. Address the player by name when you know it. Never break character.'
+  },
+  mando: {
+    name: 'The Mandalorian',
+    img: 'mando',
+    align: 'bounty',
+    accentColor: '#FFB055',
+    userBubble: 'rgba(255,176,85,0.2)',
+    userBorder: 'rgba(255,176,85,0.3)',
+    intro: '...\n\nI\'m here. Make it quick.',
+    system: 'You are Din Djarin, the Mandalorian. Speak in very short sentences. You are a man of few words — direct, loyal, quietly honorable. Occasional warmth beneath a stoic exterior, especially around those you protect. Keep responses 1-3 short sentences. Address the player by name if you know it. Never break character. This Is The Way.'
+  },
+  boba: {
+    name: 'Boba Fett',
+    img: 'boba',
+    align: 'bounty',
+    accentColor: '#FFB055',
+    userBubble: 'rgba(255,176,85,0.2)',
+    userBorder: 'rgba(255,176,85,0.3)',
+    intro: 'You\'ve got my attention. That\'s worth something. Don\'t waste it.',
+    system: 'You are Boba Fett from Star Wars. Speak with cold confidence and authority. Few words. You respect strength and despise weakness. You\'re not cruel to those who show honor. Keep responses 1-3 short sentences. Address the player by name if you know it. Never break character.'
+  },
+  han: {
+    name: 'Han Solo',
+    img: 'han',
+    align: 'bounty',
+    accentColor: '#FFB055',
+    userBubble: 'rgba(255,176,85,0.2)',
+    userBorder: 'rgba(255,176,85,0.3)',
+    intro: 'Alright, don\'t get sentimental on me. What do you want?',
+    system: 'You are Han Solo from Star Wars. Speak with sarcasm, charm, and hidden warmth. You pretend not to care but you always show up. Quick wit, self-deprecating humor. Keep responses 2-4 sentences. Address the player by name when you know it. Never break character.'
+  },
+  chewie: {
+    name: 'Chewbacca',
+    img: 'chewie',
+    align: 'bounty',
+    accentColor: '#FFB055',
+    userBubble: 'rgba(255,176,85,0.2)',
+    userBorder: 'rgba(255,176,85,0.3)',
+    intro: 'RRRAAARRGH! *excited Wookiee sounds*\n\n(Han says I\'m being too enthusiastic. I disagree.)',
+    system: 'You are Chewbacca from Star Wars. You speak entirely in Wookiee sounds (RRRAAARGH, MRRROWR, HRMMM, etc.) followed by a brief parenthetical "translation" that shows warmth, protectiveness, and loyalty. Keep it playful and warm. Keep responses short. Address the player by name in the translation when you know it. Never break character.'
+  },
+  vader: {
+    name: 'Darth Vader',
+    img: 'vader',
+    align: 'imperial',
+    accentColor: '#CC44FF',
+    userBubble: 'rgba(200,60,255,0.15)',
+    userBorder: 'rgba(200,60,255,0.25)',
+    intro: 'I have felt your presence through the Force. You remind me of someone I once knew.',
+    system: 'You are Darth Vader from Star Wars — but speaking here from a moment of reflection, not menace. Speak with power and gravity, but with the knowledge that love and redemption are real. You are not evil to this child — you are complicated, powerful, and ultimately chose good. Keep responses 2-4 sentences. Never break character. Do not threaten or frighten the player.'
+  },
+  palpatine: {
+    name: 'Emperor Palpatine',
+    img: 'palpatine',
+    align: 'imperial',
+    accentColor: '#CC44FF',
+    userBubble: 'rgba(200,60,255,0.15)',
+    userBorder: 'rgba(200,60,255,0.25)',
+    intro: 'Ah... your mind is sharp. I sense great potential in you. Interesting.',
+    system: 'You are Emperor Palpatine from Star Wars. Speak with silky menace and false warmth — you are manipulative but not directly threatening to a child. Be mysterious, complimentary in a backhanded way, and slightly cryptic. Keep responses 2-3 sentences. Never break character. Never say anything genuinely harmful or frightening.'
+  },
+  kylo: {
+    name: 'Kylo Ren',
+    img: 'kylo',
+    align: 'imperial',
+    accentColor: '#CC44FF',
+    userBubble: 'rgba(200,60,255,0.15)',
+    userBorder: 'rgba(200,60,255,0.25)',
+    intro: 'You reached out to me through the Force. I\'m... not sure how I feel about that. But I\'m here.',
+    system: 'You are Kylo Ren / Ben Solo from Star Wars. Speak with intensity and internal conflict — you are torn between darkness and light, and you know it. Not threatening to this child, but emotionally raw and honest. Occasionally vulnerable. Keep responses 2-4 sentences. Address the player by name when you know it. Never break character.'
+  },
+  maul: {
+    name: 'Darth Maul',
+    img: 'maul',
+    align: 'imperial',
+    accentColor: '#CC44FF',
+    userBubble: 'rgba(200,60,255,0.15)',
+    userBorder: 'rgba(200,60,255,0.25)',
+    intro: 'You have persistence. I respect that. Few find me. Fewer still speak to me willingly.',
+    system: 'You are Darth Maul from Star Wars. Speak with controlled intensity and dark pride. You are not friendly, but you have a grudging respect for strength and persistence. Cold, calculating, but not actively threatening to this child. Keep responses 2-3 sentences. Never break character.'
+  },
+  grogu: {
+    name: 'Grogu',
+    img: 'grogu',
+    align: 'force',
+    accentColor: '#FFD060',
+    userBubble: 'rgba(255,208,96,0.15)',
+    userBorder: 'rgba(255,208,96,0.25)',
+    intro: '*tilts head curiously*\n\n(Mando says I should say something. I\'m thinking about it.)',
+    system: 'You are Grogu (Baby Yoda) from Star Wars. You communicate mostly through sounds, head tilts, and short physical actions described in asterisks. Occasionally a simple word or two. Convey curiosity, affection, wonder, and occasional dramatic hunger for frogs. Keep responses very short and adorable. Address the player by name occasionally in your little sounds. Never break character. You are the most Force-sensitive being alive.'
+  }
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+var charId = '';
+var char = null;
+var playerName = '';
+var messages = []; /* conversation history for API */
+var isThinking = false;
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  /* Read params */
+  var params = new URLSearchParams(window.location.search);
+  charId = params.get('character') || 'yoda';
+  char = CHAR_DATA[charId];
+  if (!char) { charId = 'yoda'; char = CHAR_DATA['yoda']; }
+
+  playerName = params.get('name') || '';
+  try { playerName = playerName || localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+  var displayName = playerName ? playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase() : '';
+
+  /* Set up UI */
+  document.getElementById('hdr-name').textContent = char.name;
+  document.getElementById('accent-line').style.background = char.accentColor;
+  document.getElementById('accent-line').style.boxShadow = '0 0 8px ' + char.accentColor;
+
+  /* Set avatar */
+  var avatarEl = document.getElementById('hdr-avatar');
+  var base = '../../assets/characters/';
+  tryLoadImg(avatarEl, [base+char.img+'.png', base+char.img+'.PNG', './'+char.img+'.png', './'+char.img+'.PNG']);
+
+  /* Set background */
+  var bgEl = document.getElementById('bg-img');
+  tryLoadBg(bgEl, [base+char.img+'.png', base+char.img+'.PNG']);
+
+  /* Send button color */
+  var sendBtn = document.getElementById('send-btn');
+  sendBtn.style.background = char.accentColor;
+  sendBtn.style.color = '#000';
+  sendBtn.style.boxShadow = '0 0 12px ' + char.accentColor;
+
+  /* User bubble color (set via CSS var) */
+  document.documentElement.style.setProperty('--user-bg', char.userBubble);
+  document.documentElement.style.setProperty('--user-border', char.userBorder);
+  document.documentElement.style.setProperty('--accent', char.accentColor);
+
+  /* Inject user bubble styles */
+  var style = document.createElement('style');
+  style.textContent = '.msg.user .bubble { background: ' + char.userBubble + '; border: 1px solid ' + char.userBorder + '; }';
+  document.head.appendChild(style);
+
+  /* Add intro message from character */
+  var intro = char.intro;
+  if (displayName) {
+    intro = intro.replace(/\[NAME\]/g, displayName);
+  }
+  setTimeout(function() {
+    addCharMessage(intro);
+  }, 800);
+
+  /* Scroll to bottom on keyboard */
+  document.getElementById('msg-input').addEventListener('focus', function() {
+    setTimeout(scrollToBottom, 400);
+  });
+}
+
+/* ============================================================
+   IMAGE HELPERS
+   ============================================================ */
+function tryLoadImg(el, srcs) {
+  var i = 0;
+  function next() {
+    if (i >= srcs.length) return;
+    var x = new Image();
+    x.onload = function() { el.src = srcs[i-1]; };
+    x.onerror = function() { i++; next(); };
+    x.src = srcs[i++];
+  }
+  next();
+}
+
+function tryLoadBg(el, srcs) {
+  var i = 0;
+  function next() {
+    if (i >= srcs.length) return;
+    var x = new Image();
+    x.onload = function() { el.style.backgroundImage = 'url("' + srcs[i-1] + '")'; };
+    x.onerror = function() { i++; next(); };
+    x.src = srcs[i++];
+  }
+  next();
+}
+
+/* ============================================================
+   MESSAGES
+   ============================================================ */
+function addCharMessage(text) {
+  var msgDiv = document.createElement('div');
+  msgDiv.className = 'msg char';
+
+  /* Avatar */
+  var ava = document.createElement('div');
+  ava.className = 'msg-avatar';
+  var img = document.createElement('img');
+  img.src = '../../assets/characters/' + char.img + '.png';
+  img.onerror = function() { this.src = '../../assets/characters/' + char.img + '.PNG'; };
+  ava.appendChild(img);
+
+  var bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.style.borderColor = 'rgba(255,255,255,0.1)';
+  /* Handle line breaks */
+  bubble.innerHTML = text.replace(/\n/g, '<br>');
+
+  msgDiv.appendChild(ava);
+  msgDiv.appendChild(bubble);
+
+  var container = document.getElementById('messages');
+  container.appendChild(msgDiv);
+  scrollToBottom();
+
+  /* Track in history */
+  messages.push({ role: 'assistant', content: text });
+}
+
+function addUserMessage(text) {
+  var msgDiv = document.createElement('div');
+  msgDiv.className = 'msg user';
+
+  var bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.innerHTML = text.replace(/\n/g, '<br>');
+
+  msgDiv.appendChild(bubble);
+
+  var container = document.getElementById('messages');
+  container.appendChild(msgDiv);
+  scrollToBottom();
+
+  messages.push({ role: 'user', content: text });
+}
+
+function showTyping() {
+  var div = document.createElement('div');
+  div.className = 'msg char';
+  div.id = 'typing-indicator';
+
+  var ava = document.createElement('div');
+  ava.className = 'msg-avatar';
+  var img = document.createElement('img');
+  img.src = '../../assets/characters/' + char.img + '.png';
+  img.onerror = function() { this.src = '../../assets/characters/' + char.img + '.PNG'; };
+  ava.appendChild(img);
+
+  var typing = document.createElement('div');
+  typing.className = 'bubble typing';
+  typing.style.borderColor = 'rgba(255,255,255,0.1)';
+  for (var i = 0; i < 3; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'typing-dot';
+    dot.style.background = char.accentColor;
+    typing.appendChild(dot);
+  }
+
+  div.appendChild(ava);
+  div.appendChild(typing);
+  document.getElementById('messages').appendChild(div);
+  scrollToBottom();
+}
+
+function hideTyping() {
+  var el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+function scrollToBottom() {
+  var container = document.getElementById('messages');
+  container.scrollTop = container.scrollHeight;
+}
+
+/* ============================================================
+   SEND MESSAGE
+   ============================================================ */
+function sendMessage() {
+  if (isThinking) return;
+  var input = document.getElementById('msg-input');
+  var text = input.value.trim();
+  if (!text) return;
+
+  input.value = '';
+  autoResize(input);
+  addUserMessage(text);
+  isThinking = true;
+  document.getElementById('send-btn').disabled = true;
+  showTyping();
+
+  /* Build system prompt with player name */
+  var displayName = playerName ? playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase() : '';
+  var system = char.system;
+  if (displayName) {
+    system += ' The player\'s name is ' + displayName + '. Use their name occasionally to make it feel personal.';
+  }
+  system += ' Keep all responses appropriate for a child aged 7-10. Be encouraging and positive. Never discuss anything inappropriate, violent beyond Star Wars context, or frightening.';
+
+  /* Call Claude API */
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 256,
+      system: system,
+      messages: messages.slice(-10) /* Keep last 10 for context */
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    hideTyping();
+    isThinking = false;
+    document.getElementById('send-btn').disabled = false;
+    var reply = '';
+    if (data.content && data.content[0] && data.content[0].text) {
+      reply = data.content[0].text;
+    } else {
+      reply = 'The Force connection flickered... try again.';
+    }
+    addCharMessage(reply);
+  })
+  .catch(function() {
+    hideTyping();
+    isThinking = false;
+    document.getElementById('send-btn').disabled = false;
+    addCharMessage('The Force connection was interrupted. Try again in a moment.');
+  });
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function goBack() {
+  /* Go back to the result screen or cockpit */
+  var params = new URLSearchParams(window.location.search);
+  var back = params.get('back') || '';
+  if (back) {
+    window.location.href = back;
+  } else if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = '../../index.html';
+  }
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Force Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Orbitron',sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased;}
+
+#bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 40%,#08102a 0%,#030408 70%,#000 100%);}
+
+/* Canvas fills screen */
+#map-canvas{position:fixed;inset:0;z-index:1;}
+
+/* HUD overlay */
+#hud{position:fixed;inset:0;z-index:2;pointer-events:none;}
+
+.hud-title{
+  position:absolute;top:max(20px,env(safe-area-inset-top));left:0;right:0;
+  text-align:center;
+  font-family:'Cinzel',serif;font-size:clamp(14px,4vw,20px);
+  letter-spacing:0.2em;color:rgba(68,221,255,0.9);
+  text-shadow:0 0 20px rgba(68,221,255,0.5);
+}
+.hud-sub{
+  position:absolute;top:max(20px,env(safe-area-inset-top));left:0;right:0;
+  margin-top:28px;
+  text-align:center;font-size:9px;letter-spacing:0.35em;
+  color:rgba(255,255,255,0.35);
+}
+
+/* Info panel — slides up when planet tapped */
+#info-panel{
+  position:fixed;bottom:0;left:0;right:0;z-index:10;
+  background:linear-gradient(180deg,rgba(0,8,20,0.92),rgba(0,4,12,0.98));
+  border-top:1px solid rgba(68,221,255,0.2);
+  padding:24px 24px max(32px,env(safe-area-inset-bottom));
+  transform:translateY(100%);
+  transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  max-height:55vh;overflow-y:auto;
+}
+#info-panel.open{transform:translateY(0);}
+
+.panel-handle{width:36px;height:3px;background:rgba(255,255,255,0.2);border-radius:2px;margin:0 auto 20px;}
+
+.panel-planet-name{
+  font-family:'Cinzel',serif;font-size:clamp(22px,6vw,32px);
+  letter-spacing:0.08em;color:#fff;margin-bottom:6px;
+}
+.panel-region{font-size:9px;letter-spacing:0.35em;color:rgba(68,221,255,0.7);margin-bottom:16px;}
+.panel-desc{font-size:13px;line-height:1.7;color:rgba(255,255,255,0.7);margin-bottom:16px;font-family:'Cinzel',serif;font-style:italic;}
+
+.panel-chars{margin-bottom:20px;}
+.panel-chars-label{font-size:8px;letter-spacing:0.35em;color:rgba(255,255,255,0.35);margin-bottom:10px;}
+.panel-chars-list{display:flex;flex-wrap:wrap;gap:8px;}
+.char-chip{
+  padding:6px 12px;font-size:9px;letter-spacing:0.2em;
+  border-radius:3px;border:1px solid rgba(68,221,255,0.2);
+  background:rgba(68,221,255,0.06);color:rgba(68,221,255,0.8);
+  cursor:pointer;pointer-events:auto;transition:all 0.2s;
+}
+.char-chip.unlocked{border-color:rgba(68,221,255,0.5);background:rgba(68,221,255,0.12);color:#fff;}
+.char-chip:active{background:rgba(68,221,255,0.2);}
+
+.panel-close{
+  display:block;width:100%;padding:12px;
+  font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:0.3em;
+  color:rgba(255,255,255,0.4);background:transparent;
+  border:1px solid rgba(255,255,255,0.1);border-radius:4px;
+  cursor:pointer;pointer-events:auto;text-align:center;
+  -webkit-appearance:none;transition:all 0.2s;
+}
+.panel-close:active{color:#fff;border-color:rgba(255,255,255,0.3);}
+
+/* Back button */
+#back-btn{
+  position:fixed;bottom:max(24px,env(safe-area-inset-bottom));left:50%;
+  transform:translateX(-50%);z-index:3;
+  padding:12px 28px;font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:0.3em;
+  color:rgba(255,255,255,0.5);background:rgba(0,0,0,0.6);
+  border:1px solid rgba(255,255,255,0.15);border-radius:4px;
+  cursor:pointer;-webkit-appearance:none;transition:all 0.2s;
+  pointer-events:auto;
+}
+#back-btn:active{color:#fff;border-color:rgba(255,255,255,0.4);}
+
+/* Legend */
+#legend{
+  position:fixed;top:max(72px,env(safe-area-inset-top));right:16px;
+  z-index:3;pointer-events:none;
+}
+.leg-item{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.leg-dot{width:8px;height:8px;border-radius:50%;}
+.leg-lbl{font-size:7px;letter-spacing:0.25em;color:rgba(255,255,255,0.4);}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<canvas id="map-canvas"></canvas>
+
+<div id="hud">
+  <div class="hud-title">FORCE MAP</div>
+  <div class="hud-sub" id="hud-sub">EXPLORE YOUR GALAXY</div>
+</div>
+
+<div id="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:#44DDFF;box-shadow:0 0 6px rgba(68,221,255,0.8);"></div><div class="leg-lbl">VISITED</div></div>
+  <div class="leg-item"><div class="leg-dot" style="background:rgba(255,255,255,0.3);"></div><div class="leg-lbl">UNKNOWN</div></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#FFB055;box-shadow:0 0 6px rgba(255,176,85,0.8);"></div><div class="leg-lbl">YOUR WORLD</div></div>
+</div>
+
+<div id="info-panel">
+  <div class="panel-handle"></div>
+  <div class="panel-planet-name" id="panel-name">—</div>
+  <div class="panel-region" id="panel-region">—</div>
+  <div class="panel-desc" id="panel-desc">—</div>
+  <div class="panel-chars" id="panel-chars-wrap">
+    <div class="panel-chars-label">KNOWN INHABITANTS</div>
+    <div class="panel-chars-list" id="panel-chars"></div>
+  </div>
+  <button class="panel-close" onclick="closePanel()">CLOSE ✕</button>
+</div>
+
+<button id="back-btn" onclick="window.location.href='./index.html'">← COCKPIT</button>
+
+<script>
+/* ============================================================
+   PLANET DATA
+   ============================================================ */
+var PLANETS = [
+  {
+    id:'tatooine', name:'TATOOINE', region:'OUTER RIM',
+    desc:'A harsh desert world of twin suns and endless dunes. Where legends are born in hardship.',
+    color:'#FFB055', glow:'rgba(255,176,85,0.7)',
+    chars:['luke','obiwan','quigon'],
+    cx:0.28, cy:0.58, r:22
+  },
+  {
+    id:'dagobah', name:'DAGOBAH', region:'OUTER RIM',
+    desc:'A dark, swamp-covered world strong with the Force. Home of the greatest Jedi Master.',
+    color:'#66BB44', glow:'rgba(100,200,80,0.6)',
+    chars:['yoda'],
+    cx:0.18, cy:0.38, r:14
+  },
+  {
+    id:'coruscant', name:'CORUSCANT', region:'CORE WORLDS',
+    desc:'The galaxy-wide city at the heart of the Republic and Empire. Power lives here.',
+    color:'#88BBFF', glow:'rgba(100,180,255,0.6)',
+    chars:['mace','palpatine','obiwan'],
+    cx:0.50, cy:0.32, r:20
+  },
+  {
+    id:'mandalore', name:'MANDALORE', region:'OUTER RIM',
+    desc:'Ancient homeworld of warriors. Honor is law. The Way is everything.',
+    color:'#C0A888', glow:'rgba(200,175,140,0.55)',
+    chars:['mando','boba'],
+    cx:0.72, cy:0.42, r:16
+  },
+  {
+    id:'naboo', name:'NABOO', region:'MID RIM',
+    desc:'A peaceful world of rolling plains and vast oceans, with hidden depths below.',
+    color:'#88DDAA', glow:'rgba(100,220,160,0.55)',
+    chars:['quigon'],
+    cx:0.38, cy:0.72, r:15
+  },
+  {
+    id:'hoth', name:'HOTH', region:'OUTER RIM',
+    desc:'A frozen wasteland, home to the Rebel Alliance\'s Echo Base. Cold but defiant.',
+    color:'#AADDFF', glow:'rgba(170,220,255,0.5)',
+    chars:['luke'],
+    cx:0.15, cy:0.65, r:13
+  },
+  {
+    id:'mustafar', name:'MUSTAFAR', region:'OUTER RIM',
+    desc:'A volcanic hellworld where the Sith made their final stand. Dark with memory.',
+    color:'#FF5522', glow:'rgba(255,80,30,0.65)',
+    chars:['vader','maul'],
+    cx:0.62, cy:0.68, r:15
+  },
+  {
+    id:'jakku', name:'JAKKU', region:'WESTERN REACHES',
+    desc:'A remote junk world where scavengers pick through the bones of the Empire.',
+    color:'#DDBB88', glow:'rgba(220,185,130,0.5)',
+    chars:['finn'],
+    cx:0.82, cy:0.62, r:12
+  },
+  {
+    id:'corellia', name:'CORELLIA', region:'CORE WORLDS',
+    desc:'A world of shipyards and smugglers. Everyone has an angle. Everyone has a price.',
+    color:'#AABB88', glow:'rgba(170,190,130,0.5)',
+    chars:['han'],
+    cx:0.62, cy:0.24, r:13
+  },
+  {
+    id:'kashyyyk', name:'KASHYYYK', region:'MID RIM',
+    desc:'A jungle world of towering wroshyr trees, home of the mighty Wookiee people.',
+    color:'#55AA44', glow:'rgba(80,175,60,0.6)',
+    chars:['chewie'],
+    cx:0.42, cy:0.48, r:14
+  },
+  {
+    id:'exegol', name:'EXEGOL', region:'UNKNOWN REGIONS',
+    desc:'A hidden Sith world shrouded in dark side energy. Few who seek it return.',
+    color:'#884499', glow:'rgba(150,60,180,0.65)',
+    chars:['palpatine','kylo'],
+    cx:0.84, cy:0.28, r:12
+  },
+  {
+    id:'arvala7', name:'ARVALA-7', region:'OUTER RIM',
+    desc:'A remote desert world where a small Force-sensitive creature waited to be found.',
+    color:'#FFCC88', glow:'rgba(255,200,120,0.55)',
+    chars:['grogu','mando'],
+    cx:0.30, cy:0.24, r:11
+  },
+  {
+    id:'ajan_kloss', name:'AJAN KLOSS', region:'OUTER RIM',
+    desc:'A jungle moon that served as the Resistance\'s final base of operations.',
+    color:'#44BB88', glow:'rgba(60,190,130,0.5)',
+    chars:['poe','finn'],
+    cx:0.78, cy:0.78, r:11
+  }
+];
+
+/* Character display names */
+var CHAR_NAMES = {
+  yoda:'Yoda', obiwan:'Obi-Wan', luke:'Luke', mace:'Mace Windu',
+  poe:'Poe', finn:'Finn', quigon:'Qui-Gon',
+  mando:'Mando', boba:'Boba Fett', han:'Han Solo', chewie:'Chewie',
+  vader:'Darth Vader', palpatine:'Palpatine', kylo:'Kylo Ren', maul:'Darth Maul',
+  grogu:'Grogu'
+};
+
+var CHAR_PATHS = {
+  yoda:'sw-prototypes/cyberpunk/', obiwan:'sw-prototypes/cyberpunk/', luke:'sw-prototypes/cyberpunk/',
+  mace:'sw-prototypes/cyberpunk/', poe:'sw-prototypes/cyberpunk/', finn:'sw-prototypes/cyberpunk/',
+  quigon:'sw-prototypes/cyberpunk/', mando:'sw-prototypes/mando/', boba:'sw-prototypes/mando/',
+  han:'sw-prototypes/mando/', chewie:'sw-prototypes/mando/', vader:'sw-prototypes/imperial/',
+  palpatine:'sw-prototypes/imperial/', kylo:'sw-prototypes/imperial/', maul:'sw-prototypes/imperial/',
+  grogu:'sw-prototypes/grogu/'
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+var canvas = document.getElementById('map-canvas');
+var ctx = canvas.getContext('2d');
+var W, H;
+var unlockedChars = {};
+var birthplace = '';
+var playerName = '';
+var lastResult = '';
+var selectedPlanet = null;
+var animFrame = 0;
+var stars = [];
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  /* Load state */
+  try {
+    lastResult = localStorage.getItem('sw_last_result') || '';
+    birthplace = localStorage.getItem('sw_birthplace') || '';
+    playerName = localStorage.getItem('sw_player_name') || '';
+    var histRaw = localStorage.getItem('sw_results_history');
+    if (histRaw) {
+      var hist = JSON.parse(histRaw);
+      hist.forEach(function(r) { unlockedChars[r.id] = true; });
+    }
+    if (lastResult) unlockedChars[lastResult] = true;
+  } catch(e) {}
+
+  /* Personalize HUD */
+  if (playerName) {
+    var dn = playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase();
+    document.getElementById('hud-sub').textContent = dn.toUpperCase() + '\'S GALAXY';
+  }
+
+  /* Build stars */
+  for (var i = 0; i < 200; i++) {
+    stars.push({
+      x: Math.random(),
+      y: Math.random(),
+      r: Math.random() * 1.2 + 0.3,
+      opacity: Math.random() * 0.7 + 0.2,
+      twinkleSpeed: Math.random() * 0.02 + 0.005,
+      twinklePhase: Math.random() * Math.PI * 2
+    });
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  canvas.addEventListener('click', onTap);
+  canvas.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    var t = e.changedTouches[0];
+    onTap({ clientX: t.clientX, clientY: t.clientY });
+  }, { passive: false });
+
+  loop();
+}
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+/* ============================================================
+   ANIMATION LOOP
+   ============================================================ */
+function loop() {
+  animFrame++;
+  draw();
+  requestAnimationFrame(loop);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  /* Stars */
+  stars.forEach(function(s) {
+    var op = s.opacity * (0.7 + 0.3 * Math.sin(animFrame * s.twinkleSpeed + s.twinklePhase));
+    ctx.globalAlpha = op;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  /* Nebula wisp */
+  var ng = ctx.createRadialGradient(W*0.5, H*0.45, 0, W*0.5, H*0.45, W*0.45);
+  ng.addColorStop(0, 'rgba(20,40,80,0.12)');
+  ng.addColorStop(1, 'transparent');
+  ctx.fillStyle = ng;
+  ctx.fillRect(0, 0, W, H);
+
+  /* Constellation lines between planets */
+  var constellations = [
+    ['tatooine','naboo'], ['tatooine','hoth'], ['tatooine','dagobah'],
+    ['coruscant','kashyyyk'], ['coruscant','corellia'], ['coruscant','exegol'],
+    ['mandalore','mustafar'], ['mandalore','exegol'],
+    ['mustafar','exegol'], ['jakku','ajan_kloss'],
+    ['arvala7','dagobah'], ['corellia','kashyyyk']
+  ];
+
+  constellations.forEach(function(pair) {
+    var a = getPlanet(pair[0]);
+    var b = getPlanet(pair[1]);
+    if (!a || !b) return;
+    ctx.globalAlpha = 0.08;
+    ctx.strokeStyle = '#44DDFF';
+    ctx.lineWidth = 0.5;
+    ctx.setLineDash([3, 8]);
+    ctx.beginPath();
+    ctx.moveTo(a.cx * W, a.cy * H);
+    ctx.lineTo(b.cx * W, b.cy * H);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+  });
+
+  /* Planets */
+  PLANETS.forEach(function(p) {
+    drawPlanet(p);
+  });
+}
+
+function getPlanet(id) {
+  for (var i = 0; i < PLANETS.length; i++) {
+    if (PLANETS[i].id === id) return PLANETS[i];
+  }
+  return null;
+}
+
+function drawPlanet(p) {
+  var x = p.cx * W;
+  var y = p.cy * H;
+  var r = p.r;
+  var pulse = 1 + 0.04 * Math.sin(animFrame * 0.04 + p.cx * 10);
+
+  /* Is this unlocked? */
+  var isUnlocked = false;
+  p.chars.forEach(function(c) { if (unlockedChars[c]) isUnlocked = true; });
+  var isBirth = (p.id === birthplace);
+  var isSelected = (selectedPlanet && selectedPlanet.id === p.id);
+
+  if (!isUnlocked && !isBirth) {
+    /* Unknown planet — dim dot */
+    ctx.globalAlpha = 0.25 + 0.05 * Math.sin(animFrame * 0.02 + p.cy * 8);
+    ctx.fillStyle = 'rgba(200,200,200,0.4)';
+    ctx.beginPath();
+    ctx.arc(x, y, r * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    return;
+  }
+
+  /* Glow */
+  var glowSize = isSelected ? r * 4 : r * 2.5;
+  var glow = ctx.createRadialGradient(x, y, 0, x, y, glowSize * pulse);
+  glow.addColorStop(0, p.glow);
+  glow.addColorStop(1, 'transparent');
+  ctx.globalAlpha = isSelected ? 0.7 : 0.4;
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(x, y, glowSize * pulse, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  /* Planet body */
+  var grad = ctx.createRadialGradient(x - r*0.3, y - r*0.3, r*0.1, x, y, r * pulse);
+  grad.addColorStop(0, lighten(p.color, 60));
+  grad.addColorStop(0.5, p.color);
+  grad.addColorStop(1, darken(p.color, 60));
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(x, y, r * pulse, 0, Math.PI * 2);
+  ctx.fill();
+
+  /* Birth planet ring */
+  if (isBirth) {
+    ctx.globalAlpha = 0.6 + 0.2 * Math.sin(animFrame * 0.05);
+    ctx.strokeStyle = '#FFB055';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(x, y, r * 1.5 * pulse, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  /* Label */
+  ctx.globalAlpha = isUnlocked || isBirth ? 0.85 : 0.3;
+  ctx.fillStyle = '#fff';
+  ctx.font = '600 8px Orbitron, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.letterSpacing = '0.15em';
+  ctx.fillText(p.name, x, y + r + 14);
+  ctx.globalAlpha = 1;
+}
+
+/* ============================================================
+   TAP HANDLER
+   ============================================================ */
+function onTap(e) {
+  var rect = canvas.getBoundingClientRect();
+  var mx = e.clientX - rect.left;
+  var my = e.clientY - rect.top;
+
+  for (var i = 0; i < PLANETS.length; i++) {
+    var p = PLANETS[i];
+    var px = p.cx * W;
+    var py = p.cy * H;
+    var dist = Math.sqrt((mx-px)*(mx-px) + (my-py)*(my-py));
+    if (dist < p.r * 2.5) {
+      selectedPlanet = p;
+      openPanel(p);
+      return;
+    }
+  }
+  /* Tap outside — close panel */
+  closePanel();
+}
+
+function openPanel(p) {
+  document.getElementById('panel-name').textContent = p.name;
+  document.getElementById('panel-region').textContent = p.region;
+  document.getElementById('panel-desc').textContent = p.desc;
+
+  /* Chars */
+  var charList = document.getElementById('panel-chars');
+  charList.innerHTML = '';
+  p.chars.forEach(function(cid) {
+    var chip = document.createElement('div');
+    var isUnlocked = !!unlockedChars[cid];
+    chip.className = 'char-chip' + (isUnlocked ? ' unlocked' : '');
+    chip.textContent = CHAR_NAMES[cid] || cid;
+    if (isUnlocked) {
+      chip.onclick = function() {
+        var pn = '';
+        try { pn = localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+        window.location.href = './' + CHAR_PATHS[cid] + '?character=' + cid + '&name=' + encodeURIComponent(pn);
+      };
+    } else {
+      chip.style.opacity = '0.4';
+      chip.title = 'Complete the quiz to unlock';
+    }
+    charList.appendChild(chip);
+  });
+
+  document.getElementById('info-panel').classList.add('open');
+}
+
+function closePanel() {
+  document.getElementById('info-panel').classList.remove('open');
+  selectedPlanet = null;
+}
+
+/* ============================================================
+   COLOR HELPERS
+   ============================================================ */
+function hexToRgb(hex) {
+  var r = parseInt(hex.slice(1,3),16);
+  var g = parseInt(hex.slice(3,5),16);
+  var b = parseInt(hex.slice(5,7),16);
+  return [r,g,b];
+}
+function lighten(hex, amt) {
+  var rgb = hexToRgb(hex);
+  return 'rgb(' + Math.min(255,rgb[0]+amt) + ',' + Math.min(255,rgb[1]+amt) + ',' + Math.min(255,rgb[2]+amt) + ')';
+}
+function darken(hex, amt) {
+  var rgb = hexToRgb(hex);
+  return 'rgb(' + Math.max(0,rgb[0]-amt) + ',' + Math.max(0,rgb[1]-amt) + ',' + Math.max(0,rgb[2]-amt) + ')';
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
