@@ -578,22 +578,22 @@ function setImgSrc(el, path) {
    CHARACTERS
    ============================================================ */
 var CHARACTERS = {
-  yoda:      { name:'Yoda',            img:'./yoda.png' },
-  obiwan:    { name:'Obi-Wan',         img:'./obiwan.png' },
-  luke:      { name:'Luke',            img:'./luke.png' },
-  mace:      { name:'Mace Windu',      img:'./mace.png' },
-  poe:       { name:'Poe Dameron',     img:'./poe.png' },
-  finn:      { name:'Finn',            img:'./finn.png' },
-  quigon:    { name:'Qui-Gon Jinn',    img:'./quigon.png' },
-  mando:     { name:'The Mandalorian', img:'./mando.png' },
-  boba:      { name:'Boba Fett',       img:'./boba.png' },
-  han:       { name:'Han Solo',        img:'./han.png' },
-  chewie:    { name:'Chewbacca',       img:'./chewie.png' },
-  vader:     { name:'Darth Vader',     img:'./vader.png' },
-  palpatine: { name:'Palpatine',       img:'./palpatine.png' },
-  kylo:      { name:'Kylo Ren',        img:'./kylo.png' },
-  maul:      { name:'Darth Maul',      img:'./maul.png' },
-  grogu:     { name:'Grogu',           img:'./grogu.png' }
+  yoda:      { name:'Yoda',            img:'./yoda.png',      path:'sw-prototypes/cyberpunk/'  },
+  obiwan:    { name:'Obi-Wan',         img:'./obiwan.png',    path:'sw-prototypes/cyberpunk/'  },
+  luke:      { name:'Luke',            img:'./luke.png',      path:'sw-prototypes/cyberpunk/'  },
+  mace:      { name:'Mace Windu',      img:'./mace.png',      path:'sw-prototypes/cyberpunk/'  },
+  poe:       { name:'Poe Dameron',     img:'./poe.png',       path:'sw-prototypes/cyberpunk/'  },
+  finn:      { name:'Finn',            img:'./finn.png',      path:'sw-prototypes/cyberpunk/'  },
+  quigon:    { name:'Qui-Gon Jinn',    img:'./quigon.png',    path:'sw-prototypes/cyberpunk/'  },
+  mando:     { name:'The Mandalorian', img:'./mando.png',     path:'sw-prototypes/mando/'      },
+  boba:      { name:'Boba Fett',       img:'./boba.png',      path:'sw-prototypes/mando/'      },
+  han:       { name:'Han Solo',        img:'./han.png',       path:'sw-prototypes/mando/'      },
+  chewie:    { name:'Chewbacca',       img:'./chewie.png',    path:'sw-prototypes/mando/'      },
+  vader:     { name:'Darth Vader',     img:'./vader.png',     path:'sw-prototypes/imperial/'   },
+  palpatine: { name:'Palpatine',       img:'./palpatine.png', path:'sw-prototypes/imperial/'   },
+  kylo:      { name:'Kylo Ren',        img:'./kylo.png',      path:'sw-prototypes/imperial/'   },
+  maul:      { name:'Darth Maul',      img:'./maul.png',      path:'sw-prototypes/imperial/'   },
+  grogu:     { name:'Grogu',           img:'./grogu.png',     path:'sw-prototypes/grogu/'      }
 };
 
 /* ============================================================
@@ -1262,9 +1262,21 @@ function showResult() {
     localStorage.setItem('sw_last_result', winner);
     localStorage.setItem('sw_last_scores', JSON.stringify(scores));
     localStorage.setItem('sw_saber_color', getSaberColor());
-    /* For now, stays on calc screen — result screen is Session 4 */
-    /* TODO: navigate to result.html once built */
+    routeToResult(winner);
   }, 3500);
+}
+
+/* ============================================================
+   ROUTE TO RESULT SCREEN
+   Navigates to the correct prototype screen for this character
+   ============================================================ */
+function routeToResult(characterId) {
+  var char = CHARACTERS[characterId];
+  if (!char || !char.path) return;
+  var playerName = '';
+  try { playerName = localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+  var url = './' + char.path + '?character=' + characterId + '&name=' + encodeURIComponent(playerName || char.name);
+  window.location.href = url;
 }
 
 /* ============================================================
