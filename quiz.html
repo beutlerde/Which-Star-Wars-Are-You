@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="./audio.js"></script>
 <style>
 
 :root {
@@ -1077,6 +1078,12 @@ function renderQuestion() {
    ============================================================ */
 function selectAnswer(index) {
   var q = sessionQuestions[currentIndex];
+
+  /* Audio feedback */
+  if (typeof SWAudio !== 'undefined') {
+    SWAudio.resume();
+    SWAudio.playSaberIgnite(getSaberColor());
+  }
 
   /* Undo previous answer if re-selecting */
   if (selectedAnswer !== null) {

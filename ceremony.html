@@ -56,6 +56,7 @@ html, body {
   pointer-events: none;
   transition: opacity 0.8s ease;
   text-align: center;
+  overflow: hidden;
 }
 .scene.active {
   opacity: 1;
@@ -402,12 +403,12 @@ html, body {
   width: 100%;
   height: 100%;
   position: relative;
-  overflow: hidden;
+  /* NO overflow:hidden — Safari clips translateY starting offscreen */
   perspective: 300px;
   perspective-origin: 50% 120%;
 }
 /* Top fade — text dissolves into stars */
-#crawl-stage::before {
+#scene-crawl::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
@@ -417,7 +418,7 @@ html, body {
   pointer-events: none;
 }
 /* Bottom fade — text emerges from below */
-#crawl-stage::after {
+#scene-crawl::after {
   content: '';
   position: absolute;
   bottom: 0; left: 0; right: 0;
@@ -428,20 +429,20 @@ html, body {
 }
 .crawl-wrap {
   position: absolute;
-  bottom: -120%;
+  bottom: 0;
   left: 50%;
   width: min(75vw, 520px);
-  transform: translateX(-50%) rotateX(22deg);
+  /* translateX centers it, translateY starts it below screen, rotateX tilts away */
+  transform: translateX(-50%) translateY(120%) rotateX(22deg);
   transform-origin: 50% 100%;
-  animation: crawl-scroll 50s linear forwards;
-  animation-play-state: paused;
+  transition: none;
 }
 .crawl-wrap.scroll {
-  animation-play-state: running;
+  animation: crawl-scroll 50s linear forwards;
 }
 @keyframes crawl-scroll {
-  0%   { bottom: -120%; }
-  100% { bottom: 140%; }
+  0%   { transform: translateX(-50%) translateY(120%)  rotateX(22deg); }
+  100% { transform: translateX(-50%) translateY(-280%) rotateX(22deg); }
 }
 .crawl-text {
   color: #FFD142;

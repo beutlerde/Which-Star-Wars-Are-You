@@ -533,6 +533,18 @@ html, body {
   pointer-events:none;
   transition:background 3s ease;
 }
+/* Mute button */
+#mute-btn {
+  position: fixed; bottom: max(24px, env(safe-area-inset-bottom));
+  right: 20px; z-index: 50;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.5); font-size: 14px;
+  cursor: pointer; -webkit-appearance: none;
+  transition: all 0.2s; display: flex; align-items: center; justify-content: center;
+}
+#mute-btn:active { color: #fff; border-color: rgba(255,255,255,0.4); }
+#mute-btn.muted { color: rgba(255,255,255,0.2); }
 
 </style>
 </head>
@@ -626,6 +638,8 @@ html, body {
 
 <div id="fade-overlay"></div>
 
+<button id="mute-btn" onclick="toggleAudio()" title="Toggle sound">♪</button>
+
 <!-- Lightspeed -->
 <div id="ls">
   <canvas id="ls-canvas"></canvas>
@@ -643,6 +657,7 @@ html, body {
   </div>
 </div>
 
+<script src="./audio.js"></script>
 <script>
 
 /* ============================================================
@@ -868,6 +883,8 @@ Object.keys(PD).forEach(function(key) {
    LOCK ON
    ============================================================ */
 function lockOn(key) {
+  SWAudio.resume();
+  SWAudio.playUIClick();
   if (lockedKey && lockedKey !== key) {
     pels[lockedKey].wrap.classList.remove('locked');
   }
@@ -1292,6 +1309,7 @@ function animTie(opts) {
    TIE FORMATIONS
    ============================================================ */
 function tieFormation() {
+  SWAudio.playTIERoar(0.5);
   var vh      = window.innerHeight;
   var goRight = Math.random() > 0.5;
   var roll    = Math.random();
@@ -1637,6 +1655,7 @@ function assembleButton() {
 document.getElementById('ls-btn').addEventListener('click', closeLS);
 
 function launchLS(key) {
+  SWAudio.playHyperspace();
   var d = PD[key]; lsDest = key;
   document.getElementById('ls').classList.add('on');
   lsCanvas.width = window.innerWidth; lsCanvas.height = window.innerHeight;
@@ -1765,6 +1784,18 @@ function init() {
   setTimeout(applyVisitedIndicators, 3000);
   var isBday = checkBirthday();
   if (!isBday) { checkWelcomeBack(); }
+
+  /* Audio — start ambient drone on first touch */
+  document.addEventListener('touchstart', function startAudio() {
+    SWAudio.init();
+    SWAudio.startAmbience();
+    document.removeEventListener('touchstart', startAudio);
+  }, { once: true });
+  document.addEventListener('click', function startAudioClick() {
+    SWAudio.init();
+    SWAudio.startAmbience();
+    document.removeEventListener('click', startAudioClick);
+  }, { once: true });
 }
 
 /* ============================================================
@@ -2051,6 +2082,16 @@ function showAurebesh() {
 
 function closeAurebesh() {
   document.getElementById('aurebesh-overlay').style.display = 'none';
+}
+
+function toggleAudio() {
+  SWAudio.resume();
+  var muted = SWAudio.toggleMute();
+  var btn = document.getElementById('mute-btn');
+  if (btn) {
+    btn.textContent = muted ? '✕' : '♪';
+    if (muted) { btn.classList.add('muted'); } else { btn.classList.remove('muted'); }
+  }
 }
 
 window.addEventListener('load', init);
