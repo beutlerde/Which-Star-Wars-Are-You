@@ -399,43 +399,69 @@ html, body {
    SCENE 6 — THE CRAWL
    ============================================================ */
 #crawl-stage {
-  perspective: 400px;
-  perspective-origin: 50% 100%;
   width: 100%;
   height: 100%;
   position: relative;
   overflow: hidden;
+  perspective: 300px;
+  perspective-origin: 50% 120%;
 }
-.crawl-text {
+/* Top fade — text dissolves into stars */
+#crawl-stage::before {
+  content: '';
   position: absolute;
-  top: 100%;
-  left: 50%;
-  width: min(80vw, 600px);
-  transform: translateX(-50%) rotateX(25deg);
-  transform-origin: 50% 100%;
-  color: #FFD142;
-  font-family: 'Cinzel', 'Times New Roman', serif;
-  font-weight: 700;
-  text-align: justify;
-  font-size: clamp(16px, 3vw, 22px);
-  line-height: 1.6;
-  letter-spacing: 0.02em;
-  text-shadow: 0 0 8px rgba(255,209,66,0.3);
+  top: 0; left: 0; right: 0;
+  height: 35%;
+  background: linear-gradient(180deg, #000 0%, transparent 100%);
+  z-index: 10;
+  pointer-events: none;
 }
-.crawl-text.scroll {
-  animation: crawl-scroll 40s linear forwards;
+/* Bottom fade — text emerges from below */
+#crawl-stage::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 20%;
+  background: linear-gradient(0deg, #000 0%, transparent 100%);
+  z-index: 10;
+  pointer-events: none;
+}
+.crawl-wrap {
+  position: absolute;
+  bottom: -120%;
+  left: 50%;
+  width: min(75vw, 520px);
+  transform: translateX(-50%) rotateX(22deg);
+  transform-origin: 50% 100%;
+  animation: crawl-scroll 50s linear forwards;
+  animation-play-state: paused;
+}
+.crawl-wrap.scroll {
+  animation-play-state: running;
 }
 @keyframes crawl-scroll {
-  0%   { top: 100%; }
-  100% { top: -350%; }
+  0%   { bottom: -120%; }
+  100% { bottom: 140%; }
+}
+.crawl-text {
+  color: #FFD142;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-weight: 600;
+  text-align: justify;
+  font-size: clamp(15px, 3.5vw, 20px);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 12px rgba(255,209,66,0.25);
+  padding-bottom: 40px;
 }
 .crawl-title {
   text-align: center;
-  font-size: clamp(22px, 5vw, 32px);
-  letter-spacing: 0.08em;
-  margin-bottom: 40px;
+  font-size: clamp(18px, 4.5vw, 26px);
+  letter-spacing: 0.1em;
+  margin-bottom: 44px;
+  text-shadow: 0 0 20px rgba(255,209,66,0.5);
 }
-.crawl-para { margin-bottom: 28px; text-align: justify; }
+.crawl-para { margin-bottom: 24px; text-align: justify; }
 
 /* ============================================================
    SCENE 7 — THE CHAMBER
@@ -621,12 +647,14 @@ html, body {
      ============================================================ -->
 <section class="scene" id="scene-crawl">
   <div id="crawl-stage">
-    <div class="crawl-text" id="crawl-text">
-      <div class="crawl-title" id="crawl-title">EPISODE I:<br>THE AWAKENING OF GUAPO</div>
-      <div class="crawl-para">A long time ago in a galaxy far, far away...</div>
-      <div class="crawl-para" id="crawl-p1"></div>
-      <div class="crawl-para" id="crawl-p2"></div>
-      <div class="crawl-para" id="crawl-p3"></div>
+    <div class="crawl-wrap" id="crawl-wrap">
+      <div class="crawl-text">
+        <div class="crawl-title" id="crawl-title">EPISODE I:<br>THE AWAKENING OF GUAPO</div>
+        <div class="crawl-para">A long time ago in a galaxy far, far away...</div>
+        <div class="crawl-para" id="crawl-p1"></div>
+        <div class="crawl-para" id="crawl-p2"></div>
+        <div class="crawl-para" id="crawl-p3"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -730,22 +758,37 @@ function buildStars() {
 
 /* ============================================================
    IMAGE PROBE — gracefully use uploaded planet/crystal art
-   when present, otherwise stick with CSS fallback
+   when present, otherwise stick with CSS fallback.
+   Tries both lowercase .png and uppercase .PNG so the file
+   extension casing never has to match exactly.
    ============================================================ */
 function probeAndApplyImage(el) {
   var src = el.getAttribute('data-img');
   if (!src) return;
-  var img = new Image();
-  img.onload = function() {
-    el.style.backgroundImage = 'url("' + src + '")';
-    el.classList.remove('fallback');
-    /* Remove planet fallback gradient classes */
-    el.classList.remove('tatooine-fb','naboo-fb','coruscant-fb','mandalore-fb');
-  };
-  img.onerror = function() {
-    /* keep fallback */
-  };
-  img.src = src;
+
+  /* Build list of candidate sources: original, plus swapped-case extension */
+  var candidates = [src];
+  if (/\.png$/i.test(src)) {
+    var swapped = src.replace(/\.png$/i, function(m) {
+      return m === '.PNG' ? '.png' : '.PNG';
+    });
+    if (swapped !== src) candidates.push(swapped);
+  }
+
+  function tryNext(i) {
+    if (i >= candidates.length) return; /* none worked — keep fallback */
+    var img = new Image();
+    img.onload = function() {
+      el.style.backgroundImage = 'url("' + candidates[i] + '")';
+      el.classList.remove('fallback');
+      el.classList.remove('tatooine-fb','naboo-fb','coruscant-fb','mandalore-fb');
+    };
+    img.onerror = function() {
+      tryNext(i + 1);
+    };
+    img.src = candidates[i];
+  }
+  tryNext(0);
 }
 function probeAllImages() {
   var els = document.querySelectorAll('[data-img]');
@@ -985,14 +1028,14 @@ function startScene6() {
 
   /* Start scroll after a beat */
   setTimeout(function() {
-    $('crawl-text').classList.add('scroll');
+    $('crawl-wrap').classList.add('scroll');
   }, 800);
 
   /* Allow tap to skip crawl after 3s */
   setTimeout(function() {
     $('scene-crawl').onclick = function() {
       $('scene-crawl').onclick = null;
-      $('crawl-text').classList.remove('scroll');
+      $('crawl-wrap').classList.remove('scroll');
       startScene7();
     };
   }, 3000);
@@ -1017,19 +1060,31 @@ function startScene7() {
   bg.classList.remove('tatooine-fb','naboo-fb','coruscant-fb','mandalore-fb');
   bg.style.backgroundImage = '';
 
-  /* Try to load a chamber image specific to birthplace */
-  var src = './chamber-' + birthplace + '.png';
-  var test = new Image();
-  test.onload = function() {
-    bg.style.backgroundImage = 'url("' + src + '")';
-    bg.classList.add('visible');
-  };
-  test.onerror = function() {
-    /* Use fallback gradient */
-    bg.classList.add(birthplace + '-fb');
-    bg.classList.add('visible');
-  };
-  test.src = src;
+  /* Try to load a chamber image specific to birthplace.
+     Attempts both lowercase .png and uppercase .PNG. */
+  var chamberCandidates = [
+    './chamber-' + birthplace + '.png',
+    './chamber-' + birthplace + '.PNG'
+  ];
+
+  function tryChamber(i) {
+    if (i >= chamberCandidates.length) {
+      /* None worked — use fallback gradient */
+      bg.classList.add(birthplace + '-fb');
+      bg.classList.add('visible');
+      return;
+    }
+    var test = new Image();
+    test.onload = function() {
+      bg.style.backgroundImage = 'url("' + chamberCandidates[i] + '")';
+      bg.classList.add('visible');
+    };
+    test.onerror = function() {
+      tryChamber(i + 1);
+    };
+    test.src = chamberCandidates[i];
+  }
+  tryChamber(0);
 
   setTimeout(function() {
     $('chamber-text').innerHTML = 'The Council awaits your answers, ' + playerName + '.';
