@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Force Vision · Apple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@200;300;400;500;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08080C;
+    --paper: #F5F1E8;
+    --paper-dim: #E0DBC8;
+    --ink-1: rgba(245,241,232,0.97);
+    --ink-2: rgba(245,241,232,0.65);
+    --ink-3: rgba(245,241,232,0.40);
+    --ink-4: rgba(245,241,232,0.18);
+    --accent: #5BA3D0;
+    --accent-g: rgba(91,163,208,0.15);
+    --warm: #E8D9B0;
+    --hr: rgba(245,241,232,0.10);
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  html, body { overflow-x:hidden; }
+  body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--ink-1); -webkit-font-smoothing:antialiased; }
+  button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; }
+
+  .ambient {
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 30%, rgba(91,163,208,0.08), transparent 70%),
+      var(--bg);
+  }
+
+  .stage { position:relative; z-index:2; max-width:540px; margin:0 auto; }
+
+  .hero {
+    min-height:100vh; min-height:100dvh;
+    padding: max(20px,env(safe-area-inset-top)) 0 max(28px,env(safe-area-inset-bottom));
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    position:relative; overflow:hidden;
+  }
+
+  .hero-top {
+    position:relative; z-index:4; padding:16px 28px 0;
+    width:100%; text-align:center;
+    opacity:0; animation:fade-in 1.2s ease-out 0.4s forwards;
+  }
+  .eyebrow {
+    font-size:10px; font-weight:500; letter-spacing:0.42em;
+    color:var(--ink-3); text-transform:uppercase;
+    display:flex; align-items:center; justify-content:center; gap:14px;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content:''; display:block; width:18px; height:1px;
+    background:rgba(232,217,176,0.6);
+  }
+
+  .hero-img {
+    position:absolute; inset:0; z-index:1;
+  }
+  .hero-img::after {
+    content:''; position:absolute; bottom:0; left:0; right:0; height:55%;
+    background:linear-gradient(180deg, transparent 0%, rgba(8,8,12,0.7) 50%, var(--bg) 100%);
+    z-index:2;
+  }
+  .hero-img img {
+    width:100%; height:100%;
+    object-fit:contain; object-position:center 20%;
+    opacity:0; animation:img-in 2.2s ease-out 0.2s forwards;
+  }
+  @keyframes img-in {
+    0%   { opacity:0; transform:scale(1.06); filter:blur(10px); }
+    100% { opacity:1; transform:scale(1);   filter:blur(0); }
+  }
+
+  .hero-glow {
+    position:absolute; inset:0; z-index:1; pointer-events:none;
+    background:radial-gradient(ellipse 60% 50% at 50% 35%,
+      rgba(91,163,208,0.12), transparent 65%);
+    filter:blur(30px);
+  }
+
+  .hero-spacer { flex:1; position:relative; z-index:0; min-height:200px; }
+
+  .hero-bottom {
+    position:relative; z-index:4; padding:0 32px; width:100%;
+    opacity:0; animation:fade-up 1.4s ease-out 2.0s forwards;
+  }
+  .greeting {
+    font-family:'Caveat',cursive; font-size:clamp(24px,7vw,32px);
+    color:var(--warm); text-shadow:0 0 20px rgba(232,217,176,0.3);
+    margin-bottom:10px;
+  }
+  .char-name {
+    font-family:'Cormorant Garamond',serif; font-weight:600;
+    font-size:clamp(72px,21vw,120px); line-height:0.9;
+    letter-spacing:-0.025em; color:var(--paper);
+    text-shadow:0 4px 32px rgba(0,0,0,0.6);
+    margin-bottom:14px;
+  }
+  .subtitle {
+    font-family:'Cormorant Garamond',serif; font-style:italic;
+    font-size:clamp(15px,4vw,19px); color:var(--ink-2);
+    letter-spacing:0.02em;
+  }
+  .rule {
+    width:28px; height:1px; background:var(--warm);
+    margin:20px auto 0;
+    animation:rule-in 1.2s ease-out 2.8s both;
+    transform-origin:center;
+  }
+  @keyframes rule-in { from{opacity:0;transform:scaleX(0);} to{opacity:1;transform:scaleX(1);} }
+
+  .scroll-cue {
+    position:absolute; bottom:max(24px,env(safe-area-inset-bottom));
+    left:50%; transform:translateX(-50%); z-index:4;
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    opacity:0; animation:fade-in 1s ease-out 3.4s forwards;
+  }
+  .cue-text { font-size:9px; letter-spacing:0.42em; text-transform:uppercase; color:var(--ink-3); }
+  .cue-line { width:1px; height:24px; background:linear-gradient(180deg,var(--accent),transparent); animation:cue-pulse 2.4s ease-in-out infinite; }
+  @keyframes cue-pulse { 0%,100%{opacity:.3;transform:scaleY(.6);} 50%{opacity:1;transform:scaleY(1);} }
+
+  .section { max-width:540px; margin:0 auto; padding:88px 32px 0; opacity:0; transform:translateY(36px); transition:opacity 1.2s ease,transform 1.2s ease; }
+  .section.visible { opacity:1; transform:translateY(0); }
+
+  .sec-eye { font-size:10px; font-weight:500; letter-spacing:0.42em; color:var(--accent); text-transform:uppercase; margin-bottom:18px; display:flex; align-items:center; gap:10px; }
+  .sec-eye::before { content:''; width:16px; height:1px; background:var(--accent); }
+  .sec-title { font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(36px,9vw,52px); line-height:1.05; letter-spacing:-0.02em; color:var(--paper); margin-bottom:24px; }
+  .sec-title em { font-style:italic; font-weight:400; }
+  .sec-body { font-weight:300; font-size:18px; line-height:1.65; color:var(--ink-1); }
+  .sec-body+.sec-body { margin-top:16px; }
+
+  .quote-wrap { max-width:540px; margin:0 auto; padding:80px 32px; text-align:center; opacity:0; transform:translateY(36px); transition:opacity 1.2s ease,transform 1.2s ease; }
+  .quote-wrap.visible { opacity:1; transform:translateY(0); }
+  .q-mark { font-family:'Cormorant Garamond',serif; font-size:72px; line-height:.4; color:var(--accent); display:block; margin-bottom:24px; }
+  .q-text { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(28px,7vw,40px); line-height:1.2; color:var(--paper); margin-bottom:24px; }
+  .q-attr { font-size:10px; letter-spacing:0.38em; text-transform:uppercase; color:var(--ink-3); }
+  .q-attr::before { content:'— '; color:var(--accent); }
+
+  .stat-list { border-top:1px solid var(--hr); }
+  .stat-row { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:baseline; padding:20px 0; border-bottom:1px solid var(--hr); }
+  .stat-name { font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ink-1); }
+  .stat-val { font-family:'Cormorant Garamond',serif; font-weight:500; font-size:40px; color:var(--accent); line-height:1; }
+  .stat-track { grid-column:1/-1; height:1px; background:var(--hr); position:relative; margin-top:8px; }
+  .stat-fill { position:absolute; left:0; top:0; bottom:0; background:var(--accent); width:0; transition:width 1.5s cubic-bezier(.2,.8,.2,1) .1s; box-shadow:0 0 8px rgba(91,163,208,0.4); }
+  .section.visible .stat-fill { width:var(--w); }
+
+  .actions { max-width:540px; margin:0 auto; padding:48px 32px max(64px,env(safe-area-inset-bottom)); display:flex; flex-direction:column; gap:12px; opacity:0; transform:translateY(36px); transition:opacity 1.2s ease,transform 1.2s ease; }
+  .actions.visible { opacity:1; transform:translateY(0); }
+  .btn { padding:20px 24px; font-size:12px; font-weight:500; letter-spacing:0.28em; text-transform:uppercase; text-align:center; transition:all 0.3s ease; -webkit-tap-highlight-color:transparent; border-radius:999px; }
+  .btn-p { background:var(--paper); color:var(--bg); }
+  .btn-s { background:transparent; color:var(--ink-1); border:1px solid rgba(245,241,232,0.2); }
+  .btn-g { background:transparent; color:var(--ink-3); font-size:11px; padding:14px; }
+
+  .footer { text-align:center; padding:24px 32px 56px; font-size:10px; letter-spacing:0.32em; text-transform:uppercase; color:var(--ink-3); }
+
+  @keyframes fade-in { from{opacity:0;} to{opacity:1;} }
+  @keyframes fade-up { from{opacity:0;transform:translateY(14px);} to{opacity:1;transform:translateY(0);} }
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+<main class="stage">
+
+  <section class="hero">
+    <div class="hero-top">
+      <div class="eyebrow">✦ The Force Has Spoken ✦</div>
+    </div>
+
+    <div class="hero-img">
+      <div class="hero-glow"></div>
+      <img id="hero-img" alt="">
+    </div>
+
+    <div class="hero-spacer"></div>
+
+    <div class="hero-bottom">
+      <p class="greeting" id="greeting-el">The Force shows you…</p>
+      <h1 class="char-name" id="char-name">…</h1>
+      <p class="subtitle" id="char-subtitle"></p>
+      <div class="rule"></div>
+    </div>
+
+    <div class="scroll-cue">
+      <span class="cue-text">Scroll</span>
+      <span class="cue-line"></span>
+    </div>
+  </section>
+
+  <section class="section" id="sec-strength">
+    <div class="sec-eye">I · Your Strength</div>
+    <h2 class="sec-title" id="sec-strength-title"></h2>
+    <p class="sec-body" id="sec-body-1"></p>
+    <p class="sec-body" id="sec-body-2"></p>
+  </section>
+
+  <div class="quote-wrap">
+    <span class="q-mark">"</span>
+    <p class="q-text" id="q-text"></p>
+    <p class="q-attr" id="q-attr"></p>
+  </div>
+
+  <section class="section" id="sec-doctrine">
+    <div class="sec-eye">II · Power Move</div>
+    <h2 class="sec-title" id="sec-doctrine-title"></h2>
+  </section>
+
+  <section class="section" id="sec-stats">
+    <div class="sec-eye">III · Force Signature</div>
+    <div class="stat-list" id="stat-list"></div>
+  </section>
+
+  <div class="actions">
+    <button class="btn btn-p" id="chat-btn">✦ SPEAK TO YOUR CHARACTER</button>
+    <button class="btn btn-s" onclick="window.location.href='../../quiz.html'">See Another Vision</button>
+    <button class="btn btn-s" onclick="window.location.href='../../index.html'">Return to Cockpit</button>
+    <button class="btn btn-g" id="share-btn">Share this result</button>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 32px;border-top:1px solid var(--hr);max-width:540px;margin:0 auto;">
+    <div style="text-align:center;"><div id="midi-count" style="font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--accent);font-weight:500;letter-spacing:0.05em;">—</div><div style="font-size:8px;letter-spacing:0.35em;color:var(--ink-3);margin-top:4px;text-transform:uppercase;">Mid-Chlorians</div></div>
+    <div style="text-align:center;"><div id="threat-badge" style="font-size:10px;letter-spacing:0.25em;font-weight:500;padding:6px 14px;border-radius:3px;color:var(--accent);border:1px solid rgba(91,163,208,0.3);">—</div><div style="font-size:8px;letter-spacing:0.35em;color:var(--ink-3);margin-top:4px;text-transform:uppercase;">Threat Level</div></div>
+  </div>
+  <div class="footer" id="footer-msg">May the Force be with you ✦</div>
+</main>
+<script>
+  var CHAR_DATA = {"yoda": {"name": "Yoda", "subtitle": "Master of patience & wisdom", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Wisdom &amp; <em>Patience</em>", "body1": "You think before you act. You notice things others miss. When everyone else is rushing around, you stay calm and see the bigger picture.", "body2": "Like Yoda, you trust that the right answer comes to those who listen. Your mind is your lightsaber. Your patience is your shield.", "quote": "Do or do not.<br>There is no try.", "quote_attr": "Master Yoda", "doctrine": "Slowing down<br>when others<br><em>speed up.</em>", "stats": [["Wisdom", 95], ["Patience", 95], ["Empathy", 85], ["Loyalty", 70], ["Courage", 60], ["Aggression", 15]], "img": "yoda", "midi_count": "17,450", "threat_level": "EXTREME"}, "obiwan": {"name": "Obi-Wan", "subtitle": "Guardian of peace & wisdom", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Wisdom &amp; <em>Calm</em>", "body1": "You are the steady hand when everything is chaos. You think clearly under pressure and always find the right words at the right moment.", "body2": "Like Obi-Wan, you are the person others turn to when they need grounding. Your calm is your greatest power.", "quote": "Hello there.", "quote_attr": "Obi-Wan Kenobi", "doctrine": "Being the calm<br>when others<br><em>lose theirs.</em>", "stats": [["Wisdom", 92], ["Patience", 90], ["Empathy", 88], ["Loyalty", 85], ["Courage", 75], ["Aggression", 20]], "img": "obiwan", "midi_count": "13,400", "threat_level": "HIGH"}, "luke": {"name": "Luke", "subtitle": "The last hope of the galaxy", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Courage &amp; <em>Heart</em>", "body1": "You believe in people even when they stop believing in themselves. You see potential where others see failure, and you act on it.", "body2": "Like Luke, you have faced fear and chosen hope anyway. That is the rarest kind of strength in the galaxy.", "quote": "I am a Jedi,<br>like my father before me.", "quote_attr": "Luke Skywalker", "doctrine": "Believing in people<br>who have given up<br><em>on themselves.</em>", "stats": [["Wisdom", 80], ["Patience", 72], ["Empathy", 90], ["Loyalty", 88], ["Courage", 92], ["Aggression", 35]], "img": "luke", "midi_count": "14,500", "threat_level": "HIGH"}, "mace": {"name": "Mace Windu", "subtitle": "Master of discipline & power", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Discipline &amp; <em>Power</em>", "body1": "You have standards, and you hold them — for yourself above all. When you commit to something, it's done. No excuses, no shortcuts.", "body2": "Like Mace Windu, your strength comes from discipline so deep it becomes second nature. You are the person the room notices when they walk in.", "quote": "I will deal with<br>this Sith Lord myself.", "quote_attr": "Mace Windu", "doctrine": "Holding the line<br>when everyone else<br><em>flinches.</em>", "stats": [["Discipline", 98], ["Power", 95], ["Courage", 92], ["Wisdom", 85], ["Loyalty", 80], ["Aggression", 55]], "img": "mace", "midi_count": "12,000", "threat_level": "SEVERE"}, "poe": {"name": "Poe", "subtitle": "Best pilot in the Resistance", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Boldness &amp; <em>Heart</em>", "body1": "You fly toward the problem, not away from it. You inspire everyone around you just by showing up — the energy you bring changes the room.", "body2": "Like Poe, you were born to lead from the front. Your confidence is not arrogance — it's the certainty that things can be better.", "quote": "That's one hell<br>of a pilot.", "quote_attr": "Poe Dameron", "doctrine": "Flying into<br>the impossible<br><em>with a smile.</em>", "stats": [["Speed", 98], ["Courage", 94], ["Loyalty", 90], ["Charisma", 95], ["Wisdom", 65], ["Aggression", 40]], "img": "poe", "midi_count": "4,200", "threat_level": "MODERATE"}, "finn": {"name": "Finn", "subtitle": "The hero who chose his path", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Bravery &amp; <em>Heart</em>", "body1": "You chose to be a hero. Not because it was easy — but because you knew it was right.", "body2": "Like Finn, your greatest power is your heart. You fight for the people next to you. That is what makes you unstoppable.", "quote": "I was raised to<br>do one thing.<br>But I'm done with that.", "quote_attr": "Finn", "doctrine": "Choosing to<br>do the right thing,<br><em>every time.</em>", "stats": [["Courage", 92], ["Empathy", 95], ["Loyalty", 94], ["Heart", 98], ["Wisdom", 68], ["Aggression", 35]], "img": "finn", "midi_count": "4,800", "threat_level": "MODERATE"}, "quigon": {"name": "Qui-Gon", "subtitle": "Follower of the living Force", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Trust &amp; <em>Serenity</em>", "body1": "You feel the flow of life around you. You trust the process even when others panic. You see what things could become.", "body2": "Like Qui-Gon, you follow the living Force wherever it leads. Your instincts are rarely wrong — and your calm is contagious.", "quote": "Feel, don't think.<br>Trust your instincts.", "quote_attr": "Qui-Gon Jinn", "doctrine": "Trusting the flow<br>of life<br><em>completely.</em>", "stats": [["Serenity", 98], ["Wisdom", 92], ["Intuition", 97], ["Courage", 82], ["Loyalty", 85], ["Aggression", 18]], "img": "quigon", "midi_count": "16,700", "threat_level": "EXTREME"}, "mando": {"name": "Mando", "subtitle": "The honor-bound guardian", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Independence &amp; <em>Honor</em>", "body1": "You walk your own path. You don't need anyone's approval to know who you are. You have your own code — and you keep it, no matter what.", "body2": "Like Mando, your loyalty runs deep once it's earned. Quiet on the outside, fierce on the inside.", "quote": "I can bring you in warm,<br>or I can bring you<br>in cold.", "quote_attr": "Din Djarin", "doctrine": "Walking your own path<br>when others<br><em>follow the crowd.</em>", "stats": [["Loyalty", 95], ["Courage", 92], ["Honor", 90], ["Independence", 88], ["Wisdom", 65], ["Aggression", 45]], "img": "mando", "midi_count": "3,100", "threat_level": "MODERATE"}, "boba": {"name": "Boba Fett", "subtitle": "The most feared hunter", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Precision &amp; <em>Self-Reliance</em>", "body1": "You don't need a crowd. You don't need applause. You know what you're worth, and you prove it through results — not words.", "body2": "Like Boba Fett, your power comes from complete self-reliance. You are the most dangerous thing in the room.", "quote": "He's no good<br>to me dead.", "quote_attr": "Boba Fett", "doctrine": "Proving your worth<br>through results,<br><em>not words.</em>", "stats": [["Precision", 88], ["Patience", 85], ["Loyalty", 75], ["Courage", 88], ["Empathy", 40], ["Aggression", 70]], "img": "boba", "midi_count": "2,800", "threat_level": "LOW"}, "han": {"name": "Han Solo", "subtitle": "The scoundrel with a heart of gold", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Instinct &amp; <em>Charm</em>", "body1": "You trust your gut, and your gut is usually right. You talk your way in, fly your way out, and make it look effortless.", "body2": "Like Han, you act like you don't care — then show up at exactly the right moment for the people who matter to you.", "quote": "Never tell me<br>the odds.", "quote_attr": "Han Solo", "doctrine": "Showing up<br>when it matters most,<br><em>every time.</em>", "stats": [["Instinct", 92], ["Courage", 88], ["Loyalty", 80], ["Charm", 95], ["Patience", 50], ["Aggression", 55]], "img": "han", "midi_count": "1,200", "threat_level": "LOW"}, "chewie": {"name": "Chewie", "subtitle": "The most loyal co-pilot", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Loyalty &amp; <em>Strength</em>", "body1": "You are the most reliable person in any room. When you commit to someone, it's forever.", "body2": "Like Chewie, you are a gentle giant. Enormous heart, fierce protector, devoted friend. The people around you are lucky to have you.", "quote": "RRRAAARRGH!", "quote_attr": "Chewbacca", "doctrine": "Being the one<br>everyone can count on,<br><em>no matter what.</em>", "stats": [["Loyalty", 97], ["Strength", 95], ["Empathy", 85], ["Courage", 88], ["Wisdom", 60], ["Aggression", 55]], "img": "chewie", "midi_count": "2,400", "threat_level": "LOW"}, "vader": {"name": "Vader", "subtitle": "The fallen knight, redeemed", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Focus &amp; <em>Discipline</em>", "body1": "When you decide to do something, nothing can stop you. You have incredible discipline and focus — the kind that gets things done.", "body2": "Like Vader, you carry great power. And like Vader, in the very end, that power was used for love. Your strength is only as great as what you choose to use it for.", "quote": "I find your lack<br>of faith<br>disturbing.", "quote_attr": "Darth Vader", "doctrine": "Channeling your focus<br>toward what —<br><em>and who — you love.</em>", "stats": [["Focus", 98], ["Discipline", 96], ["Courage", 90], ["Loyalty", 85], ["Patience", 55], ["Aggression", 80]], "img": "vader", "midi_count": "27,700", "threat_level": "SUPREME"}, "palpatine": {"name": "Palpatine", "subtitle": "Master of strategy & vision", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Strategy &amp; <em>Vision</em>", "body1": "You see moves others cannot imagine. You think in systems, in long arcs, in outcomes that take years to unfold. No one outplans you.", "body2": "Like Palpatine, your greatest power is your mind. The question — and it is the most important question — is what you choose to use that power for.", "quote": "Everything is proceeding<br>as I have foreseen.", "quote_attr": "Emperor Palpatine", "doctrine": "Using your vision<br>to build something —<br><em>not to control it.</em>", "stats": [["Strategy", 97], ["Patience", 90], ["Power", 85], ["Wisdom", 88], ["Empathy", 30], ["Aggression", 85]], "img": "palpatine", "midi_count": "20,500", "threat_level": "SUPREME"}, "kylo": {"name": "Kylo Ren", "subtitle": "The one who chose to come back", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Intensity &amp; <em>Passion</em>", "body1": "You feel everything deeply. You don't do things halfway. When you care about something, you care about it completely — and that intensity is a superpower.", "body2": "Like Kylo Ren — like Ben Solo — your greatest battle is with yourself. And the fact that you keep fighting it means the good side is winning.", "quote": "I know what I have to do.<br>I don't know if I<br>have the strength to do it.", "quote_attr": "Kylo Ren", "doctrine": "Letting the people<br>who love you<br><em>reach through the darkness.</em>", "stats": [["Intensity", 95], ["Courage", 88], ["Loyalty", 70], ["Wisdom", 65], ["Patience", 45], ["Aggression", 80]], "img": "kylo", "midi_count": "15,200", "threat_level": "HIGH"}, "maul": {"name": "Darth Maul", "subtitle": "Relentless and unstoppable", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Intensity &amp; <em>Endurance</em>", "body1": "You are relentless. When you commit to something, you see it through to the end — no matter what it costs.", "body2": "Like Maul, your greatest strength is your refusal to quit. That same fire, pointed at something worth fighting for, makes you unstoppable.", "quote": "At last we will reveal<br>ourselves to the Jedi.", "quote_attr": "Darth Maul", "doctrine": "Pointing your<br>relentlessness toward<br><em>something worthy of it.</em>", "stats": [["Endurance", 95], ["Aggression", 90], ["Courage", 92], ["Intensity", 97], ["Patience", 50], ["Empathy", 35]], "img": "maul", "midi_count": "12,300", "threat_level": "SEVERE"}, "grogu": {"name": "Grogu", "subtitle": "The curious innocent", "greeting_template": "[NAME], the Force shows you…", "strength_title": "Curiosity &amp; <em>A Pure Heart</em>", "body1": "You see wonder in everything. You ask the best questions. You experience the world with open eyes and an open heart.", "body2": "Like Grogu, you have a quiet kind of power that surprises everyone. Your kindness and curiosity might just be your greatest strength of all.", "quote": "The Force is strong<br>in this one.<br>Very strong.", "quote_attr": "The Armorer", "doctrine": "Loving big<br>and staying<br><em>curious.</em>", "stats": [["Empathy", 99], ["Curiosity", 98], ["Force Sense", 97], ["Loyalty", 95], ["Courage", 72], ["Aggression", 2]], "img": "grogu", "midi_count": "19,000", "threat_level": "SUPREME"}};
+
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get('character') || 'yoda';
+    var c = CHAR_DATA[id];
+    if (!c) return;
+
+    // Name from URL param
+    var playerName = params.get('name') || '';
+    var displayName = playerName ? playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase() : '';
+
+    // Hero image
+    var base = '../../assets/characters/';
+    var imgEl = document.getElementById('hero-img');
+    var candidates = [base+c.img+'.png', base+c.img+'.PNG', base+c.img+'.jpg'];
+    var i = 0;
+    function tryNext() {
+      if (i >= candidates.length) return;
+      var x = new Image();
+      x.onload = function() { imgEl.src = candidates[i-1]; };
+      x.onerror = function() { i++; tryNext(); };
+      x.src = candidates[i++];
+    }
+    tryNext();
+
+    // Greeting
+    var greetEl = document.getElementById('greeting-el');
+    if (greetEl) {
+      var greet = displayName ? (displayName + ', the Force shows you\u2026') : 'The Force shows you\u2026';
+      greetEl.textContent = greet;
+    }
+
+    // Name + subtitle
+    document.getElementById('char-name').textContent = c.name;
+    document.getElementById('char-subtitle').textContent = c.subtitle;
+
+    // Strength
+    document.getElementById('sec-strength-title').innerHTML = c.strength_title;
+    document.getElementById('sec-body-1').textContent = c.body1;
+    document.getElementById('sec-body-2').textContent = c.body2;
+
+    // Quote
+    document.getElementById('q-text').innerHTML = c.quote;
+    document.getElementById('q-attr').textContent = c.quote_attr;
+
+    // Doctrine
+    document.getElementById('sec-doctrine-title').innerHTML = c.doctrine;
+
+    // Stats
+    var list = document.getElementById('stat-list');
+    list.innerHTML = '';
+    c.stats.forEach(function(s) {
+      var row = document.createElement('div');
+      row.className = 'stat-row';
+      row.innerHTML = '<span class="stat-name">'+s[0]+'</span><span class="stat-val">'+s[1]+'</span><div class="stat-track"><div class="stat-fill" style="--w:'+s[1]+'%"></div></div>';
+      list.appendChild(row);
+    });
+
+    // Footer
+    var footerEl = document.getElementById('footer-msg');
+    if (footerEl) {
+      footerEl.textContent = displayName ? 'May the Force be with you, ' + displayName + ' \u2726' : 'May the Force be with you \u2726';
+    }
+
+    // Mid-chlorians + threat level
+    var midiEl = document.getElementById('midi-count');
+    if (midiEl) midiEl.textContent = c.midi_count || '—';
+    var threatEl = document.getElementById('threat-badge');
+    if (threatEl && c.threat_level) threatEl.textContent = c.threat_level;
+
+    // Chat button
+    var chatBtn = document.getElementById('chat-btn');
+    if (chatBtn) {
+      chatBtn.onclick = function() {
+        window.location.href = '../../chat.html?character=' + id + '&name=' + encodeURIComponent(playerName || '');
+      };
+    }
+  })();
+
+  var io = new IntersectionObserver(function(e) {
+    e.forEach(function(x) { if (x.isIntersecting) x.target.classList.add('visible'); });
+  }, {threshold:0.1});
+  document.querySelectorAll('.section,.quote-wrap,.actions').forEach(function(el) { io.observe(el); });
+</script>
+</body>
+</html>
