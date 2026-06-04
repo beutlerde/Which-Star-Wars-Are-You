@@ -267,13 +267,8 @@ const MANDO_CHARS = {"mando": {"name": "MANDO", "img": "mando", "subtitle": "The
     const qa = document.querySelector('.plaque-attr');
     if (qa) qa.textContent = c.quote_attr;
 
-    // Doctrine (second heading of same type)
+    // Doctrine
     if (titles[1]) titles[1].textContent = c.doctrine;
-    
-
-    // Force twin
-    const twinName = document.querySelector('}
-    });
 
     // Image — smart loader
     const img = document.getElementById('hero-img');
@@ -287,15 +282,19 @@ const MANDO_CHARS = {"mando": {"name": "MANDO", "img": "mando", "subtitle": "The
       function tryNext() {
         if (ci >= cands.length) return;
         const t = new Image();
-        t.onload = () => { img.src = cands[ci-1]; img.style.opacity = '1'; };
-        t.onerror = () => { ci++; tryNext(); };
+        t.onload = function() { img.src = cands[ci-1]; img.style.opacity = '1'; };
+        t.onerror = function() { ci++; tryNext(); };
         t.src = cands[ci++];
       }
       tryNext();
     }
 
+    // Show actions
+    var actionsEl = document.querySelector('.actions');
+    if (actionsEl) actionsEl.classList.add('visible');
+
     // Page title
-    document.title = 'Force Vision · ' + c.name;
+    document.title = 'Bounty Puck \u00b7 ' + c.name;
   }
 
   loadCharacter();
