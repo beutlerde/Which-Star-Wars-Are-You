@@ -475,21 +475,55 @@ function openPanel(p) {
   var charList = document.getElementById('panel-chars');
   charList.innerHTML = '';
   p.chars.forEach(function(cid) {
-    var chip = document.createElement('div');
     var isUnlocked = !!unlockedChars[cid];
-    chip.className = 'char-chip' + (isUnlocked ? ' unlocked' : '');
-    chip.textContent = CHAR_NAMES[cid] || cid;
+
     if (isUnlocked) {
-      chip.onclick = function() {
-        var pn = '';
-        try { pn = localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+      /* Unlocked — show character name + two action buttons */
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'display:flex;flex-direction:column;gap:6px;width:100%;';
+
+      var nameEl = document.createElement('div');
+      nameEl.style.cssText = 'font-size:9px;letter-spacing:0.3em;color:rgba(68,221,255,0.8);';
+      nameEl.textContent = CHAR_NAMES[cid] || cid;
+
+      var btns = document.createElement('div');
+      btns.style.cssText = 'display:flex;gap:8px;';
+
+      var pn = '';
+      try { pn = localStorage.getItem('sw_player_name') || ''; } catch(e) {}
+
+      var viewBtn = document.createElement('button');
+      viewBtn.className = 'char-chip unlocked';
+      viewBtn.textContent = 'VIEW RESULT';
+      viewBtn.style.flex = '1';
+      viewBtn.onclick = function() {
         window.location.href = './' + CHAR_PATHS[cid] + '?character=' + cid + '&name=' + encodeURIComponent(pn);
       };
+
+      var chatBtn = document.createElement('button');
+      chatBtn.className = 'char-chip unlocked';
+      chatBtn.textContent = '⚡ FORCE LINK';
+      chatBtn.style.flex = '1';
+      chatBtn.style.background = 'rgba(68,221,255,0.15)';
+      chatBtn.style.borderColor = 'rgba(68,221,255,0.5)';
+      chatBtn.onclick = function() {
+        window.location.href = './chat.html?character=' + cid + '&name=' + encodeURIComponent(pn) + '&back=./force-map.html';
+      };
+
+      btns.appendChild(viewBtn);
+      btns.appendChild(chatBtn);
+      wrap.appendChild(nameEl);
+      wrap.appendChild(btns);
+      charList.appendChild(wrap);
+
     } else {
-      chip.style.opacity = '0.4';
-      chip.title = 'Complete the quiz to unlock';
+      /* Locked — dim chip */
+      var chip = document.createElement('div');
+      chip.className = 'char-chip';
+      chip.textContent = CHAR_NAMES[cid] || cid;
+      chip.style.opacity = '0.35';
+      charList.appendChild(chip);
     }
-    charList.appendChild(chip);
   });
 
   document.getElementById('info-panel').classList.add('open');

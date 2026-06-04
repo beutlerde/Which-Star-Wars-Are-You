@@ -18,7 +18,7 @@ const QUESTION_BANK = [
     "id": "think_01",
     "category": "THE WAY YOU THINK",
     "type": "personality",
-    "image": "PLACEHOLDER: A lone figure sitting cross-legged on a clifftop edge, twin suns setting behind them, vast desert below, contemplative silhouette with cape moving slightly in the wind",
+    "image": "./assets/quiz/think_01.png",
     "text": "Before you act, you always—",
     "answers": [
       {
@@ -234,7 +234,7 @@ const QUESTION_BANK = [
     "text": "Which path calls to you?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A narrow rocky path winding up the side of a misty mountain at dawn, soft amber light breaking through fog, no figures, contemplative atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_04-a.png",
         "caption": "The Climb",
         "scores": {
           "mace": 3,
@@ -250,7 +250,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A wide open desert path stretching toward a glowing horizon under twin suns, vast and inviting, no figures, sense of freedom, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_04-b.png",
         "caption": "The Open Road",
         "scores": {
           "han": 3,
@@ -265,7 +265,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A peaceful path through ancient towering trees, shafts of green-gold light filtering through the canopy, mossy stones, no figures, sacred atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_04-c.png",
         "caption": "The Forest Way",
         "scores": {
           "yoda": 3,
@@ -281,7 +281,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A dark path cutting through a violent storm, red lightning crackling overhead, no figures, intense ominous atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_04-d.png",
         "caption": "The Storm Path",
         "scores": {
           "kylo": 3,
@@ -510,7 +510,7 @@ const QUESTION_BANK = [
     "text": "Choose a door.",
     "answers": [
       {
-        "image": "PLACEHOLDER: An ancient wooden temple door covered in carved spiritual symbols, weathered with age, soft warm light glowing from beneath the threshold, no figures, sacred atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_08-a.png",
         "caption": "The Temple",
         "scores": {
           "yoda": 3,
@@ -526,7 +526,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A massive steel Imperial blast door with red warning lights and heavy industrial bolts, locked and intimidating, no figures, militant atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_08-b.png",
         "caption": "The Blast Door",
         "scores": {
           "vader": 3,
@@ -542,7 +542,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A shimmering door of pure energy, swirling cyan and gold particles forming an archway, mysterious and beautiful, no figures, otherworldly atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_08-c.png",
         "caption": "The Energy Door",
         "scores": {
           "luke": 3,
@@ -558,7 +558,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A cracked ancient stone door covered in unknown alien glyphs, partially open with darkness beyond, no figures, dangerous atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_08-d.png",
         "caption": "The Forgotten One",
         "scores": {
           "han": 3,
@@ -859,7 +859,7 @@ const QUESTION_BANK = [
     "text": "Which holocron whispers to you?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A glowing blue cubic Jedi holocron floating in space, geometric patterns of light pulsing on its surface, peaceful and welcoming, no figures, sacred atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_13-a.png",
         "caption": "The Jedi",
         "scores": {
           "obiwan": 3,
@@ -875,7 +875,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A glowing red pyramidal Sith holocron with sharp angular edges, dark crimson energy crackling around it, dangerous and tempting, no figures, ominous atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_13-b.png",
         "caption": "The Sith",
         "scores": {
           "palpatine": 3,
@@ -892,7 +892,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A weathered green crystalline holocron of unknown ancient design, soft jade light pulsing slowly, mysterious and serene, no figures, ancient atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_13-c.png",
         "caption": "The Ancient",
         "scores": {
           "yoda": 3,
@@ -907,7 +907,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A small white spherical holocron with no visible markings or patterns, gentle pearl light radiating softly, mysterious and pure, no figures, contemplative atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_13-d.png",
         "caption": "The Unknown",
         "scores": {
           "grogu": 3,
@@ -1195,7 +1195,7 @@ const QUESTION_BANK = [
     "id": "think_18",
     "category": "THE WAY YOU THINK",
     "type": "scenario",
-    "image": "PLACEHOLDER: A circular war room with a glowing tactical map at the center, various command chairs around it, soft blue holographic light, completely empty of people — first-person POV walking in",
+    "image": "./assets/quiz/think_18.png",
     "text": "You walk into a war room. The plan on the map is wrong. Everyone has agreed to it. What do you do?",
     "answers": [
       {
@@ -1670,7 +1670,7 @@ const QUESTION_BANK = [
     "text": "Where does your mind live?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A serene mountain temple at sunrise with mist rolling between peaks, simple stone architecture, no figures, profoundly peaceful atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_25-a.png",
         "caption": "The Mountain Temple",
         "scores": {
           "yoda": 3,
@@ -1685,7 +1685,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A bustling alien cantina with colorful lights and exotic decor, warm chaotic glow, music implied, no figures clearly visible, lively atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_25-b.png",
         "caption": "The Cantina",
         "scores": {
           "han": 3,
@@ -1702,7 +1702,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A starship cockpit at hyperspeed with stars streaking past viewports, holographic displays glowing, control panels active, no figures, focused atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_25-c.png",
         "caption": "The Cockpit",
         "scores": {
           "poe": 3,
@@ -1719,7 +1719,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A vast empty desert at twilight under a massive star-filled sky, single rock formation in distance, profound emptiness, no figures, contemplative atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/think_25-d.png",
         "caption": "The Empty Desert",
         "scores": {
           "mando": 3,
@@ -1740,7 +1740,7 @@ const QUESTION_BANK = [
     "id": "fight_01",
     "category": "THE WAY YOU FIGHT",
     "type": "scenario",
-    "image": "PLACEHOLDER: Two crossed lightsaber blades meeting in the air, sparks frozen mid-flight, dramatic lighting, no faces visible, only the blades and hands, intense atmosphere, pure black background, 1024x1024",
+    "image": "./assets/quiz/fight_01.png",
     "text": "You are pulled into a fight you did not start. What happens in your body first?",
     "answers": [
       {
@@ -2157,7 +2157,7 @@ const QUESTION_BANK = [
     "id": "fight_09",
     "category": "THE WAY YOU FIGHT",
     "type": "scenario",
-    "image": "PLACEHOLDER: A single warrior silhouetted in a doorway, backlit by harsh light, one hand on a weapon hilt, no face visible, intense moment of decision, atmospheric tension, pure black background, 1024x1024",
+    "image": "./assets/quiz/fight_09.png",
     "text": "Three opponents are waiting on the other side of the door. You have one breath before you walk through. What do you do with it?",
     "answers": [
       {
@@ -2569,7 +2569,7 @@ const QUESTION_BANK = [
     "id": "fight_16",
     "category": "THE WAY YOU FIGHT",
     "type": "scenario",
-    "image": "PLACEHOLDER: A vast empty arena floor with strange ancient markings, dust drifting through shafts of red and blue light from above, a single weapon lying in the center, no figures, ominous waiting atmosphere, pure black background, 1024x1024",
+    "image": "./assets/quiz/fight_16.png",
     "text": "You enter an arena. There is one weapon in the center. Your opponent has not arrived yet. What do you do?",
     "answers": [
       {
@@ -3193,7 +3193,7 @@ const QUESTION_BANK = [
     "text": "Pick a weapon.",
     "answers": [
       {
-        "image": "PLACEHOLDER: A single elegant blue lightsaber hilt resting on weathered stone, soft cyan glow emanating from the emitter, ceremonial and sacred, no figures, peaceful but ready atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_04-a.png",
         "caption": "The Lightsaber",
         "scores": {
           "obiwan": 3,
@@ -3209,7 +3209,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A worn DL-44 blaster pistol on a battered wooden bar surface, scratches and dents from decades of use, subtle scope, no figures, rugged outlaw atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_04-b.png",
         "caption": "The Blaster",
         "scores": {
           "han": 3,
@@ -3226,7 +3226,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A massive Wookiee bowcaster with intricate wooden carvings, battle scars, ammunition bandolier draped over it, primal and powerful, no figures, fierce loyal atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_04-c.png",
         "caption": "The Bowcaster",
         "scores": {
           "chewie": 3,
@@ -3242,7 +3242,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: An empty stone pedestal where a weapon would be, illuminated by soft light from above, beautifully bare, profound emptiness, no figures, transcendent atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_04-d.png",
         "caption": "No Weapon",
         "scores": {
           "yoda": 3,
@@ -3267,7 +3267,7 @@ const QUESTION_BANK = [
     "text": "Which battlefield draws you in?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A snowy Hoth-like ice plain with crashed walker silhouettes in the distance, cold blue light, sense of strategic combat, no figures, vast cold atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_08-a.png",
         "caption": "The Frozen Plain",
         "scores": {
           "mace": 3,
@@ -3284,7 +3284,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A volcanic landscape with rivers of orange lava, ash drifting through air, broken obsidian rocks, intense heat implied, no figures, hellish dramatic atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_08-b.png",
         "caption": "The Lava Field",
         "scores": {
           "vader": 3,
@@ -3300,7 +3300,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A misty ancient forest with massive moss-covered trees, soft green light filtering through, mystical and quiet, sense of patient combat, no figures, sacred atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_08-c.png",
         "caption": "The Sacred Grove",
         "scores": {
           "yoda": 3,
@@ -3316,7 +3316,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A bustling alien spaceport at night with neon signs reflecting on wet pavement, narrow alleyways, sense of urban combat, no figures clearly visible, gritty atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_08-d.png",
         "caption": "The Spaceport",
         "scores": {
           "han": 3,
@@ -3340,7 +3340,7 @@ const QUESTION_BANK = [
     "text": "When you fight, you become—",
     "answers": [
       {
-        "image": "PLACEHOLDER: A still calm pool of water at the moment a single drop creates ripples, perfectly silent, dawn light reflecting, profound stillness, no figures, transcendent atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_13-a.png",
         "caption": "Still Water",
         "scores": {
           "yoda": 3,
@@ -3356,7 +3356,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A wildfire consuming a vast plain, flames reaching skyward, embers spiraling into night air, untamable energy, no figures, fierce atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_13-b.png",
         "caption": "A Wildfire",
         "scores": {
           "maul": 3,
@@ -3373,7 +3373,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A shaft of pure white sunlight breaking through dark stormclouds, beam cutting through shadow, hopeful piercing light, no figures, redemptive atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_13-c.png",
         "caption": "A Sunbreak",
         "scores": {
           "luke": 3,
@@ -3389,7 +3389,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A massive ancient stone wall standing alone in vast emptiness, weathered but unbroken, immovable presence, no figures, steadfast atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_13-d.png",
         "caption": "A Stone Wall",
         "scores": {
           "mando": 3,
@@ -3413,7 +3413,7 @@ const QUESTION_BANK = [
     "text": "After the fight is over — which moment is yours?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A single warrior silhouette walking away from camera into a misty horizon, no faces visible, mysterious solitary atmosphere, sense of moving on, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_25-a.png",
         "caption": "Walking Away",
         "scores": {
           "mando": 3,
@@ -3428,7 +3428,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A figure kneeling in meditation in the aftermath of battle, hands resting on knees, peaceful surrender to stillness, no face visible, contemplative atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_25-b.png",
         "caption": "Kneeling Still",
         "scores": {
           "yoda": 3,
@@ -3444,7 +3444,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: Hands extended to help another person up off the ground, both wearing rebel-style clothing, gesture of reconciliation, no faces shown, hopeful atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_25-c.png",
         "caption": "Helping Up",
         "scores": {
           "luke": 3,
@@ -3460,7 +3460,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A figure standing victorious on a high vantage point looking out at a vast landscape below, cape moving in wind, no face visible, triumphant atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/fight_25-d.png",
         "caption": "Standing Tall",
         "scores": {
           "mace": 3,
@@ -3481,7 +3481,7 @@ const QUESTION_BANK = [
     "id": "choose_01",
     "category": "THE WAY YOU CHOOSE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A forked path at a crossroads under a vast starfield, one path lit faintly by blue light, the other faintly by red, no figures visible, contemplative atmosphere, pure black background, 1024x1024",
+    "image": "./assets/quiz/choose_01.png",
     "text": "The rules say no. Your heart says yes. What do you actually do?",
     "answers": [
       {
@@ -4316,7 +4316,7 @@ const QUESTION_BANK = [
     "id": "choose_16",
     "category": "THE WAY YOU CHOOSE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A scale balanced precariously with a glowing kyber crystal on one side and a small folded letter on the other, soft dramatic lighting, no figures, intense moment of weighing, pure black background, 1024x1024",
+    "image": "./assets/quiz/choose_16.png",
     "text": "You are offered power and asked to give up one thing in return. What is hardest to give up?",
     "answers": [
       {
@@ -4936,7 +4936,7 @@ const QUESTION_BANK = [
     "text": "A test arrives. Which version do you face?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A massive ancient mirror standing alone in an empty stone chamber, reflecting only darkness and a single point of light at the center, mysterious and profound, no figures, deeply contemplative atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_04-a.png",
         "caption": "The Mirror",
         "scores": {
           "yoda": 3,
@@ -4952,7 +4952,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A scale balanced perfectly on a stone pedestal, with a glowing kyber crystal on one side and a smooth river stone on the other, soft side lighting, no figures, sacred decision atmosphere, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_04-b.png",
         "caption": "The Scale",
         "scores": {
           "obiwan": 3,
@@ -4968,7 +4968,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A vast open door at the end of a long corridor, harsh white light pouring through from beyond, single threshold to cross, no figures, atmosphere of irreversible decision, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_04-c.png",
         "caption": "The Threshold",
         "scores": {
           "luke": 3,
@@ -4985,7 +4985,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A maze of paths seen from above, multiple directions branching, no clear correct route, dim purple-blue lighting, no figures, atmosphere of complex choice, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_04-d.png",
         "caption": "The Maze",
         "scores": {
           "palpatine": 3,
@@ -5009,7 +5009,7 @@ const QUESTION_BANK = [
     "text": "Two hands are extended to you. Which one do you take?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A weathered hand wrapped in worn Jedi robe sleeve, calluses visible, palm open and patient, soft warm light, no face visible, gesture of wise teacher, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_08-a.png",
         "caption": "The Master",
         "scores": {
           "yoda": 2,
@@ -5025,7 +5025,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A black gloved hand emerging from imperial cape, palm open but commanding, red light glowing faintly from within the glove, no face visible, gesture of dark power, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_08-b.png",
         "caption": "The Dark Hand",
         "scores": {
           "vader": 3,
@@ -5042,7 +5042,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A young calloused hand in rough rebel clothing, palm open with quiet hope, scars from work visible, soft golden light, no face visible, gesture of equal partnership, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_08-c.png",
         "caption": "The Friend",
         "scores": {
           "luke": 3,
@@ -5058,7 +5058,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A small green clawed hand reaching upward, gentle and curious, soft warm light surrounding it, no face visible, gesture of pure innocent trust, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_08-d.png",
         "caption": "The Small Hand",
         "scores": {
           "grogu": 3,
@@ -5082,7 +5082,7 @@ const QUESTION_BANK = [
     "text": "Which light do you walk toward?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A single shaft of warm golden sunlight breaking through misty clouds onto a distant grassy hill, peaceful and inviting, no figures, atmosphere of hope and home, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_13-a.png",
         "caption": "The Golden Light",
         "scores": {
           "luke": 3,
@@ -5098,7 +5098,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A glowing pool of cool blue energy at the entrance of an ancient temple, mystical and beckoning, no figures, atmosphere of sacred wisdom, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_13-b.png",
         "caption": "The Blue Light",
         "scores": {
           "obiwan": 3,
@@ -5113,7 +5113,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A pulsing crimson glow emanating from a half-open massive doorway, dangerous and seductive, no figures, atmosphere of forbidden power, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_13-c.png",
         "caption": "The Red Light",
         "scores": {
           "vader": 3,
@@ -5130,7 +5130,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A field of countless tiny pale stars scattered across darkness like fireflies, mysterious and infinite, no clear path forward, no figures, atmosphere of unknown possibility, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_13-d.png",
         "caption": "The Star Field",
         "scores": {
           "yoda": 3,
@@ -5154,7 +5154,7 @@ const QUESTION_BANK = [
     "text": "At the moment of choice, what stands beside you?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A faded translucent figure of a wise elder Jedi standing as a Force ghost beside an empty path, glowing softly blue, no face clearly visible, atmosphere of ancestral guidance, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_25-a.png",
         "caption": "A Ghost",
         "scores": {
           "luke": 3,
@@ -5170,7 +5170,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A loyal animal companion silhouette standing in faithful watch, head raised attentively, profound bond implied, no figures or faces, atmosphere of unbreakable loyalty, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_25-b.png",
         "caption": "A Friend",
         "scores": {
           "mando": 3,
@@ -5186,7 +5186,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: An empty space where someone should be standing, soft outline of absence visible, profound aloneness, no figures, atmosphere of solitary decision, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_25-c.png",
         "caption": "No One",
         "scores": {
           "boba": 3,
@@ -5204,7 +5204,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A shadowy figure of yourself reflected back, dark mirror version standing in opposition, soft red and blue light meeting in the middle, no clear face, atmosphere of internal conflict, pure black background, 1024x1024",
+        "image": "./assets/quiz/choose_25-d.png",
         "caption": "Myself",
         "scores": {
           "kylo": 3,
@@ -5225,7 +5225,7 @@ const QUESTION_BANK = [
     "id": "begin_01",
     "category": "THE WAY YOU BEGIN",
     "type": "scenario",
-    "image": "PLACEHOLDER: Eyes opening in darkness for the very first time, blurred and just coming into focus, soft light dawning at the edges of vision, no face fully visible, atmosphere of awakening, pure black background, 1024x1024",
+    "image": "./assets/quiz/begin_01.png",
     "text": "When you wake up in the morning, what is the first thing that moves through you?",
     "answers": [
       {
@@ -5626,7 +5626,7 @@ const QUESTION_BANK = [
     "id": "begin_09",
     "category": "THE WAY YOU BEGIN",
     "type": "scenario",
-    "image": "PLACEHOLDER: A foot taking the very first step onto unfamiliar ground, dust rising slightly, harsh new light ahead, no face visible, atmosphere of irreversible beginning, pure black background, 1024x1024",
+    "image": "./assets/quiz/begin_09.png",
     "text": "You are at the edge of something completely new. The first step is yours. What carries you across?",
     "answers": [
       {
@@ -6027,7 +6027,7 @@ const QUESTION_BANK = [
     "id": "begin_16",
     "category": "THE WAY YOU BEGIN",
     "type": "scenario",
-    "image": "PLACEHOLDER: A single small spark of light igniting in pure darkness, the very first photon of a fire being born, perfectly still moment of beginning, no figures, atmosphere of origin, pure black background, 1024x1024",
+    "image": "./assets/quiz/begin_16.png",
     "text": "You realize a long journey is starting. The first night you sleep on it — what is in your dreams?",
     "answers": [
       {
@@ -6632,7 +6632,7 @@ const QUESTION_BANK = [
     "text": "Pick your ship.",
     "answers": [
       {
-        "image": "PLACEHOLDER: A classic Millennium Falcon hovering in a docking bay with battle damage and rust, lights glowing, exhaust ports steaming, characterful and lived-in, no figures, atmosphere of legendary freedom, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_04-a.png",
         "caption": "The Falcon",
         "scores": {
           "han": 3,
@@ -6648,7 +6648,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A Rebel X-Wing fighter with wings spread in attack position, S-foils open, red and orange paint with Rebellion symbol, ready for launch, no figures, atmosphere of heroic precision, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_04-b.png",
         "caption": "The X-Wing",
         "scores": {
           "luke": 3,
@@ -6664,7 +6664,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A TIE Advanced fighter with sleek dark wings, red glowing engine emitters, gleaming Imperial black armor, intimidating and precise, no figures, atmosphere of dark power, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_04-c.png",
         "caption": "The TIE",
         "scores": {
           "vader": 3,
@@ -6681,7 +6681,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A weathered Mandalorian Razor Crest gunship parked on a desert landing pad at twilight, hull dented from countless missions, atmosphere of quiet duty and lonely paths, no figures, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_04-d.png",
         "caption": "The Razor Crest",
         "scores": {
           "mando": 3,
@@ -6705,7 +6705,7 @@ const QUESTION_BANK = [
     "text": "Pick your droid companion.",
     "answers": [
       {
-        "image": "PLACEHOLDER: A scuffed white-and-blue R2-D2 astromech droid standing alert with dome rotated, holographic projector lit, faithful and brave, no figures, atmosphere of loyal companionship, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_08-a.png",
         "caption": "R2-D2",
         "scores": {
           "luke": 3,
@@ -6720,7 +6720,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A polished orange-and-white BB-8 droid with head tilted curiously, spherical body in motion, expressive and eager, no figures, atmosphere of bright optimism, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_08-b.png",
         "caption": "BB-8",
         "scores": {
           "poe": 3,
@@ -6735,7 +6735,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A worn battle-scarred IG-11 assassin droid standing watchful, blaster rifle held ready, weathered chrome plating, no figures, atmosphere of silent vigilance, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_08-c.png",
         "caption": "IG-11",
         "scores": {
           "mando": 3,
@@ -6751,7 +6751,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A gleaming golden C-3PO protocol droid standing slightly nervous, arms gesturing, polished metal reflecting soft light, no figures, atmosphere of anxious helpfulness, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_08-d.png",
         "caption": "C-3PO",
         "scores": {
           "obiwan": 3,
@@ -6774,7 +6774,7 @@ const QUESTION_BANK = [
     "text": "Which planet calls to you?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A vast Tatooine-like desert landscape with twin suns setting, golden sand dunes rolling to the horizon, moisture vaporators silhouetted, no figures, atmosphere of dreaming and yearning, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_13-a.png",
         "caption": "Tatooine",
         "scores": {
           "luke": 3,
@@ -6790,7 +6790,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A misty Dagobah-like swamp forest with massive ancient trees, glowing pools of water, twisted roots, mystical and quiet, no figures, atmosphere of deep wisdom and hidden truth, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_13-b.png",
         "caption": "Dagobah",
         "scores": {
           "yoda": 3,
@@ -6806,7 +6806,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A vast Coruscant cityscape at night with massive towering skyscrapers, sky lanes of glowing traffic, neon lights, dazzling and overwhelming, no figures, atmosphere of complex civilization and power, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_13-c.png",
         "caption": "Coruscant",
         "scores": {
           "palpatine": 3,
@@ -6823,7 +6823,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A peaceful green Naboo-like landscape with rolling hills, waterfalls cascading from cliffs, ancient ruins in the distance, soft golden afternoon light, no figures, atmosphere of beauty and home, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_13-d.png",
         "caption": "Naboo",
         "scores": {
           "quigon": 3,
@@ -6847,7 +6847,7 @@ const QUESTION_BANK = [
     "text": "You see this. What is your very first instinct?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A small wounded creature huddled in soft moss, looking up with large frightened eyes, vulnerable and alone, atmosphere of needing protection, no human figures, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_25-a.png",
         "caption": "Protect",
         "scores": {
           "mando": 3,
@@ -6864,7 +6864,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A glowing mysterious object floating in midair, ancient symbols pulsing on its surface, beautiful and unknown, atmosphere of curiosity, no figures, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_25-b.png",
         "caption": "Investigate",
         "scores": {
           "obiwan": 3,
@@ -6880,7 +6880,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A locked ornate chest covered in chains and seals, sitting alone in a dusty chamber, mysterious and forbidden, atmosphere of temptation, no figures, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_25-c.png",
         "caption": "Open",
         "scores": {
           "han": 3,
@@ -6896,7 +6896,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: An ominous shadow stretching across a doorway, silhouette of unknown danger, hint of red glow from beyond, atmosphere of warning, no figures clearly visible, pure black background, 1024x1024",
+        "image": "./assets/quiz/begin_25-d.png",
         "caption": "Step Back",
         "scores": {
           "boba": 3,
@@ -6918,7 +6918,7 @@ const QUESTION_BANK = [
     "id": "love_01",
     "category": "THE WAY YOU LOVE",
     "type": "scenario",
-    "image": "PLACEHOLDER: Two figures walking together at sunset, one large in armor, one tiny beside them, hand-in-hand silhouettes, soft amber backlight, no faces visible, atmosphere of chosen family, pure black background, 1024x1024",
+    "image": "./assets/quiz/love_01.png",
     "text": "Someone you love is in trouble. So are you. What do you actually do?",
     "answers": [
       {
@@ -7329,7 +7329,7 @@ const QUESTION_BANK = [
     "id": "love_09",
     "category": "THE WAY YOU LOVE",
     "type": "scenario",
-    "image": "PLACEHOLDER: Two hands reaching across a vast dark chasm, almost touching but not quite, dramatic lighting, no faces, atmosphere of love at its limits, pure black background, 1024x1024",
+    "image": "./assets/quiz/love_09.png",
     "text": "You can save the galaxy or save one person. What actually happens in you?",
     "answers": [
       {
@@ -7740,7 +7740,7 @@ const QUESTION_BANK = [
     "id": "love_16",
     "category": "THE WAY YOU LOVE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A small figure asleep, being watched over by a larger figure standing guard in shadows, soft protective light, no faces clearly visible, atmosphere of devotion, pure black background, 1024x1024",
+    "image": "./assets/quiz/love_16.png",
     "text": "You are watching someone you love sleep, completely vulnerable. What goes through you?",
     "answers": [
       {
@@ -8352,7 +8352,7 @@ const QUESTION_BANK = [
     "text": "Who would you bring on a long journey?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A small green-skinned child silhouette with large ears reaching up with both tiny hands, warm soft glow around them, gentle innocent figure, no clear face visible, atmosphere of pure trust, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_04-a.png",
         "caption": "The Innocent",
         "scores": {
           "grogu": 3,
@@ -8367,7 +8367,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A tall furred Wookiee silhouette standing as a loyal protector, bandolier across chest, profound calm strength, no clear face visible, atmosphere of unwavering loyalty, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_04-b.png",
         "caption": "The Loyal One",
         "scores": {
           "chewie": 3,
@@ -8382,7 +8382,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A wise elder Jedi figure in flowing robes standing in meditation pose, calm presence, soft green-gold light around them, no clear face visible, atmosphere of ancient wisdom, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_04-c.png",
         "caption": "The Teacher",
         "scores": {
           "obiwan": 3,
@@ -8398,7 +8398,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A scrappy human figure in a worn vest and weathered boots standing with relaxed confidence, sense of charm and humor, no clear face visible, atmosphere of cocky devotion, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_04-d.png",
         "caption": "The Friend",
         "scores": {
           "han": 3,
@@ -8420,7 +8420,7 @@ const QUESTION_BANK = [
     "text": "Which home calls to you?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A small humble dwelling on a moisture farm at sunset, golden warm light, simple but loving, distant sounds of family implied, no figures, atmosphere of chosen simplicity, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_08-a.png",
         "caption": "The Farm",
         "scores": {
           "luke": 3,
@@ -8435,7 +8435,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A small wandering starship interior glimpsed through a window, warm lights inside, drifting through stars, the ship itself is the home, no figures, atmosphere of motion and freedom together, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_08-b.png",
         "caption": "The Ship",
         "scores": {
           "mando": 3,
@@ -8450,7 +8450,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: An ancient peaceful Jedi temple courtyard with reflecting pools and stone gardens, soft golden light through pillars, no figures, atmosphere of spiritual home, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_08-c.png",
         "caption": "The Temple",
         "scores": {
           "yoda": 3,
@@ -8466,7 +8466,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A vast luxurious palace chamber with imperial banners and polished black marble floors, dramatic columns reaching to ceiling, no figures, atmosphere of power as home, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_08-d.png",
         "caption": "The Palace",
         "scores": {
           "palpatine": 3,
@@ -8490,7 +8490,7 @@ const QUESTION_BANK = [
     "text": "What gift do you give to someone you love?",
     "answers": [
       {
-        "image": "PLACEHOLDER: A simple handwritten letter sealed with wax, resting on a wooden surface, soft warm light, personal and intimate, no figures, atmosphere of words from the heart, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_13-a.png",
         "caption": "My Words",
         "scores": {
           "obiwan": 3,
@@ -8506,7 +8506,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: A protective armored chest plate gleaming on a stand, well-worn from use, ready to be given to a successor, no figures, atmosphere of protection passed forward, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_13-b.png",
         "caption": "My Protection",
         "scores": {
           "mando": 3,
@@ -8522,7 +8522,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: An ancient sealed door slowly opening into golden light, threshold being crossed by an unseen presence, atmosphere of freedom granted, no figures, atmosphere of letting go, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_13-c.png",
         "caption": "My Trust",
         "scores": {
           "yoda": 3,
@@ -8538,7 +8538,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "PLACEHOLDER: Two hands working together to build something small and intricate, focused craftsmanship, sharing knowledge through doing, no faces, atmosphere of patient teaching, pure black background, 1024x1024",
+        "image": "./assets/quiz/love_13-d.png",
         "caption": "My Time",
         "scores": {
           "obiwan": 3,
@@ -8562,7 +8562,7 @@ const QUESTION_BANK = [
     "text": "Pick a moment that feels like love.",
     "answers": [
       {
-        "image": "A Hug scene",
+        "image": "./assets/quiz/love_25-a.png",
         "caption": "A Hug",
         "scores": {
           "chewie": 3,
@@ -8577,7 +8577,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "A Shared Meal scene",
+        "image": "./assets/quiz/love_25-b.png",
         "caption": "A Shared Meal",
         "scores": {
           "han": 3,
@@ -8593,7 +8593,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "A Piggyback scene",
+        "image": "./assets/quiz/love_25-c.png",
         "caption": "A Piggyback Ride",
         "scores": {
           "mando": 3,
@@ -8608,7 +8608,7 @@ const QUESTION_BANK = [
         }
       },
       {
-        "image": "A Goodnight scene",
+        "image": "./assets/quiz/love_25-d.png",
         "caption": "A Goodnight",
         "scores": {
           "obiwan": 3,
@@ -8629,7 +8629,7 @@ const QUESTION_BANK = [
     "id": "connect_01",
     "category": "THE WAY YOU CONNECT",
     "type": "scenario",
-    "image": "PLACEHOLDER: A circle of figures around a small campfire in the dark, silhouettes only, warm glow of flames in the center, no clear faces, atmosphere of chosen family gathered, pure black background, 1024x1024",
+    "image": "./assets/quiz/connect_01.png",
     "text": "You walk into a room full of strangers. What is the first thing you do?",
     "answers": [
       {
@@ -9025,7 +9025,7 @@ const QUESTION_BANK = [
     "id": "connect_09",
     "category": "THE WAY YOU CONNECT",
     "type": "scenario",
-    "image": "PLACEHOLDER: Two hands belonging to very different people clasped together at the wrist in a warrior handshake, one human one not, weathered and strong, no faces visible, atmosphere of forged bond, pure black background, 1024x1024",
+    "image": "./assets/quiz/connect_09.png",
     "text": "You meet someone who could become your closest friend. The moment you both realize it — what is happening?",
     "answers": [
       {
@@ -9422,7 +9422,7 @@ const QUESTION_BANK = [
     "id": "connect_16",
     "category": "THE WAY YOU CONNECT",
     "type": "scenario",
-    "image": "PLACEHOLDER: A long table in a cantina with several mugs and plates, warm lantern light overhead, suggesting a group that just sat together, no figures visible, atmosphere of community just departed, pure black background, 1024x1024",
+    "image": "./assets/quiz/connect_16.png",
     "text": "You walk into a group meal. There is one empty seat at each end of a long table. Which one do you choose?",
     "answers": [
       {
@@ -10012,6 +10012,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic emblem illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. Square 1:1 overall, 1024x1024.\n\nTOP LEFT — \"The Rebellion\": The classic Rebel Alliance Starbird symbol, orange and gold phoenix-like emblem with wings raised, weathered metal texture, atmosphere of hope and resistance.\n\nTOP RIGHT — \"The Empire\": A black Imperial cog emblem with sharp geometric edges, gleaming dark metal, atmosphere of disciplined power.\n\nBOTTOM LEFT — \"The Mandalorian\": A skull-shaped helmet emblem with a single T-shaped visor, weathered metal with battle scratches, atmosphere of bounty hunter clan.\n\nBOTTOM RIGHT — \"The Jedi\": A circular Jedi Order emblem with stylized wings extending outward, soft blue-gold glow, atmosphere of ancient guardianship.",
     "answers": [
       {
+        "image": "./assets/quiz/connect_04-a.png",
+        
         "caption": "The Rebellion",
         "scores": {
           "luke": 3,
@@ -10026,6 +10028,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_04-b.png",
+        
         "caption": "The Empire",
         "scores": {
           "vader": 3,
@@ -10041,6 +10045,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_04-c.png",
+        
         "caption": "The Mandalorian",
         "scores": {
           "mando": 3,
@@ -10055,6 +10061,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_04-d.png",
+        
         "caption": "The Jedi",
         "scores": {
           "yoda": 3,
@@ -10080,6 +10088,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic group silhouette illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO faces clearly visible — silhouettes only. Square 1:1 overall, 1024x1024.\n\nTOP LEFT — \"Just Me\": A single Star Wars-style figure standing alone on a cliff edge with cape blowing in the wind, vast empty sky behind them, atmosphere of self-reliance and solitude.\n\nTOP RIGHT — \"Two of Us\": Two Star Wars figures standing back to back, one large furred warrior and one smaller human in a vest, ready for anything together, atmosphere of unbreakable partnership.\n\nBOTTOM LEFT — \"A Small Crew\": Four Star Wars figures standing together in a tight group, varied silhouettes — a Jedi, a pilot, a smuggler, and a small companion — strong group bond, atmosphere of chosen family.\n\nBOTTOM RIGHT — \"An Army\": A vast array of Star Wars figures stretching into the distance, dozens of silhouetted warriors in formation, atmosphere of mass loyalty and command.",
     "answers": [
       {
+        "image": "./assets/quiz/connect_08-a.png",
+        
         "caption": "Just Me",
         "scores": {
           "boba": 3,
@@ -10096,6 +10106,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_08-b.png",
+        
         "caption": "Two of Us",
         "scores": {
           "han": 3,
@@ -10110,6 +10122,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_08-c.png",
+        
         "caption": "A Small Crew",
         "scores": {
           "luke": 3,
@@ -10124,6 +10138,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_08-d.png",
+        
         "caption": "An Army",
         "scores": {
           "mace": 3,
@@ -10149,6 +10165,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic atmospheric illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures visible. Square 1:1 overall, 1024x1024.\n\nTOP LEFT — \"Around a Fire\": A warm campfire in the middle of a wilderness clearing, soft golden light radiating outward, log seats arranged in a circle, atmosphere of intimate gathering.\n\nTOP RIGHT — \"In a Cantina\": A bustling alien cantina interior with warm hanging lanterns, a long bar, exotic instruments hanging on walls, the suggestion of music and laughter, no figures visible.\n\nBOTTOM LEFT — \"On a Ship\": A small starship lounge with circular table and bench seating, warm lights, viewport showing stars streaking past at hyperspace, cozy and intimate.\n\nBOTTOM RIGHT — \"In a Temple\": A quiet ancient meditation chamber with stone benches around a central altar, soft beams of light through tall windows, atmosphere of sacred companionship.",
     "answers": [
       {
+        "image": "./assets/quiz/connect_13-a.png",
+        
         "caption": "Around a Fire",
         "scores": {
           "mando": 3,
@@ -10164,6 +10182,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_13-b.png",
+        
         "caption": "In a Cantina",
         "scores": {
           "han": 3,
@@ -10178,6 +10198,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_13-c.png",
+        
         "caption": "On a Ship",
         "scores": {
           "mando": 3,
@@ -10192,6 +10214,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_13-d.png",
+        
         "caption": "In a Temple",
         "scores": {
           "yoda": 3,
@@ -10216,6 +10240,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic emotional illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. Figures may appear as silhouettes but NO clear faces. Square 1:1 overall, 1024x1024.\n\nTOP LEFT — \"Backs Together\": Two figures standing back-to-back with weapons drawn, facing outward in opposite directions, defending each other, atmosphere of unbreakable trust under pressure.\n\nTOP RIGHT — \"All Laughing\": Three or four figures clustered together, all visibly laughing, hands on each other's shoulders, warm joyful golden light, atmosphere of shared joy.\n\nBOTTOM LEFT — \"Watching Together\": A group of figures all looking up at the same vast starscape, side by side, no one speaking, atmosphere of shared awe and quiet companionship.\n\nBOTTOM RIGHT — \"Leaving the Bay\": A small group walking together onto a starship ramp, one leading, others following, ready for what comes next, atmosphere of shared mission.",
     "answers": [
       {
+        "image": "./assets/quiz/connect_25-a.png",
+        
         "caption": "Backs Together",
         "scores": {
           "mando": 3,
@@ -10230,6 +10256,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_25-b.png",
+        
         "caption": "All Laughing",
         "scores": {
           "han": 3,
@@ -10244,6 +10272,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_25-c.png",
+        
         "caption": "Watching Together",
         "scores": {
           "luke": 3,
@@ -10259,6 +10289,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/connect_25-d.png",
+        
         "caption": "Leaving the Bay",
         "scores": {
           "poe": 3,
@@ -10279,7 +10311,7 @@ const QUESTION_BANK = [
     "id": "trust_01",
     "category": "THE WAY YOU TRUST",
     "type": "scenario",
-    "image": "PLACEHOLDER: An outstretched open hand offering a small glowing crystal, soft warm light, palm vulnerable and exposed, no face visible, atmosphere of trust being offered, pure black background, 1024x1024",
+    "image": "./assets/quiz/trust_01.png",
     "text": "Someone offers you something precious. You can take it or leave it. What do you do first?",
     "answers": [
       {
@@ -10679,7 +10711,7 @@ const QUESTION_BANK = [
     "id": "trust_09",
     "category": "THE WAY YOU TRUST",
     "type": "scenario",
-    "image": "PLACEHOLDER: Two figures sitting across from each other at a small table in dim light, one offering a sealed envelope, the other reaching to take it but not yet, suspended moment, no faces visible, atmosphere of decision, pure black background, 1024x1024",
+    "image": "./assets/quiz/trust_09.png",
     "text": "A stranger offers to help you with something important. They have nothing to gain. What do you do?",
     "answers": [
       {
@@ -11077,7 +11109,7 @@ const QUESTION_BANK = [
     "id": "trust_16",
     "category": "THE WAY YOU TRUST",
     "type": "scenario",
-    "image": "PLACEHOLDER: A small key being held in a gloved hand, soft warm light, vulnerable moment of handover, no faces visible, atmosphere of trust being transferred, pure black background, 1024x1024",
+    "image": "./assets/quiz/trust_16.png",
     "text": "You have to leave something precious in someone else's hands. Who do you actually leave it with?",
     "answers": [
       {
@@ -11680,6 +11712,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic character silhouette illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO faces clearly visible — silhouettes or partial shadow only. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A wise elder hooded figure in flowing brown Jedi-style robes standing in calm meditation pose, soft green-gold glow around them, ancient and serene presence.\n\nQUADRANT 2 (top right): A masked warrior figure in full helmeted armor with a single T-shaped visor, ammunition belt across chest, weapon holstered, atmosphere of disciplined silent loyalty.\n\nQUADRANT 3 (bottom left): A scrappy roguish figure in a worn vest leaning casually against a wall, hands in pockets, sense of charm and humor, weapon at hip, atmosphere of cocky friendship.\n\nQUADRANT 4 (bottom right): A tall furred large-bodied alien creature silhouette with bandolier across chest, profound calm strength, atmosphere of unwavering loyalty.",
     "answers": [
       {
+        "image": "./assets/quiz/trust_04-a.png",
+        
         "caption": "The Wise Elder",
         "scores": {
           "yoda": 3,
@@ -11695,6 +11729,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_04-b.png",
+        
         "caption": "The Silent Warrior",
         "scores": {
           "mando": 3,
@@ -11709,6 +11745,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_04-c.png",
+        
         "caption": "The Friend",
         "scores": {
           "han": 3,
@@ -11722,6 +11760,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_04-d.png",
+        
         "caption": "The Loyal One",
         "scores": {
           "chewie": 3,
@@ -11745,6 +11785,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic atmospheric illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A small ornate wooden box sitting in plain sight on a busy workshop table cluttered with tools and parts, hidden in plain sight, atmosphere of disguise through ordinariness.\n\nQUADRANT 2 (top right): A deep underground vault with a heavy round metal door, dim cyan lighting, sense of impenetrable security, atmosphere of guarded fortress.\n\nQUADRANT 3 (bottom left): An ancient stone altar in a remote mountain temple at sunrise, weathered carvings, sacred light from above, atmosphere of protected sanctuary.\n\nQUADRANT 4 (bottom right): A small leather pouch worn close to the chest, partially hidden inside a vest pocket, suggesting always-on-person security, intimate atmosphere of personal carry.",
     "answers": [
       {
+        "image": "./assets/quiz/trust_08-a.png",
+        
         "caption": "In Plain Sight",
         "scores": {
           "palpatine": 3,
@@ -11759,6 +11801,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_08-b.png",
+        
         "caption": "The Vault",
         "scores": {
           "boba": 3,
@@ -11774,6 +11818,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_08-c.png",
+        
         "caption": "The Temple",
         "scores": {
           "yoda": 3,
@@ -11789,6 +11835,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_08-d.png",
+        
         "caption": "On Me",
         "scores": {
           "mando": 3,
@@ -11812,6 +11860,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic symbolic illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures with faces visible — hands, objects, and symbolic imagery only. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A handshake between two different hands — one weathered and gloved, one bare and human — clasping firmly at the wrist in a warrior greeting, warm light, atmosphere of bond forged through action.\n\nQUADRANT 2 (top right): A back-to-back combat stance — two silhouetted figures pressed against each other, weapons drawn outward, ready to defend each other, atmosphere of trust under fire.\n\nQUADRANT 3 (bottom left): An ancient key being handed from one hand to another in soft warm light, both hands open and vulnerable, atmosphere of access being granted.\n\nQUADRANT 4 (bottom right): A small child silhouette being held safely in adult arms, profound size difference, warm golden glow around them, atmosphere of unconditional safekeeping.",
     "answers": [
       {
+        "image": "./assets/quiz/trust_13-a.png",
+        
         "caption": "A Warrior Handshake",
         "scores": {
           "mando": 3,
@@ -11827,6 +11877,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_13-b.png",
+        
         "caption": "Backs Together",
         "scores": {
           "chewie": 3,
@@ -11841,6 +11893,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_13-c.png",
+        
         "caption": "A Key Handed Over",
         "scores": {
           "obiwan": 3,
@@ -11855,6 +11909,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_13-d.png",
+        
         "caption": "A Child Held Safe",
         "scores": {
           "mando": 3,
@@ -11878,6 +11934,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic emotional illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A figure sleeping peacefully while another figure sits nearby keeping watch, soft warm light from a single lamp, atmosphere of trust through vigilance.\n\nQUADRANT 2 (top right): Two figures standing on the edge of a high cliff together, one figure's hand on the other's shoulder, vast sky ahead of them, atmosphere of leaping into the unknown together.\n\nQUADRANT 3 (bottom left): One figure passing a small bundled item to another figure across a doorway, hands meeting in the middle, atmosphere of an important thing being entrusted.\n\nQUADRANT 4 (bottom right): A small figure climbing onto a larger figure's back, arms wrapping around the larger one's neck, the larger figure walking forward into a bright horizon, atmosphere of being carried in trust.",
     "answers": [
       {
+        "image": "./assets/quiz/trust_25-a.png",
+        
         "caption": "Sleeping While You Watch",
         "scores": {
           "mando": 3,
@@ -11892,6 +11950,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_25-b.png",
+        
         "caption": "Jumping Together",
         "scores": {
           "luke": 3,
@@ -11905,6 +11965,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_25-c.png",
+        
         "caption": "Entrusting Something",
         "scores": {
           "yoda": 3,
@@ -11919,6 +11981,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/trust_25-d.png",
+        
         "caption": "Being Carried",
         "scores": {
           "grogu": 3,
@@ -11938,7 +12002,7 @@ const QUESTION_BANK = [
     "id": "live_01",
     "category": "THE WAY YOU LIVE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A simple unmade bed in dawn light, blanket half-pulled back, soft morning light through a window, single mug on a nearby table, no figure visible, atmosphere of a quiet morning beginning, pure black background, 1024x1024",
+    "image": "./assets/quiz/live_01.png",
     "text": "You have a whole day ahead with no one telling you what to do. What is your first move?",
     "answers": [
       {
@@ -12332,7 +12396,7 @@ const QUESTION_BANK = [
     "id": "live_09",
     "category": "THE WAY YOU LIVE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A workbench with tools laid out neatly, an unfinished project in the middle, single warm overhead light, no figure visible, atmosphere of solitary craft, pure black background, 1024x1024",
+    "image": "./assets/quiz/live_09.png",
     "text": "You are working on something for hours. No one is asking you to. What is it?",
     "answers": [
       {
@@ -12717,7 +12781,7 @@ const QUESTION_BANK = [
     "id": "live_16",
     "category": "THE WAY YOU LIVE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A view through a circular ship window at deep space, swirling galaxies and distant nebulae, profound vastness, no figure visible, atmosphere of contemplation, pure black background, 1024x1024",
+    "image": "./assets/quiz/live_16.png",
     "text": "You are looking out at the vastness of space. What is going through you?",
     "answers": [
       {
@@ -13303,6 +13367,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic atmospheric illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A simple workbench with tools laid out neatly in the same arrangement, a half-finished project waiting, single warm overhead lamp casting golden light, atmosphere of patient discipline.\n\nQUADRANT 2 (top right): An open landing ramp of a starship in dawn light, mist rolling around the bottom of the ramp, a vast unknown landscape beyond, atmosphere of adventure beginning.\n\nQUADRANT 3 (bottom left): A stone meditation platform on a mountaintop at sunrise, simple cushion in the center, mist below, atmosphere of sacred stillness.\n\nQUADRANT 4 (bottom right): A bustling alien marketplace at dawn, lanterns being lit, stalls opening, sense of chaotic life beginning, atmosphere of energy and possibility.",
     "answers": [
       {
+        "image": "./assets/quiz/live_04-a.png",
+        
         "caption": "The Workbench",
         "scores": {
           "mando": 3,
@@ -13316,6 +13382,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_04-b.png",
+        
         "caption": "The Open Ramp",
         "scores": {
           "han": 3,
@@ -13329,6 +13397,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_04-c.png",
+        
         "caption": "The Mountain Platform",
         "scores": {
           "yoda": 3,
@@ -13343,6 +13413,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_04-d.png",
+        
         "caption": "The Marketplace",
         "scores": {
           "poe": 3,
@@ -13367,6 +13439,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic still-life illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A worn weapon hilt resting on weathered cloth, scratches and personal markings carved into the metal, soft side lighting, atmosphere of an object that has been used a thousand times.\n\nQUADRANT 2 (top right): A small worn helmet on a wooden stand, soft warm lamp light, the helmet showing battle scratches and personal dents, atmosphere of armor that has become identity.\n\nQUADRANT 3 (bottom left): A faded handwritten letter sitting on a desk, ink slightly smudged from being read many times, soft window light falling across it, atmosphere of words returned to again and again.\n\nQUADRANT 4 (bottom right): A glowing crystal on a small altar surrounded by simple stones, soft green light emanating from within, atmosphere of sacred discovery.",
     "answers": [
       {
+        "image": "./assets/quiz/live_08-a.png",
+        
         "caption": "My Weapon",
         "scores": {
           "mando": 3,
@@ -13382,6 +13456,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_08-b.png",
+        
         "caption": "My Helmet",
         "scores": {
           "mando": 3,
@@ -13395,6 +13471,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_08-c.png",
+        
         "caption": "A Letter",
         "scores": {
           "obiwan": 3,
@@ -13409,6 +13487,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_08-d.png",
+        
         "caption": "A Crystal",
         "scores": {
           "yoda": 3,
@@ -13432,6 +13512,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic interior illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A small starship cockpit at hyperspeed with stars streaking past viewports, holographic displays glowing softly, single pilot chair, atmosphere of focused solitude in motion.\n\nQUADRANT 2 (top right): A simple workshop with tools hanging on the wall, work surface with a half-finished project, warm side lighting, atmosphere of patient craftsmanship.\n\nQUADRANT 3 (bottom left): A small private library with floor-to-ceiling shelves of ancient books, a single reading chair under a warm lamp, atmosphere of contemplation and study.\n\nQUADRANT 4 (bottom right): A wide open balcony overlooking a vast vista at golden hour, simple stone bench facing the view, atmosphere of perspective and openness.",
     "answers": [
       {
+        "image": "./assets/quiz/live_13-a.png",
+        
         "caption": "The Cockpit",
         "scores": {
           "han": 3,
@@ -13445,6 +13527,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_13-b.png",
+        
         "caption": "The Workshop",
         "scores": {
           "mando": 3,
@@ -13458,6 +13542,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_13-c.png",
+        
         "caption": "The Library",
         "scores": {
           "obiwan": 3,
@@ -13472,6 +13558,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_13-d.png",
+        
         "caption": "The Balcony",
         "scores": {
           "yoda": 3,
@@ -13495,6 +13583,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic atmospheric illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A figure sitting alone on a cliff edge watching a sunset over a vast alien landscape, no face visible, atmosphere of solitary peace.\n\nQUADRANT 2 (top right): A small group of figures gathered around a campfire under a star-filled sky, warm orange glow on all of them, no faces clearly visible, atmosphere of shared joy.\n\nQUADRANT 3 (bottom left): A figure leaning against the side of a parked starship after a long journey, hands on hips, looking out at a new horizon, atmosphere of adventure completed and beginning again.\n\nQUADRANT 4 (bottom right): A figure standing in a workshop holding up a completed object they have built, soft warm light, atmosphere of patient work finished.",
     "answers": [
       {
+        "image": "./assets/quiz/live_25-a.png",
+        
         "caption": "A Quiet Sunset",
         "scores": {
           "yoda": 3,
@@ -13510,6 +13600,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_25-b.png",
+        
         "caption": "Around a Fire",
         "scores": {
           "han": 3,
@@ -13524,6 +13616,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_25-c.png",
+        
         "caption": "A New Horizon",
         "scores": {
           "poe": 3,
@@ -13537,6 +13631,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/live_25-d.png",
+        
         "caption": "A Finished Build",
         "scores": {
           "mando": 3,
@@ -13555,7 +13651,7 @@ const QUESTION_BANK = [
     "id": "fall_01",
     "category": "THE WAY YOU FALL",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure standing at the edge of a cliff with one foot already off, suspended in the air, between solid ground and the drop, no face visible, atmosphere of irreversible moment, pure black background, 1024x1024",
+    "image": "./assets/quiz/fall_01.png",
     "text": "You realize you are about to do something you will regret. The moment to stop is right now. What happens?",
     "answers": [
       {
@@ -13957,7 +14053,7 @@ const QUESTION_BANK = [
     "id": "fall_09",
     "category": "THE WAY YOU FALL",
     "type": "scenario",
-    "image": "PLACEHOLDER: A dark hooded figure holding out a gloved hand offering something glowing red, soft hellish light from above, the gesture is of temptation, no face visible, atmosphere of decisive moment, pure black background, 1024x1024",
+    "image": "./assets/quiz/fall_09.png",
     "text": "A teacher you respected becomes someone who hurts people. They invite you to join them. What goes through you?",
     "answers": [
       {
@@ -14352,7 +14448,7 @@ const QUESTION_BANK = [
     "id": "fall_16",
     "category": "THE WAY YOU FALL",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure in mid-air falling between two cliff edges, hands reaching for a rope, dramatic vertical composition, no face visible, atmosphere of suspended consequence, pure black background, 1024x1024",
+    "image": "./assets/quiz/fall_16.png",
     "text": "You are mid-fall. There is no stopping it now. What is the truest thing inside you?",
     "answers": [
       {
@@ -14951,6 +15047,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic dramatic illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A figure standing at the very edge of a cliff with one foot extended into the air, dramatic vertical composition, vast empty sky below, atmosphere of suspended decision before the fall.\n\nQUADRANT 2 (top right): A figure in mid-air falling backwards into a deep chasm, hands reaching upward, sense of unstoppable descent, atmosphere of fall already in motion.\n\nQUADRANT 3 (bottom left): A figure walking slowly down a dark staircase descending into red-glowing depths, deliberate pace, atmosphere of chosen descent.\n\nQUADRANT 4 (bottom right): A figure on the ground after a fall, slowly beginning to push themselves up, weight of failure visible in their posture, atmosphere of rising from below.",
     "answers": [
       {
+        "image": "./assets/quiz/fall_04-a.png",
+        
         "caption": "On the Edge",
         "scores": {
           "kylo": 3,
@@ -14965,6 +15063,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_04-b.png",
+        
         "caption": "Already Falling",
         "scores": {
           "vader": 3,
@@ -14978,6 +15078,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_04-c.png",
+        
         "caption": "Walking Down",
         "scores": {
           "vader": 3,
@@ -14993,6 +15095,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_04-d.png",
+        
         "caption": "Rising From Below",
         "scores": {
           "luke": 3,
@@ -15017,6 +15121,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic symbolic illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures with faces visible — objects and atmospheric imagery only. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A glowing crown floating in mid-air, surrounded by faint red light, ornate metalwork, atmosphere of power and dominion offered.\n\nQUADRANT 2 (top right): A glowing red blade hilt resting on a black pedestal, surrounded by sparks of crimson energy, atmosphere of forbidden strength.\n\nQUADRANT 3 (bottom left): An open ancient book with glowing pages, mysterious symbols pulsing softly, surrounded by warm golden light, atmosphere of forbidden knowledge.\n\nQUADRANT 4 (bottom right): A silhouette of a beloved person standing in a doorway with arms extended in welcome, soft warm light around them, atmosphere of impossible reunion offered.",
     "answers": [
       {
+        "image": "./assets/quiz/fall_08-a.png",
+        
         "caption": "A Crown",
         "scores": {
           "palpatine": 3,
@@ -15032,6 +15138,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_08-b.png",
+        
         "caption": "A Red Blade",
         "scores": {
           "kylo": 3,
@@ -15046,6 +15154,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_08-c.png",
+        
         "caption": "A Forbidden Book",
         "scores": {
           "palpatine": 3,
@@ -15061,6 +15171,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_08-d.png",
+        
         "caption": "A Lost Loved One",
         "scores": {
           "vader": 3,
@@ -15085,6 +15197,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic emotional illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A figure walking away alone down a long empty road into the distance, sunset behind them, atmosphere of solitary recovery.\n\nQUADRANT 2 (top right): A figure being helped to their feet by another figure, hand extended in compassion, warm golden light around the moment of help, atmosphere of being lifted by another.\n\nQUADRANT 3 (bottom left): A figure meditating in a quiet stone alcove, sitting still, soft natural light from above, atmosphere of inner work and acceptance.\n\nQUADRANT 4 (bottom right): A figure standing tall on a battlefield surrounded by aftermath, weapon still in hand, scarred but unbroken, atmosphere of choosing to continue.",
     "answers": [
       {
+        "image": "./assets/quiz/fall_13-a.png",
+        
         "caption": "Walking Alone",
         "scores": {
           "mando": 3,
@@ -15100,6 +15214,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_13-b.png",
+        
         "caption": "A Hand Lifts Me",
         "scores": {
           "luke": 3,
@@ -15114,6 +15230,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_13-c.png",
+        
         "caption": "I Sit With It",
         "scores": {
           "yoda": 3,
@@ -15128,6 +15246,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_13-d.png",
+        
         "caption": "I Keep Fighting",
         "scores": {
           "mace": 3,
@@ -15152,6 +15272,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic dramatic illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A close view of a single hand reaching out desperately toward another hand just out of reach, fingers straining, atmosphere of last moment before the fall.\n\nQUADRANT 2 (top right): A figure pausing mid-step, frozen between two choices, one foot forward and one foot back, atmosphere of the moment before committing.\n\nQUADRANT 3 (bottom left): A figure crouched on the ground after a fall, head down, hand against the earth, atmosphere of impact and arrival at bottom.\n\nQUADRANT 4 (bottom right): A figure standing at dawn after a long night, dust settling around them, scarred but standing, atmosphere of having survived the fall.",
     "answers": [
       {
+        "image": "./assets/quiz/fall_25-a.png",
+        
         "caption": "The Hand Out of Reach",
         "scores": {
           "luke": 3,
@@ -15166,6 +15288,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_25-b.png",
+        
         "caption": "The Pause Before",
         "scores": {
           "kylo": 3,
@@ -15179,6 +15303,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_25-c.png",
+        
         "caption": "The Impact",
         "scores": {
           "vader": 3,
@@ -15193,6 +15319,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fall_25-d.png",
+        
         "caption": "The Standing After",
         "scores": {
           "luke": 3,
@@ -15213,7 +15341,7 @@ const QUESTION_BANK = [
     "id": "hurt_01",
     "category": "THE WAY YOU HURT",
     "type": "scenario",
-    "image": "PLACEHOLDER: A single hand resting on a chest in a gesture of self-comfort, soft cyan light from one side, no face visible, atmosphere of internal moment, pure black background, 1024x1024",
+    "image": "./assets/quiz/hurt_01.png",
     "text": "You are hurt. Not in your body — somewhere deeper. What do you do first?",
     "answers": [
       {
@@ -15608,7 +15736,7 @@ const QUESTION_BANK = [
     "id": "hurt_09",
     "category": "THE WAY YOU HURT",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure sitting alone on a rock at the edge of an empty valley at twilight, shoulders slightly hunched, no face visible, atmosphere of solitary processing, pure black background, 1024x1024",
+    "image": "./assets/quiz/hurt_09.png",
     "text": "Something hurt you a long time ago. You think you are over it. Then suddenly, you are not. What do you do?",
     "answers": [
       {
@@ -16000,7 +16128,7 @@ const QUESTION_BANK = [
     "id": "hurt_16",
     "category": "THE WAY YOU HURT",
     "type": "scenario",
-    "image": "PLACEHOLDER: Two figures sitting side by side on a low wall, looking outward together, no faces visible, soft sunset light, atmosphere of shared silent witness, pure black background, 1024x1024",
+    "image": "./assets/quiz/hurt_16.png",
     "text": "Someone you love tells you they are in pain. Real pain. What do you actually do?",
     "answers": [
       {
@@ -16591,6 +16719,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic atmospheric illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures with faces visible — symbolic and atmospheric imagery only. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A vast distant storm on the horizon over a calm sea, lightning crackling far away but the foreground still peaceful, atmosphere of pain held at a distance.\n\nQUADRANT 2 (top right): A heavy stone sitting on top of a wooden box, the box slightly crushed under the weight, simple still life with soft side lighting, atmosphere of weight carried quietly.\n\nQUADRANT 3 (bottom left): A broken crystal whose pieces are slowly reforming into something new and beautiful, soft golden light flowing through the cracks, atmosphere of pain becoming wisdom.\n\nQUADRANT 4 (bottom right): A landscape with a deep dark canyon running through it, the canyon hidden behind sunlit hills, hint of the chasm just visible, atmosphere of hidden depth.",
     "answers": [
       {
+        "image": "./assets/quiz/hurt_04-a.png",
+        
         "caption": "A Distant Storm",
         "scores": {
           "yoda": 3,
@@ -16605,6 +16735,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_04-b.png",
+        
         "caption": "A Heavy Weight",
         "scores": {
           "vader": 3,
@@ -16620,6 +16752,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_04-c.png",
+        
         "caption": "A Broken Crystal",
         "scores": {
           "luke": 3,
@@ -16635,6 +16769,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_04-d.png",
+        
         "caption": "A Hidden Canyon",
         "scores": {
           "han": 3,
@@ -16658,6 +16794,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic emotional illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A figure sitting alone under a vast star-filled sky, completely still, atmosphere of solitary processing under cosmic perspective.\n\nQUADRANT 2 (top right): A figure being wrapped in a blanket by another figure standing beside them, gentle gesture, warm soft light, atmosphere of being cared for in silence.\n\nQUADRANT 3 (bottom left): Two figures laughing together over a meal at a small table, warm hanging lamp above them, atmosphere of joy as medicine.\n\nQUADRANT 4 (bottom right): A figure working steadily with their hands at a workbench, focused on a task, atmosphere of healing through doing.",
     "answers": [
       {
+        "image": "./assets/quiz/hurt_08-a.png",
+        
         "caption": "The Sky Alone",
         "scores": {
           "yoda": 3,
@@ -16673,6 +16811,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_08-b.png",
+        
         "caption": "Being Wrapped Up",
         "scores": {
           "chewie": 3,
@@ -16687,6 +16827,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_08-c.png",
+        
         "caption": "Laughing With Someone",
         "scores": {
           "han": 3,
@@ -16700,6 +16842,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_08-d.png",
+        
         "caption": "Working With My Hands",
         "scores": {
           "mando": 3,
@@ -16722,6 +16866,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic metaphorical illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures with faces visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A scar on weathered metal armor, beautiful in its imperfection, soft warm light catching the texture, atmosphere of marks earned and accepted.\n\nQUADRANT 2 (top right): A tree trunk grown around an old wound, the bark now smooth where it once was torn, atmosphere of nature healing around pain.\n\nQUADRANT 3 (bottom left): A simple stone in a clear stream of running water, the water flowing past and around it constantly, atmosphere of pain present but not stopping life.\n\nQUADRANT 4 (bottom right): An old lantern with a small flame still burning inside despite long years of weather, atmosphere of pain that fuels rather than destroys.",
     "answers": [
       {
+        "image": "./assets/quiz/hurt_13-a.png",
+        
         "caption": "A Scar on Armor",
         "scores": {
           "mando": 3,
@@ -16736,6 +16882,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_13-b.png",
+        
         "caption": "A Healed Tree",
         "scores": {
           "yoda": 3,
@@ -16750,6 +16898,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_13-c.png",
+        
         "caption": "A Stone in a Stream",
         "scores": {
           "quigon": 3,
@@ -16763,6 +16913,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_13-d.png",
+        
         "caption": "A Burning Lantern",
         "scores": {
           "kylo": 3,
@@ -16787,6 +16939,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic emotional illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): Two figures sitting side by side on a porch step, no one talking, the silence soft and shared, atmosphere of presence without words.\n\nQUADRANT 2 (top right): One figure offering a steaming mug to another figure who is sitting hunched and tired, small gesture of care, warm light, atmosphere of small kindness during hard times.\n\nQUADRANT 3 (bottom left): One figure wrapping their arms around another in a strong hug, both standing in soft light, atmosphere of being held tightly when it is needed.\n\nQUADRANT 4 (bottom right): One figure walking shoulder to shoulder with another along a path, both moving forward together at the same pace, atmosphere of company through difficulty.",
     "answers": [
       {
+        "image": "./assets/quiz/hurt_25-a.png",
+        
         "caption": "Sitting in Silence",
         "scores": {
           "yoda": 3,
@@ -16801,6 +16955,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_25-b.png",
+        
         "caption": "A Warm Mug",
         "scores": {
           "finn": 3,
@@ -16815,6 +16971,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_25-c.png",
+        
         "caption": "A Strong Hug",
         "scores": {
           "chewie": 3,
@@ -16829,6 +16987,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hurt_25-d.png",
+        
         "caption": "Walking Together",
         "scores": {
           "luke": 3,
@@ -16848,7 +17008,7 @@ const QUESTION_BANK = [
     "id": "hide_01",
     "category": "THE WAY YOU HIDE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A weathered helmet sitting on a wooden bench in soft side light, its T-shaped visor empty, no figure visible, atmosphere of identity removed and waiting, pure black background, 1024x1024",
+    "image": "./assets/quiz/hide_01.png",
     "text": "You take off the mask you wear in public. What part of you do you actually let out?",
     "answers": [
       {
@@ -17242,7 +17402,7 @@ const QUESTION_BANK = [
     "id": "hide_09",
     "category": "THE WAY YOU HIDE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure standing alone in a forest hideout at twilight, simple shelter behind them, isolated from the wider world, no face visible, atmosphere of chosen solitude, pure black background, 1024x1024",
+    "image": "./assets/quiz/hide_09.png",
     "text": "You need to disappear for a while. Where do you actually go?",
     "answers": [
       {
@@ -17635,7 +17795,7 @@ const QUESTION_BANK = [
     "id": "hide_16",
     "category": "THE WAY YOU HIDE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure looking at their reflection in a still pool of water, the reflection slightly different from them, soft moonlight, no clear face, atmosphere of inner contemplation, pure black background, 1024x1024",
+    "image": "./assets/quiz/hide_16.png",
     "text": "You see your own reflection unexpectedly. What is the first thing you actually notice?",
     "answers": [
       {
@@ -18229,6 +18389,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic still-life illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures or faces visible — only the masks/coverings themselves resting on simple surfaces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A weathered Mandalorian-style helmet with a single T-shaped visor sitting on a stone bench, scratches and dents from battle, soft warm side lighting, atmosphere of protective armor that has become identity.\n\nQUADRANT 2 (top right): A dark imposing helmet with a deep red glow inside the eye slits, polished black surface, sitting on a metal pedestal, intimidating and powerful, atmosphere of power that conceals.\n\nQUADRANT 3 (bottom left): A simple cloth hood lying gently folded on weathered wood, soft natural light, no menace, no power, just quiet concealment, atmosphere of humble hiding from a wider world.\n\nQUADRANT 4 (bottom right): A polished diplomatic mask of refined design with subtle ornamentation, almost beautiful, but with empty eyes that reveal nothing, atmosphere of social presentation.",
     "answers": [
       {
+        "image": "./assets/quiz/hide_04-a.png",
+        
         "caption": "The Warrior Helmet",
         "scores": {
           "mando": 3,
@@ -18242,6 +18404,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_04-b.png",
+        
         "caption": "The Dark Helmet",
         "scores": {
           "vader": 3,
@@ -18256,6 +18420,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_04-c.png",
+        
         "caption": "The Hood",
         "scores": {
           "yoda": 3,
@@ -18269,6 +18435,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_04-d.png",
+        
         "caption": "The Social Mask",
         "scores": {
           "palpatine": 3,
@@ -18294,6 +18462,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic atmospheric illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A small humble hut in the middle of a misty swamp forest, alone among ancient trees, single warm light in the window, atmosphere of chosen exile and quiet wisdom.\n\nQUADRANT 2 (top right): A bustling crowded alien marketplace at dusk, dozens of figures and stalls, anonymous in the chaos, atmosphere of hiding in plain sight through crowd.\n\nQUADRANT 3 (bottom left): A small starship parked alone on a desolate moon, the only light for miles, vast empty space around it, atmosphere of solitude through distance.\n\nQUADRANT 4 (bottom right): A hidden underground vault behind a heavy stone door, soft amber lighting, secure and inaccessible, atmosphere of fortified privacy.",
     "answers": [
       {
+        "image": "./assets/quiz/hide_08-a.png",
+        
         "caption": "The Swamp Hut",
         "scores": {
           "yoda": 3,
@@ -18308,6 +18478,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_08-b.png",
+        
         "caption": "The Crowd",
         "scores": {
           "han": 3,
@@ -18321,6 +18493,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_08-c.png",
+        
         "caption": "A Lonely Moon",
         "scores": {
           "mando": 3,
@@ -18334,6 +18508,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_08-d.png",
+        
         "caption": "The Vault",
         "scores": {
           "palpatine": 3,
@@ -18357,6 +18533,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic symbolic illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. NO figures with faces visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A small warm flame burning gently in the center of a stone alcove, protected from wind, glowing steadily, atmosphere of soft love kept safe.\n\nQUADRANT 2 (top right): A small cracked teacup sitting on a windowsill, hairline fractures visible but the cup still holding its shape, soft morning light, atmosphere of fragility carefully managed.\n\nQUADRANT 3 (bottom left): A coiled rope on a workshop floor, tightly wound, ready to spring outward, sense of stored energy, atmosphere of strength held in reserve.\n\nQUADRANT 4 (bottom right): A vast complex mechanism of gears and dials in motion, intricate and beautiful, atmosphere of constant calculation beneath the surface.",
     "answers": [
       {
+        "image": "./assets/quiz/hide_13-a.png",
+        
         "caption": "A Small Flame",
         "scores": {
           "mando": 3,
@@ -18371,6 +18549,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_13-b.png",
+        
         "caption": "A Cracked Cup",
         "scores": {
           "kylo": 3,
@@ -18384,6 +18564,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_13-c.png",
+        
         "caption": "A Coiled Rope",
         "scores": {
           "mace": 3,
@@ -18398,6 +18580,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_13-d.png",
+        
         "caption": "A Mechanism",
         "scores": {
           "palpatine": 3,
@@ -18420,6 +18604,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic emotional illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic sci-fi illustration, soft cel-shading, painterly storybook style, vibrant colors, high contrast. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A figure removing a helmet slowly with both hands, head bowed, the helmet held in front of them, atmosphere of vulnerable revelation.\n\nQUADRANT 2 (top right): Two figures sitting across from each other in dim warm light, one speaking, one listening with full attention, atmosphere of being truly heard.\n\nQUADRANT 3 (bottom left): A figure standing in a doorway looking out at a wide open landscape, hood thrown back, no armor, atmosphere of stepping into the light unguarded.\n\nQUADRANT 4 (bottom right): A close view of one hand reaching for another in soft light, both hands open, palms turned up in trust, atmosphere of letting someone in.",
     "answers": [
       {
+        "image": "./assets/quiz/hide_25-a.png",
+        
         "caption": "Removing the Helmet",
         "scores": {
           "mando": 3,
@@ -18434,6 +18620,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_25-b.png",
+        
         "caption": "Being Truly Heard",
         "scores": {
           "luke": 3,
@@ -18448,6 +18636,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_25-c.png",
+        
         "caption": "Stepping Into the Light",
         "scores": {
           "yoda": 3,
@@ -18462,6 +18652,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/hide_25-d.png",
+        
         "caption": "Reaching for a Hand",
         "scores": {
           "luke": 3,
@@ -18481,7 +18673,7 @@ const QUESTION_BANK = [
     "id": "heal_01",
     "category": "THE WAY YOU HEAL",
     "type": "scenario",
-    "image": "PLACEHOLDER: A small lantern being lit in pure darkness, the very first flame catching, soft warm gold spreading outward, no figure visible, atmosphere of beginning to recover, pure black background, 1024x1024",
+    "image": "./assets/quiz/heal_01.png",
     "text": "You have been carrying something heavy for a long time. You finally feel ready to start healing. What is the first move?",
     "answers": [
       {
@@ -18868,7 +19060,7 @@ const QUESTION_BANK = [
     "id": "heal_09",
     "category": "THE WAY YOU HEAL",
     "type": "scenario",
-    "image": "PLACEHOLDER: An ancient broken stone bridge being slowly rebuilt, new stones being placed where old ones cracked, soft golden afternoon light, no figures visible, atmosphere of careful patient repair, pure black background, 1024x1024",
+    "image": "./assets/quiz/heal_09.png",
     "text": "You see someone you used to be — younger, hurt, still raw. What do you want to say to them?",
     "answers": [
       {
@@ -19257,7 +19449,7 @@ const QUESTION_BANK = [
     "id": "heal_16",
     "category": "THE WAY YOU HEAL",
     "type": "scenario",
-    "image": "PLACEHOLDER: A small green sapling growing out of a crack in old weathered stone, soft golden morning light, no figure visible, atmosphere of new life from old wound, pure black background, 1024x1024",
+    "image": "./assets/quiz/heal_16.png",
     "text": "A friend says, \"I think I am finally healing.\" What is the first thing you actually feel for them?",
     "answers": [
       {
@@ -19842,6 +20034,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic atmospheric illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic space-opera illustration in the style of vintage 1970s/1980s sci-fi film concept art. Lived-in, weathered, dusty, practical. Warm earth-tone palette: tan, ochre, rust, faded orange. Hard practical lighting with long shadows. Smoke and dust catching the light. Painterly storybook execution with soft cel-shading. NOT futuristic chrome. NOT superhero aesthetic. NOT glossy CGI. NO figures visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): An ancient mossy stone meditation alcove in a misty primal forest, sunbeams cutting through dense canopy, a simple woven mat on damp stone, atmosphere of healing through stillness and ancient natural wisdom.\n\nQUADRANT 2 (top right): A weathered starship cockpit at sunset over a vast desert landscape, dust motes drifting through warm orange light through the viewport, worn leather pilot seat, atmosphere of healing through motion and open sky.\n\nQUADRANT 3 (bottom left): A simple workshop bench in a dusty desert hut, hand tools laid out in careful rows, a half-mended piece of armor, soft warm lamp light, atmosphere of healing through patient work with the hands.\n\nQUADRANT 4 (bottom right): A small fire in the center of a circle of figures gathered close in a rocky desert canyon, warm golden flames flickering on tan rock walls, atmosphere of healing through company and shared warmth.",
     "answers": [
       {
+        "image": "./assets/quiz/heal_04-a.png",
+        
         "caption": "A Quiet Forest",
         "scores": {
           "yoda": 3,
@@ -19856,6 +20050,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_04-b.png",
+        
         "caption": "A Long Flight",
         "scores": {
           "han": 3,
@@ -19869,6 +20065,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_04-c.png",
+        
         "caption": "A Workbench",
         "scores": {
           "mando": 3,
@@ -19882,6 +20080,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_04-d.png",
+        
         "caption": "A Fire With Friends",
         "scores": {
           "chewie": 3,
@@ -19905,6 +20105,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic symbolic illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic space-opera illustration in the style of vintage 1970s/1980s sci-fi film concept art. Lived-in, weathered, dusty, practical. Warm earth-tone palette: tan, ochre, rust, faded orange. Hard practical lighting with long shadows. Smoke and dust catching the light. Painterly storybook execution with soft cel-shading. NOT futuristic chrome. NOT superhero aesthetic. NOT glossy CGI. NO figures with faces visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A cracked piece of weathered armor being mended with gold lacquer, the gold tracing the lines of damage and making them beautiful, soft warm light on the metal, atmosphere of broken things made stronger.\n\nQUADRANT 2 (top right): A small green sprout pushing up through a crack in dry desert stone, soft golden sunlight on the tiny leaves, atmosphere of new life finding a way through old hurt.\n\nQUADRANT 3 (bottom left): A old rusted blaster pistol being slowly cleaned and reassembled on a worn workbench, parts laid out in order, soft warm overhead light, atmosphere of careful restoration through patient work.\n\nQUADRANT 4 (bottom right): A weathered woven brown cloak being mended by hand with simple needle and thread, the fabric stronger where it has been repaired, atmosphere of healing as quiet ongoing craft.",
     "answers": [
       {
+        "image": "./assets/quiz/heal_08-a.png",
+        
         "caption": "A Gold-Mended Crack",
         "scores": {
           "kylo": 3,
@@ -19920,6 +20122,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_08-b.png",
+        
         "caption": "A Sprout from Stone",
         "scores": {
           "yoda": 3,
@@ -19933,6 +20137,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_08-c.png",
+        
         "caption": "A Restored Weapon",
         "scores": {
           "mando": 3,
@@ -19946,6 +20152,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_08-d.png",
+        
         "caption": "A Mended Cloak",
         "scores": {
           "obiwan": 3,
@@ -19969,6 +20177,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic atmospheric illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic space-opera illustration in the style of vintage 1970s/1980s sci-fi film concept art. Lived-in, weathered, dusty, practical. Warm earth-tone palette: tan, ochre, rust, faded orange. Hard practical lighting with long shadows. Smoke and dust catching the light. Painterly storybook execution with soft cel-shading. NOT futuristic chrome. NOT superhero aesthetic. NOT glossy CGI. NO figures visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): Twin suns rising over an endless tan desert dune landscape, brilliant golden-orange light spreading across the sand, weathered moisture collectors silhouetted against the sky, atmosphere of new beginning in a familiar place.\n\nQUADRANT 2 (top right): Soft early sunlight filtering through ancient mossy primal trees in a misty swamp forest, the air thick with golden particles, atmosphere of sacred awakening in nature.\n\nQUADRANT 3 (bottom left): The view from a starship cockpit emerging from hyperspeed into a calm star-filled void, soft cyan-blue light from the displays, vast quiet space ahead, atmosphere of arrival after long journey.\n\nQUADRANT 4 (bottom right): A small candle flame burning steady on a windowsill in a humble desert dwelling at dawn, warm light catching dust in the air, simple peaceful interior, atmosphere of small light returning home.",
     "answers": [
       {
+        "image": "./assets/quiz/heal_13-a.png",
+        
         "caption": "Twin Suns Rising",
         "scores": {
           "luke": 3,
@@ -19983,6 +20193,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_13-b.png",
+        
         "caption": "Light Through Trees",
         "scores": {
           "yoda": 3,
@@ -19997,6 +20209,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_13-c.png",
+        
         "caption": "Out of Hyperspeed",
         "scores": {
           "mando": 3,
@@ -20010,6 +20224,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_13-d.png",
+        
         "caption": "A Candle Returning",
         "scores": {
           "mando": 3,
@@ -20033,6 +20249,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic emotional illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic space-opera illustration in the style of vintage 1970s/1980s sci-fi film concept art. Lived-in, weathered, dusty, practical. Warm earth-tone palette: tan, ochre, rust, faded orange. Hard practical lighting with long shadows. Smoke and dust catching the light. Painterly storybook execution with soft cel-shading. NOT futuristic chrome. NOT superhero aesthetic. NOT glossy CGI. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left): A figure sitting in meditation on a weathered stone platform overlooking misty primal forests at dawn, simple brown robes, no face visible, atmosphere of inner peace reclaimed.\n\nQUADRANT 2 (top right): Two figures sitting close on a low desert wall watching twin suns set together, soft warm light surrounding them, no faces visible, atmosphere of being healed by company.\n\nQUADRANT 3 (bottom left): A figure in worn armor standing tall and steady in a dusty desert canyon at dawn, scars visible on the armor, weapon holstered, no face visible, atmosphere of choosing to keep walking.\n\nQUADRANT 4 (bottom right): A weathered hand opened in a gentle gesture of letting go, soft warm light catching dust drifting upward from the open palm, atmosphere of release as healing.",
     "answers": [
       {
+        "image": "./assets/quiz/heal_25-a.png",
+        
         "caption": "Sitting in Stillness",
         "scores": {
           "yoda": 3,
@@ -20047,6 +20265,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_25-b.png",
+        
         "caption": "Sunset Together",
         "scores": {
           "mando": 3,
@@ -20061,6 +20281,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_25-c.png",
+        
         "caption": "Standing Again",
         "scores": {
           "mando": 3,
@@ -20075,6 +20297,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/heal_25-d.png",
+        
         "caption": "Letting Go",
         "scores": {
           "yoda": 3,
@@ -20094,7 +20318,7 @@ const QUESTION_BANK = [
     "id": "rise_01",
     "category": "THE WAY YOU RISE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A single figure walking up a long staircase carved into a cliff, sunrise above them, no face visible, atmosphere of deliberate ascent, pure black background, 1024x1024",
+    "image": "./assets/quiz/rise_01.png",
     "text": "You are at the bottom. You know you have to climb. What is the first step actually like?",
     "answers": [
       {
@@ -20479,7 +20703,7 @@ const QUESTION_BANK = [
     "id": "rise_09",
     "category": "THE WAY YOU RISE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A worn pair of hands holding a small green sapling with roots still loose, ready to be planted in fresh soil, no face visible, atmosphere of careful new beginning, pure black background, 1024x1024",
+    "image": "./assets/quiz/rise_09.png",
     "text": "You realize something you used to need, you do not need anymore. What do you do with it?",
     "answers": [
       {
@@ -20868,7 +21092,7 @@ const QUESTION_BANK = [
     "id": "rise_16",
     "category": "THE WAY YOU RISE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure standing at the top of a tall cliff after a long climb, looking out at a vast horizon with twin suns, no face visible, weathered cloak blowing in wind, atmosphere of arrival after great effort, pure black background, 1024x1024",
+    "image": "./assets/quiz/rise_16.png",
     "text": "You finally reach a level you have been working toward for years. The first feeling — what is it?",
     "answers": [
       {
@@ -21454,6 +21678,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic space-opera illustration in the style of vintage 1970s/1980s sci-fi film concept art. Hard practical lighting with long shadows. Painterly storybook execution with soft cel-shading. NOT modern Marvel CGI. NOT plastic chrome. NOT superhero aesthetic. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left) — OUTER RIM aesthetic, warm dusty earth tones, tan and ochre: A weathered figure in worn brown robes climbing a long stone staircase carved into a desert cliff, twin suns rising above, dust catching warm light, no face visible, atmosphere of pilgrim's ascent.\n\nQUADRANT 2 (top right) — CORE WORLDS aesthetic, polished marble and cool tones, electric blue and brass: A figure in elegant ceremonial robes walking up a wide grand marble staircase between towering pillars, blue-white light from above, geometric precision, no face visible, atmosphere of being elevated into power.\n\nQUADRANT 3 (bottom left) — OUTER RIM aesthetic, weathered, dusty, lived-in: A figure climbing up the rocky inside of a deep canyon at dawn, hands and feet on ancient handholds, faded orange light from above, no face visible, atmosphere of working their way up by sheer will.\n\nQUADRANT 4 (bottom right) — CORE WORLDS aesthetic, refined, regal, powerful: A figure standing in a cathedral-like ancient temple of curved arches and beams of light from above, single rays piercing the architecture, no face visible, atmosphere of ascending toward something sacred and vast.",
     "answers": [
       {
+        "image": "./assets/quiz/rise_04-a.png",
+        
         "caption": "The Stone Staircase",
         "scores": {
           "yoda": 3,
@@ -21467,6 +21693,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_04-b.png",
+        
         "caption": "The Marble Steps",
         "scores": {
           "palpatine": 3,
@@ -21481,6 +21709,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_04-c.png",
+        
         "caption": "Climbing the Canyon",
         "scores": {
           "han": 3,
@@ -21494,6 +21724,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_04-d.png",
+        
         "caption": "The Sacred Temple",
         "scores": {
           "luke": 3,
@@ -21517,6 +21749,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic symbolic illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic space-opera illustration in the style of vintage 1970s/1980s sci-fi film concept art. Hard practical lighting with long shadows. Painterly storybook execution with soft cel-shading. NOT modern Marvel CGI. NOT plastic chrome. NOT superhero aesthetic. NO figures with faces visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left) — OUTER RIM aesthetic, warm earth tones, lived-in: A weathered photo or holographic image of a loved one held in a worn gloved hand, soft warm tan lamp light catching the image, dust in the air, atmosphere of memory as fuel.\n\nQUADRANT 2 (top right) — CORE WORLDS aesthetic, polished, regal, crimson and brass: An ornate gleaming dark crown resting on a polished obsidian pedestal in a vast chamber, dramatic spot lighting from above, atmosphere of ambition as fuel.\n\nQUADRANT 3 (bottom left) — OUTER RIM aesthetic, dusty, practical: A simple worn workbench with hands placed on its surface, half-finished work in front of them, golden afternoon light through a window, atmosphere of daily discipline as fuel.\n\nQUADRANT 4 (bottom right) — JEDI aesthetic, sacred and serene, soft green-blue tones: A small glowing crystal sitting cupped in two open hands, soft cool light radiating from it, atmosphere of inner knowing as fuel.",
     "answers": [
       {
+        "image": "./assets/quiz/rise_08-a.png",
+        
         "caption": "A Loved One Remembered",
         "scores": {
           "mando": 3,
@@ -21531,6 +21765,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_08-b.png",
+        
         "caption": "A Crown",
         "scores": {
           "palpatine": 3,
@@ -21544,6 +21780,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_08-c.png",
+        
         "caption": "The Daily Work",
         "scores": {
           "mando": 3,
@@ -21557,6 +21795,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_08-d.png",
+        
         "caption": "A Light Within",
         "scores": {
           "yoda": 3,
@@ -21580,6 +21820,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic atmospheric illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic space-opera illustration in the style of vintage 1970s/1980s sci-fi film concept art. Hard practical lighting with long shadows. Painterly storybook execution with soft cel-shading. NOT modern Marvel CGI. NOT plastic chrome. NOT superhero aesthetic. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left) — OUTER RIM aesthetic, warm sunset, weathered: A figure standing alone at the edge of a tall desert cliff at sunset, twin suns on the horizon, weathered cloak blowing in wind, no face visible, atmosphere of solitary arrival after long journey.\n\nQUADRANT 2 (top right) — CORE WORLDS aesthetic, regal, powerful: A figure standing on a high marble balcony overlooking a vast city of towers and starships at dawn, hands resting on the balustrade, polished refined architecture, no face visible, atmosphere of dominion earned.\n\nQUADRANT 3 (bottom left) — OUTER RIM aesthetic, communal, warm: A group of figures gathered around their leader on a desert canyon ridge, lifting them up in celebration, warm orange evening light, no clear faces, atmosphere of being raised up by others.\n\nQUADRANT 4 (bottom right) — JEDI aesthetic, sacred, transcendent: A figure standing on an ancient stone platform high above misty primal forests, arms slightly extended, soft golden light pouring down from above, atmosphere of arrival through inner mastery.",
     "answers": [
       {
+        "image": "./assets/quiz/rise_13-a.png",
+        
         "caption": "A Solitary Cliff",
         "scores": {
           "mando": 3,
@@ -21593,6 +21835,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_13-b.png",
+        
         "caption": "A Balcony Above the City",
         "scores": {
           "palpatine": 3,
@@ -21607,6 +21851,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_13-c.png",
+        
         "caption": "Lifted Up by Others",
         "scores": {
           "luke": 3,
@@ -21621,6 +21867,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_13-d.png",
+        
         "caption": "A Sacred Platform",
         "scores": {
           "yoda": 3,
@@ -21644,6 +21892,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic emotional illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic space-opera illustration in the style of vintage 1970s/1980s sci-fi film concept art. Hard practical lighting with long shadows. Painterly storybook execution with soft cel-shading. NOT modern Marvel CGI. NOT plastic chrome. NOT superhero aesthetic. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left) — JEDI aesthetic, sacred, serene: A figure in simple robes kneeling in a beam of soft golden light in an ancient stone temple, head bowed in deep meditation, atmosphere of full presence and inner alignment.\n\nQUADRANT 2 (top right) — CORE WORLDS aesthetic, regal, weighty: A figure standing tall and centered in front of a tall window overlooking a great fleet of starships, hands clasped behind their back, ceremonial robes, atmosphere of having become someone whose word matters.\n\nQUADRANT 3 (bottom left) — OUTER RIM aesthetic, warm, weathered: A figure putting an arm around a smaller figure on a dusty desert ridge at sunset, both watching the horizon together, atmosphere of being someone whose strength is for others.\n\nQUADRANT 4 (bottom right) — OUTER RIM aesthetic, lived-in, free: A figure leaning back against the side of their starship looking up at the stars, arms crossed, content, no destination in sight, atmosphere of being fully oneself with nowhere to prove it.",
     "answers": [
       {
+        "image": "./assets/quiz/rise_25-a.png",
+        
         "caption": "Aligned in Light",
         "scores": {
           "yoda": 3,
@@ -21658,6 +21908,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_25-b.png",
+        
         "caption": "A Word That Matters",
         "scores": {
           "mace": 3,
@@ -21672,6 +21924,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_25-c.png",
+        
         "caption": "Strength for Others",
         "scores": {
           "mando": 3,
@@ -21686,6 +21940,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/rise_25-d.png",
+        
         "caption": "Free Under the Stars",
         "scores": {
           "han": 3,
@@ -21704,7 +21960,7 @@ const QUESTION_BANK = [
     "id": "win_01",
     "category": "THE WAY YOU WIN",
     "type": "scenario",
-    "image": "PLACEHOLDER: A hand raised slowly into the air after a long battle, the rest of the figure shadowed, weathered glove with dust still on it, no face visible, atmosphere of quiet triumph, pure black background, 1024x1024",
+    "image": "./assets/quiz/win_01.png",
     "text": "You just won something you have been working toward for a long time. What is your first move?",
     "answers": [
       {
@@ -22089,7 +22345,7 @@ const QUESTION_BANK = [
     "id": "win_09",
     "category": "THE WAY YOU WIN",
     "type": "scenario",
-    "image": "PLACEHOLDER: A simple gold medal or token resting in an open palm at sunset, soft warm light, no figure visible above the wrist, atmosphere of victory held, pure black background, 1024x1024",
+    "image": "./assets/quiz/win_09.png",
     "text": "Someone hands you the symbol of your victory — a medal, a title, a trophy. What do you actually do with it?",
     "answers": [
       {
@@ -22474,7 +22730,7 @@ const QUESTION_BANK = [
     "id": "win_16",
     "category": "THE WAY YOU WIN",
     "type": "scenario",
-    "image": "PLACEHOLDER: A high stone platform after a long battle, victory flags or banners hanging from the parapets, the platform empty but with footprints in the dust showing someone just stood there, no figure visible, atmosphere of aftermath, pure black background, 1024x1024",
+    "image": "./assets/quiz/win_16.png",
     "text": "The cheering stops. The crowd goes home. You are alone with your win. What is going through you?",
     "answers": [
       {
@@ -23053,6 +23309,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic illustration in the style of vintage 1970s/1980s film concept art. Hard practical lighting with long shadows. Painterly storybook execution with soft cel-shading. NOT modern Marvel CGI. NOT plastic chrome. NOT superhero aesthetic. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left) — Warm earth tones, dusty, communal: A group of weathered figures gathered around a campfire in a desert canyon, arms raised in celebration, warm orange flames lighting their silhouettes, atmosphere of shared victory with chosen family.\n\nQUADRANT 2 (top right) — Polished, regal, brass and crimson: A figure standing alone at the top of wide marble steps in a vast classical hall, soft beams of cool light falling around them, atmosphere of authority claimed.\n\nQUADRANT 3 (bottom left) — Warm sunset, weathered, intimate: Two silhouetted figures standing close at a desert ridge at sunset, one with an arm across the other's shoulders, atmosphere of victory shared between two.\n\nQUADRANT 4 (bottom right) — Sacred, serene, soft green-blue tones: A single figure standing quietly in a beam of golden light inside an ancient stone temple, head slightly bowed, no celebration, atmosphere of inner victory.",
     "answers": [
       {
+        "image": "./assets/quiz/win_04-a.png",
+        
         "caption": "Around the Fire",
         "scores": {
           "han": 3,
@@ -23067,6 +23325,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_04-b.png",
+        
         "caption": "At the Top of the Hall",
         "scores": {
           "palpatine": 3,
@@ -23081,6 +23341,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_04-c.png",
+        
         "caption": "Shoulder to Shoulder",
         "scores": {
           "mando": 3,
@@ -23094,6 +23356,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_04-d.png",
+        
         "caption": "In the Light",
         "scores": {
           "yoda": 3,
@@ -23117,6 +23381,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic still-life illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic illustration in the style of vintage 1970s/1980s film concept art. Hard practical lighting with long shadows. Painterly storybook execution with soft cel-shading. NOT modern Marvel CGI. NOT plastic chrome. NOT superhero aesthetic. NO figures or faces visible. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left) — Polished, regal, brass and crimson: An ornate ceremonial medal of brass and crimson ribbon resting on a polished marble pedestal, dramatic spot lighting from above, atmosphere of formal recognition.\n\nQUADRANT 2 (top right) — Warm earth tones, lived-in: A simple cup of dark drink on a worn wooden table being toasted alongside other cups, mid-clink, soft warm tavern light, atmosphere of victory toasted with friends.\n\nQUADRANT 3 (bottom left) — Weathered, intimate: A small handmade trinket — a carved wooden piece, perhaps a charm — sitting in an open weathered palm, soft afternoon light, atmosphere of personal triumph carried close.\n\nQUADRANT 4 (bottom right) — Sacred, soft green tones: A glowing small object glowing softly with gentle inner light, surrounded by soft cool mist, sitting on a simple stone surface, atmosphere of a sacred meaning earned.",
     "answers": [
       {
+        "image": "./assets/quiz/win_08-a.png",
+        
         "caption": "A Ceremonial Medal",
         "scores": {
           "mace": 3,
@@ -23131,6 +23397,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_08-b.png",
+        
         "caption": "A Cup Raised With Friends",
         "scores": {
           "han": 3,
@@ -23145,6 +23413,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_08-c.png",
+        
         "caption": "A Small Token I Carry",
         "scores": {
           "mando": 3,
@@ -23159,6 +23429,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_08-d.png",
+        
         "caption": "A Sacred Object",
         "scores": {
           "yoda": 3,
@@ -23182,6 +23454,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic action illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic illustration in the style of vintage 1970s/1980s film concept art. Hard practical lighting with long shadows. Painterly storybook execution with soft cel-shading. NOT modern Marvel CGI. NOT plastic chrome. NOT superhero aesthetic. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left) — Warm, joyful, communal: A silhouetted figure with arms thrown wide and head tilted back in pure joy, others around them mid-cheer, warm orange firelight illuminating the scene, atmosphere of unrestrained celebration.\n\nQUADRANT 2 (top right) — Quiet, weathered, alone: A silhouetted figure standing perfectly still at a desert ridge at sunset, head slightly bowed, no movement at all, atmosphere of stillness in victory.\n\nQUADRANT 3 (bottom left) — Polished, regal, cool tones: A silhouetted figure already turning to walk through a marble archway away from the celebration behind them, halfway to the next thing, atmosphere of moving past the win immediately.\n\nQUADRANT 4 (bottom right) — Warm, intimate, tender: A silhouetted figure embracing a smaller figure tightly, holding them close, soft warm light around the moment, atmosphere of victory shared with a loved one.",
     "answers": [
       {
+        "image": "./assets/quiz/win_13-a.png",
+        
         "caption": "Throw My Arms Wide",
         "scores": {
           "han": 3,
@@ -23196,6 +23470,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_13-b.png",
+        
         "caption": "Stand Perfectly Still",
         "scores": {
           "yoda": 3,
@@ -23210,6 +23486,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_13-c.png",
+        
         "caption": "Walk Toward the Next Thing",
         "scores": {
           "palpatine": 3,
@@ -23224,6 +23502,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_13-d.png",
+        
         "caption": "Hold Someone Close",
         "scores": {
           "mando": 3,
@@ -23247,6 +23527,8 @@ const QUESTION_BANK = [
     "grid_prompt": "Create a 2x2 grid of 4 cinematic emotional illustrations, each in its own quadrant, separated by thin clean borders. PURE BLACK BACKGROUND throughout. Style: cinematic illustration in the style of vintage 1970s/1980s film concept art. Hard practical lighting with long shadows. Painterly storybook execution with soft cel-shading. NOT modern Marvel CGI. NOT plastic chrome. NOT superhero aesthetic. Figures may appear as silhouettes but NO clear faces. NO TEXT OR WORDS anywhere in the images. Square 1:1 overall, 1024x1024.\n\nQUADRANT 1 (top left) — Sacred, serene, green and gold: A figure kneeling in soft light in an ancient stone temple, hands open in their lap, atmosphere of inner mastery as the true win.\n\nQUADRANT 2 (top right) — Regal, powerful, brass and crimson: A figure standing tall at a high marble window overlooking a sprawling capital city at dawn, ceremonial robes draped behind them, atmosphere of authority recognized.\n\nQUADRANT 3 (bottom left) — Warm, weathered, family: A figure in worn armor standing protectively over a smaller seated figure at a campfire, soft orange firelight, atmosphere of having won so someone smaller is safe.\n\nQUADRANT 4 (bottom right) — Warm, communal, joyful: A group of figures with arms around each other at a desert ridge at sunset, all silhouetted together, atmosphere of having won together as a crew.",
     "answers": [
       {
+        "image": "./assets/quiz/win_25-a.png",
+        
         "caption": "Inner Mastery",
         "scores": {
           "yoda": 3,
@@ -23261,6 +23543,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_25-b.png",
+        
         "caption": "Authority Recognized",
         "scores": {
           "palpatine": 3,
@@ -23275,6 +23559,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_25-c.png",
+        
         "caption": "Someone Smaller Is Safe",
         "scores": {
           "mando": 3,
@@ -23289,6 +23575,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/win_25-d.png",
+        
         "caption": "Together as a Crew",
         "scores": {
           "han": 3,
@@ -23308,7 +23596,7 @@ const QUESTION_BANK = [
     "id": "fail_01",
     "category": "THE WAY YOU FAIL",
     "type": "scenario",
-    "image": "PLACEHOLDER: A single weathered hand resting on dusty ground, the rest of the figure unseen, soft dim light, atmosphere of having just been knocked down, pure black background, 1024x1024",
+    "image": "./assets/quiz/fail_01.png",
     "text": "You just failed at something that mattered to you. The first thirty seconds — what is happening in you?",
     "answers": [
       {
@@ -23690,7 +23978,7 @@ const QUESTION_BANK = [
     "id": "fail_09",
     "category": "THE WAY YOU FAIL",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure standing on a rocky ledge looking out at a vast empty horizon after a defeat, shoulders slightly slumped but not broken, weathered cloak blowing, no face visible, atmosphere of deciding what comes next, pure black background, 1024x1024",
+    "image": "./assets/quiz/fail_09.png",
     "text": "You worked toward something for years. It did not work. You are standing in the aftermath. What is the first decision?",
     "answers": [
       {
@@ -24072,7 +24360,7 @@ const QUESTION_BANK = [
     "id": "fail_16",
     "category": "THE WAY YOU FAIL",
     "type": "scenario",
-    "image": "PLACEHOLDER: An old training dummy or practice target in a quiet arena, well used, light dust on the floor, no figure visible, atmosphere of the moment after a long practice that did not go well, pure black background, 1024x1024",
+    "image": "./assets/quiz/fail_16.png",
     "text": "You finish a long practice session. You did worse, not better. The mat is empty. Just you and the silence. What do you do?",
     "answers": [
       {
@@ -24653,6 +24941,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/fail_04-a.png",
+        
         "caption": "A Broken Tool",
         "scores": {
           "mando": 3,
@@ -24666,6 +24956,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_04-b.png",
+        
         "caption": "An Empty Arena",
         "scores": {
           "mace": 3,
@@ -24680,6 +24972,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_04-c.png",
+        
         "caption": "A Long Walk Home",
         "scores": {
           "obiwan": 3,
@@ -24694,6 +24988,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_04-d.png",
+        
         "caption": "A Friend Standing Beside Me",
         "scores": {
           "chewie": 3,
@@ -24717,6 +25013,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/fail_08-a.png",
+        
         "caption": "Back to the Workbench",
         "scores": {
           "mando": 3,
@@ -24730,6 +25028,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_08-b.png",
+        
         "caption": "Out Into the Open Sky",
         "scores": {
           "han": 3,
@@ -24743,6 +25043,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_08-c.png",
+        
         "caption": "Into Quiet Stillness",
         "scores": {
           "yoda": 3,
@@ -24757,6 +25059,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_08-d.png",
+        
         "caption": "Toward Someone I Love",
         "scores": {
           "mando": 3,
@@ -24780,6 +25084,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/fail_13-a.png",
+        
         "caption": "A Scar",
         "scores": {
           "mando": 3,
@@ -24794,6 +25100,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_13-b.png",
+        
         "caption": "A Story",
         "scores": {
           "obiwan": 3,
@@ -24808,6 +25116,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_13-c.png",
+        
         "caption": "A Sharper Edge",
         "scores": {
           "mace": 3,
@@ -24822,6 +25132,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_13-d.png",
+        
         "caption": "A Lighter Heart",
         "scores": {
           "yoda": 3,
@@ -24845,6 +25157,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/fail_25-a.png",
+        
         "caption": "A Door I Walked Past",
         "scores": {
           "yoda": 3,
@@ -24858,6 +25172,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_25-b.png",
+        
         "caption": "A Mirror I Did Not Want",
         "scores": {
           "kylo": 3,
@@ -24871,6 +25187,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_25-c.png",
+        
         "caption": "A Lesson I Paid For",
         "scores": {
           "obiwan": 3,
@@ -24885,6 +25203,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/fail_25-d.png",
+        
         "caption": "A Bridge to Who I Am Now",
         "scores": {
           "luke": 3,
@@ -24905,7 +25225,7 @@ const QUESTION_BANK = [
     "id": "lead_01",
     "category": "THE WAY YOU LEAD",
     "type": "scenario",
-    "image": "PLACEHOLDER: A single figure standing at the front of a group looking back at them with their hand raised in a gesture of pause, group of silhouettes behind, no faces visible, soft warm light, atmosphere of decision-making in the moment, pure black background, 1024x1024",
+    "image": "./assets/quiz/lead_01.png",
     "text": "People are looking to you to make a call. The room is quiet, waiting. What do you actually do?",
     "answers": [
       {
@@ -25293,7 +25613,7 @@ const QUESTION_BANK = [
     "id": "lead_09",
     "category": "THE WAY YOU LEAD",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure crouched down at the level of a smaller silhouetted figure, hand on the smaller one's shoulder, both no faces visible, warm side lighting, atmosphere of a leader meeting someone where they are, pure black background, 1024x1024",
+    "image": "./assets/quiz/lead_09.png",
     "text": "Someone you are responsible for is scared. They are about to do something hard. What do you actually say?",
     "answers": [
       {
@@ -25675,7 +25995,7 @@ const QUESTION_BANK = [
     "id": "lead_16",
     "category": "THE WAY YOU LEAD",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure walking ahead on a worn path with several smaller silhouettes following behind at varying distances, sunset light, no faces visible, atmosphere of leadership through forward movement, pure black background, 1024x1024",
+    "image": "./assets/quiz/lead_16.png",
     "text": "You realize people have been following you. You did not ask for it. Now what?",
     "answers": [
       {
@@ -26253,6 +26573,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/lead_04-a.png",
+        
         "caption": "Standing in Front",
         "scores": {
           "mace": 3,
@@ -26266,6 +26588,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_04-b.png",
+        
         "caption": "Walking Beside",
         "scores": {
           "luke": 3,
@@ -26280,6 +26604,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_04-c.png",
+        
         "caption": "Standing Behind",
         "scores": {
           "mando": 3,
@@ -26294,6 +26620,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_04-d.png",
+        
         "caption": "Sitting Quietly",
         "scores": {
           "yoda": 3,
@@ -26317,6 +26645,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/lead_08-a.png",
+        
         "caption": "Firm and Clear",
         "scores": {
           "mace": 3,
@@ -26331,6 +26661,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_08-b.png",
+        
         "caption": "Warm and Funny",
         "scores": {
           "han": 3,
@@ -26344,6 +26676,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_08-c.png",
+        
         "caption": "Quiet and Steady",
         "scores": {
           "yoda": 3,
@@ -26358,6 +26692,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_08-d.png",
+        
         "caption": "Honest and Open",
         "scores": {
           "luke": 3,
@@ -26381,6 +26717,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/lead_13-a.png",
+        
         "caption": "A Crown",
         "scores": {
           "palpatine": 3,
@@ -26395,6 +26733,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_13-b.png",
+        
         "caption": "A Hand on a Shoulder",
         "scores": {
           "mando": 3,
@@ -26409,6 +26749,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_13-c.png",
+        
         "caption": "A Lit Torch",
         "scores": {
           "luke": 3,
@@ -26422,6 +26764,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_13-d.png",
+        
         "caption": "An Open Door",
         "scores": {
           "yoda": 3,
@@ -26445,6 +26789,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/lead_25-a.png",
+        
         "caption": "The Wise One",
         "scores": {
           "yoda": 3,
@@ -26459,6 +26805,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_25-b.png",
+        
         "caption": "The Guardian",
         "scores": {
           "mando": 3,
@@ -26473,6 +26821,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_25-c.png",
+        
         "caption": "The Spark",
         "scores": {
           "poe": 3,
@@ -26486,6 +26836,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/lead_25-d.png",
+        
         "caption": "The Quiet Hand",
         "scores": {
           "yoda": 3,
@@ -26504,7 +26856,7 @@ const QUESTION_BANK = [
     "id": "dream_01",
     "category": "THE WAY YOU DREAM",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure looking up at a vast sky full of stars, weathered cloak blowing softly, no face visible, atmosphere of yearning toward something, pure black background, 1024x1024",
+    "image": "./assets/quiz/dream_01.png",
     "text": "You are alone. You let yourself imagine what you most want. What kind of picture comes up?",
     "answers": [
       {
@@ -26883,7 +27235,7 @@ const QUESTION_BANK = [
     "id": "dream_09",
     "category": "THE WAY YOU DREAM",
     "type": "scenario",
-    "image": "PLACEHOLDER: A small lit lantern held in hands at dusk, warm glow against the gathering dark, no face visible, atmosphere of carrying something precious through the dark, pure black background, 1024x1024",
+    "image": "./assets/quiz/dream_09.png",
     "text": "You are walking through a long stretch of life with no clear path. What dream do you carry like a small lit lantern?",
     "answers": [
       {
@@ -27258,7 +27610,7 @@ const QUESTION_BANK = [
     "id": "dream_16",
     "category": "THE WAY YOU DREAM",
     "type": "scenario",
-    "image": "PLACEHOLDER: A pair of eyes opening to a sunrise, soft golden first light hitting the face, no full features visible, atmosphere of waking with possibility, pure black background, 1024x1024",
+    "image": "./assets/quiz/dream_16.png",
     "text": "You wake up tomorrow morning and find your biggest dream came true overnight. What is the very first feeling?",
     "answers": [
       {
@@ -27826,6 +28178,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/dream_04-a.png",
+        
         "caption": "A Distant Sunrise",
         "scores": {
           "luke": 3,
@@ -27839,6 +28193,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_04-b.png",
+        
         "caption": "A Quiet Hearth",
         "scores": {
           "mando": 3,
@@ -27853,6 +28209,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_04-c.png",
+        
         "caption": "A Mountain Peak",
         "scores": {
           "palpatine": 3,
@@ -27866,6 +28224,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_04-d.png",
+        
         "caption": "A Vast Open Sky",
         "scores": {
           "yoda": 3,
@@ -27888,6 +28248,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/dream_08-a.png",
+        
         "caption": "A Hand to Hold",
         "scores": {
           "mando": 3,
@@ -27902,6 +28264,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_08-b.png",
+        
         "caption": "A Bright Star",
         "scores": {
           "luke": 3,
@@ -27915,6 +28279,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_08-c.png",
+        
         "caption": "An Open Road",
         "scores": {
           "han": 3,
@@ -27928,6 +28294,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_08-d.png",
+        
         "caption": "A Sacred Light",
         "scores": {
           "yoda": 3,
@@ -27951,6 +28319,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/dream_13-a.png",
+        
         "caption": "In Another Person",
         "scores": {
           "mando": 3,
@@ -27965,6 +28335,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_13-b.png",
+        
         "caption": "In a Place I Have Not Seen",
         "scores": {
           "luke": 3,
@@ -27978,6 +28350,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_13-c.png",
+        
         "caption": "In a Skill I Want",
         "scores": {
           "mando": 3,
@@ -27992,6 +28366,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_13-d.png",
+        
         "caption": "In a Future Version of Me",
         "scores": {
           "luke": 3,
@@ -28014,6 +28390,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD — to be written once aesthetic system is finalized",
     "answers": [
       {
+        "image": "./assets/quiz/dream_25-a.png",
+        
         "caption": "A Map I Follow",
         "scores": {
           "mando": 3,
@@ -28028,6 +28406,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_25-b.png",
+        
         "caption": "A Light I Carry",
         "scores": {
           "luke": 3,
@@ -28042,6 +28422,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_25-c.png",
+        
         "caption": "A Voice I Listen For",
         "scores": {
           "yoda": 3,
@@ -28056,6 +28438,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/dream_25-d.png",
+        
         "caption": "A Hunger I Feed",
         "scores": {
           "palpatine": 3,
@@ -28074,7 +28458,7 @@ const QUESTION_BANK = [
     "id": "leave_01",
     "category": "THE WAY YOU LEAVE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure walking away down a long path at sunset, back turned, weathered cloak blowing softly, no face visible, atmosphere of departure with weight, pure black background, 1024x1024",
+    "image": "./assets/quiz/leave_01.png",
     "text": "You know it is time to leave something behind. You have known for a while. How do you actually go?",
     "answers": [
       {
@@ -28453,7 +28837,7 @@ const QUESTION_BANK = [
     "id": "leave_09",
     "category": "THE WAY YOU LEAVE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A doorway being closed behind a figure walking away, soft warm light from inside spilling into the dark outside, no face visible, atmosphere of one chapter ending and another beginning, pure black background, 1024x1024",
+    "image": "./assets/quiz/leave_09.png",
     "text": "You are at the threshold of leaving for the last time. The door is open. What is the last thing you do?",
     "answers": [
       {
@@ -28830,7 +29214,7 @@ const QUESTION_BANK = [
     "id": "leave_16",
     "category": "THE WAY YOU LEAVE",
     "type": "scenario",
-    "image": "PLACEHOLDER: An empty room with the door slightly ajar, soft afternoon light falling on a few personal items left behind on a wooden surface, no figure visible, atmosphere of recent departure, pure black background, 1024x1024",
+    "image": "./assets/quiz/leave_16.png",
     "text": "You are leaving someone you love because it is the right thing to do — even though they will not understand for years. What do you say in the moment?",
     "answers": [
       {
@@ -29400,6 +29784,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/leave_04-a.png",
+        
         "caption": "A Long Last Look",
         "scores": {
           "obiwan": 3,
@@ -29413,6 +29799,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_04-b.png",
+        
         "caption": "A Closed Door",
         "scores": {
           "yoda": 3,
@@ -29426,6 +29814,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_04-c.png",
+        
         "caption": "A Ship Lifting Off",
         "scores": {
           "han": 3,
@@ -29439,6 +29829,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_04-d.png",
+        
         "caption": "A Letter Left Behind",
         "scores": {
           "luke": 3,
@@ -29461,6 +29853,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/leave_08-a.png",
+        
         "caption": "A Place That Shaped Me",
         "scores": {
           "luke": 3,
@@ -29474,6 +29868,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_08-b.png",
+        
         "caption": "A Person I Loved",
         "scores": {
           "mando": 3,
@@ -29488,6 +29884,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_08-c.png",
+        
         "caption": "A Version of Myself",
         "scores": {
           "kylo": 3,
@@ -29501,6 +29899,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_08-d.png",
+        
         "caption": "A Dream I Outgrew",
         "scores": {
           "yoda": 3,
@@ -29524,6 +29924,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/leave_13-a.png",
+        
         "caption": "A Memory",
         "scores": {
           "obiwan": 3,
@@ -29537,6 +29939,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_13-b.png",
+        
         "caption": "A Lesson",
         "scores": {
           "yoda": 3,
@@ -29551,6 +29955,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_13-c.png",
+        
         "caption": "A Friend",
         "scores": {
           "mando": 3,
@@ -29565,6 +29971,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_13-d.png",
+        
         "caption": "Nothing",
         "scores": {
           "boba": 3,
@@ -29587,6 +29995,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/leave_25-a.png",
+        
         "caption": "A Quiet Word",
         "scores": {
           "yoda": 3,
@@ -29600,6 +30010,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_25-b.png",
+        
         "caption": "A Long Hug",
         "scores": {
           "chewie": 3,
@@ -29614,6 +30026,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_25-c.png",
+        
         "caption": "A Wave From a Distance",
         "scores": {
           "han": 3,
@@ -29627,6 +30041,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/leave_25-d.png",
+        
         "caption": "A Promise",
         "scores": {
           "luke": 3,
@@ -29646,7 +30062,7 @@ const QUESTION_BANK = [
     "id": "force_01",
     "category": "THE WAY YOU FORCE",
     "type": "scenario",
-    "image": "PLACEHOLDER: Two hands held open with soft glowing light suspended between them, no figure visible, atmosphere of holding something invisible and alive, pure black background, 1024x1024",
+    "image": "./assets/quiz/force_01.png",
     "text": "There is a feeling some people talk about — a sense of being connected to something bigger than themselves. What is your honest relationship with it?",
     "answers": [
       {
@@ -30019,7 +30435,7 @@ const QUESTION_BANK = [
     "id": "force_09",
     "category": "THE WAY YOU FORCE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure sitting cross-legged at the edge of a high cliff at dawn, facing outward into vast open sky, no face visible, weathered cloak still in the breeze, atmosphere of inner listening, pure black background, 1024x1024",
+    "image": "./assets/quiz/force_09.png",
     "text": "You sit quietly somewhere beautiful. You let yourself feel the thing some people call the Force — or the spirit — or just the bigness. What comes up for you?",
     "answers": [
       {
@@ -30396,7 +30812,7 @@ const QUESTION_BANK = [
     "id": "force_16",
     "category": "THE WAY YOU FORCE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A small glowing crystal held in cupped hands, faint blue light coming from inside it, no face visible, atmosphere of holding something quietly precious, pure black background, 1024x1024",
+    "image": "./assets/quiz/force_16.png",
     "text": "Someone hands you something they say is sacred. Old. Important to them. You hold it. What happens in you?",
     "answers": [
       {
@@ -30960,6 +31376,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/force_04-a.png",
+        
         "caption": "A Warm Current",
         "scores": {
           "yoda": 3,
@@ -30973,6 +31391,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_04-b.png",
+        
         "caption": "A Quiet Whisper",
         "scores": {
           "obiwan": 3,
@@ -30986,6 +31406,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_04-c.png",
+        
         "caption": "A Hidden Edge",
         "scores": {
           "palpatine": 3,
@@ -30999,6 +31421,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_04-d.png",
+        
         "caption": "Nothing I Can Name",
         "scores": {
           "han": 3,
@@ -31021,6 +31445,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/force_08-a.png",
+        
         "caption": "In Nature",
         "scores": {
           "yoda": 3,
@@ -31034,6 +31460,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_08-b.png",
+        
         "caption": "In Stillness",
         "scores": {
           "yoda": 3,
@@ -31048,6 +31476,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_08-c.png",
+        
         "caption": "In a Loved One",
         "scores": {
           "mando": 3,
@@ -31062,6 +31492,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_08-d.png",
+        
         "caption": "In My Own Work",
         "scores": {
           "mando": 3,
@@ -31084,6 +31516,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/force_13-a.png",
+        
         "caption": "A Steady Flame",
         "scores": {
           "yoda": 3,
@@ -31097,6 +31531,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_13-b.png",
+        
         "caption": "A Bright Beam",
         "scores": {
           "luke": 3,
@@ -31110,6 +31546,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_13-c.png",
+        
         "caption": "A Sharp Point",
         "scores": {
           "mace": 3,
@@ -31123,6 +31561,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_13-d.png",
+        
         "caption": "A Quiet Pull",
         "scores": {
           "yoda": 3,
@@ -31145,6 +31585,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/force_25-a.png",
+        
         "caption": "The Unseen",
         "scores": {
           "yoda": 3,
@@ -31159,6 +31601,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_25-b.png",
+        
         "caption": "My Own Mind",
         "scores": {
           "mace": 3,
@@ -31173,6 +31617,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_25-c.png",
+        
         "caption": "The People I Love",
         "scores": {
           "mando": 3,
@@ -31187,6 +31633,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/force_25-d.png",
+        
         "caption": "My Own Hands",
         "scores": {
           "han": 3,
@@ -31205,7 +31653,7 @@ const QUESTION_BANK = [
     "id": "surprise_01",
     "category": "THE WAY YOU SURPRISE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A figure standing in a moment of unexpected stillness, hand raised partway in a gesture they did not plan, soft warm side light catching them mid-motion, no face visible, atmosphere of being caught by surprise from inside, pure black background, 1024x1024",
+    "image": "./assets/quiz/surprise_01.png",
     "text": "You did something that surprised even you. What was it like in that moment?",
     "answers": [
       {
@@ -31582,7 +32030,7 @@ const QUESTION_BANK = [
     "id": "surprise_09",
     "category": "THE WAY YOU SURPRISE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A small reflection in still water at dusk, the reflected figure looking back at the viewer with a calm steady gaze, no full face visible, atmosphere of meeting yourself, pure black background, 1024x1024",
+    "image": "./assets/quiz/surprise_09.png",
     "text": "You meet a version of yourself from five years ago. They get to see who you are now. What surprises them most?",
     "answers": [
       {
@@ -31959,7 +32407,7 @@ const QUESTION_BANK = [
     "id": "surprise_16",
     "category": "THE WAY YOU SURPRISE",
     "type": "scenario",
-    "image": "PLACEHOLDER: A weathered hand gently reaching toward another smaller hand, the gesture tentative but real, both hands visible but no faces, soft warm light, atmosphere of unexpected reaching, pure black background, 1024x1024",
+    "image": "./assets/quiz/surprise_16.png",
     "text": "You are in a moment you have been dreading. You suddenly do something kind. Where did the kindness come from?",
     "answers": [
       {
@@ -32538,6 +32986,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/surprise_04-a.png",
+        
         "caption": "A Hidden Softness",
         "scores": {
           "mando": 3,
@@ -32551,6 +33001,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_04-b.png",
+        
         "caption": "A Sudden Courage",
         "scores": {
           "finn": 3,
@@ -32564,6 +33016,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_04-c.png",
+        
         "caption": "A Deep Wisdom",
         "scores": {
           "yoda": 3,
@@ -32578,6 +33032,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_04-d.png",
+        
         "caption": "A Quiet Strength",
         "scores": {
           "mando": 3,
@@ -32600,6 +33056,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/surprise_08-a.png",
+        
         "caption": "Letting Someone In",
         "scores": {
           "mando": 3,
@@ -32614,6 +33072,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_08-b.png",
+        
         "caption": "Walking Away",
         "scores": {
           "obiwan": 3,
@@ -32627,6 +33087,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_08-c.png",
+        
         "caption": "Saying the True Thing",
         "scores": {
           "obiwan": 3,
@@ -32640,6 +33102,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_08-d.png",
+        
         "caption": "Choosing Mercy",
         "scores": {
           "yoda": 3,
@@ -32664,6 +33128,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/surprise_13-a.png",
+        
         "caption": "A Hand Offered",
         "scores": {
           "luke": 3,
@@ -32678,6 +33144,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_13-b.png",
+        
         "caption": "A Helmet Removed",
         "scores": {
           "mando": 3,
@@ -32691,6 +33159,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_13-c.png",
+        
         "caption": "A Sword Lowered",
         "scores": {
           "yoda": 3,
@@ -32706,6 +33176,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_13-d.png",
+        
         "caption": "A Door Held Open",
         "scores": {
           "yoda": 3,
@@ -32730,6 +33202,8 @@ const QUESTION_BANK = [
     "grid_prompt": "TBD",
     "answers": [
       {
+        "image": "./assets/quiz/surprise_25-a.png",
+        
         "caption": "Someone Quieter",
         "scores": {
           "yoda": 3,
@@ -32744,6 +33218,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_25-b.png",
+        
         "caption": "Someone Braver",
         "scores": {
           "luke": 3,
@@ -32757,6 +33233,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_25-c.png",
+        
         "caption": "Someone Wiser",
         "scores": {
           "yoda": 3,
@@ -32771,6 +33249,8 @@ const QUESTION_BANK = [
         }
       },
       {
+        "image": "./assets/quiz/surprise_25-d.png",
+        
         "caption": "Someone Softer",
         "scores": {
           "mando": 3,
