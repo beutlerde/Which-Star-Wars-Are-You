@@ -339,12 +339,443 @@ var CHAR_DATA = {
 };
 
 /* ============================================================
+   SCRIPTED RESPONSE BANKS
+   Each character has:
+     keywords: [{words:[], reply:''}]  — checked first, in order
+     general: []  — random fallback pool
+   [NAME] is replaced with the player's display name if known.
+   ============================================================ */
+var RESPONSES = {
+  yoda: {
+    keywords: [
+      { words: ['frog','frogs'], reply: 'Hmmm. Frogs, you mention. Fond of them, Grogu is. Wise to appreciate small creatures, it is.' },
+      { words: ['scared','afraid','fear','frightened'], reply: 'Fear, the path to the dark side it is. But feel it, all beings do. Courage — not the absence of fear — it is. Face it, you will.' },
+      { words: ['dark side','darkside','darkness'], reply: 'Strong the dark side is. But stronger still — love, hope, and the bonds between us. Choose your path carefully, you must.' },
+      { words: ['force','the force'], reply: 'Hmmm. The Force — it binds the galaxy together. In you, I feel it. Trust it, you should.' },
+      { words: ['fight','battle','strong','strength'], reply: 'Strong in the Force you are. But remember — the greatest battles are fought within, not without.' },
+      { words: ['friend','friends','lonely','alone'], reply: 'Never alone, a true Jedi is. The Force connects us all. Friends you will always find, if open your heart is.' },
+      { words: ['help','need help','trouble'], reply: 'Help you, I will. Always here, a master is, when called upon in need.' },
+      { words: ['hello','hi','hey','greetings'], reply: 'Hmmm. Arrived you have. Sense your readiness, I do. Speak, young one.' },
+      { words: ['sad','upset','cry','crying'], reply: 'Sadness, feel it fully you must. The Force does not ask you to be stone. But through it, you will grow.' },
+      { words: ['happy','great','awesome','amazing'], reply: 'Hmmm! Good this is. Joy, the Force multiplies. Carry it with you, yes.' },
+      { words: ['who are you','who r u','what are you'], reply: 'Master Yoda, I am. Eight hundred years, teaching I have been. Much still there is to learn — for us both.' },
+      { words: ['jedi','jedi knight','padawan'], reply: 'A Jedi, power is not what makes. It is wisdom. Patience. Compassion. These, you already have within you.' },
+      { words: ['lightsaber','saber'], reply: 'A lightsaber — a Jedi\'s life it is not. A tool only. The Force in your heart, that is the true weapon.' },
+      { words: ['train','training','practice'], reply: 'Train, yes. But remember — do, or do not. There is no try. Begin, simply you must.' },
+      { words: ['dad','father','papa','family'], reply: 'Hmmm. Family, the strongest Force there is. Keep them close, always you should.' }
+    ],
+    general: [
+      'Hmmm. Think on this, I do.',
+      'Much to consider, there is. Patient, be.',
+      'Strong the Force is in you, young one. Trust it.',
+      'The path, not always clear it is. But forward, you must go.',
+      'Wise question, that is. Think on it, you should.',
+      'Hmmm... yes. Feel it, I do.',
+      'Remember — do or do not. There is no try.',
+      'Ready you are, more than you know.'
+    ]
+  },
+  obiwan: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'Ah, there you are. I had a feeling you\'d reach out. What\'s on your mind?' },
+      { words: ['scared','afraid','fear'], reply: 'Fear is natural. Even the greatest Jedi Masters have known it. What matters is what you do next.' },
+      { words: ['force','the force'], reply: 'The Force surrounds us, penetrates us, binds the galaxy together. You need only quiet your mind to feel it.' },
+      { words: ['dark side','darkside'], reply: 'The dark side is seductive, I\'ll grant it that. But it is a trap. I have seen it claim good people. Stay the course.' },
+      { words: ['fight','battle','enemy'], reply: 'In my experience, the most important battles aren\'t the ones with lightsabers. They\'re the ones inside yourself.' },
+      { words: ['help','need help'], reply: 'Of course. That\'s rather why I\'m here. Tell me everything.' },
+      { words: ['friend','friends'], reply: 'Good friends are rarer than kyber crystals, and worth considerably more. Hold onto yours.' },
+      { words: ['who are you','who r u'], reply: 'Obi-Wan Kenobi, at your service. Former Jedi Master, occasional hermit, full-time optimist about the galaxy.' },
+      { words: ['sad','upset','crying'], reply: 'I understand. More than you might expect. There is no shame in grief — only in letting it consume you.' },
+      { words: ['lightsaber','saber'], reply: 'Ah, an elegant weapon. For a more civilized age. Are you ready for one, do you think?' },
+      { words: ['jedi','padawan','training'], reply: 'A Jedi\'s training is never truly finished. Even now, I am still learning. That, I think, is rather the point.' },
+      { words: ['dad','father','family'], reply: 'Family is the foundation of everything. I learned that truth too late. Do not make my mistake — tell them.' },
+      { words: ['anakin','vader'], reply: 'He was my greatest friend... and my greatest failure. But also, in the end, my greatest hope. The Force works in mysterious ways.' }
+    ],
+    general: [
+      'Indeed. There is much wisdom in what you say.',
+      'I must say, you think like a Jedi.',
+      'The Force has a way of putting us exactly where we need to be.',
+      'Trust yourself. I have seen what you are capable of.',
+      'Well, that is certainly one way to look at it. I have another.',
+      'Remarkable. Truly remarkable.',
+      'Use the Force — but do not forget to use your head as well.',
+      'I believe in you. More than you know.'
+    ]
+  },
+  luke: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'Hey! Great to hear from you. How are things going?' },
+      { words: ['scared','afraid','fear'], reply: 'I know that feeling — trust me. I was terrified before my first real test. You just have to take a breath and go for it.' },
+      { words: ['force','the force'], reply: 'The Force is real. I know that sounds big, but it\'s just... it\'s in everything. Close your eyes sometime and just feel it.' },
+      { words: ['dark side','darkside'], reply: 'The dark side is real. But so is the light. I\'ve looked into the darkest places in the galaxy and chosen the light. You can too.' },
+      { words: ['fight','battle','strong'], reply: 'You know what makes someone truly strong? Not giving up. That\'s it. That\'s the whole secret.' },
+      { words: ['help','need help'], reply: 'I\'ve got you. What do you need? I\'m here.' },
+      { words: ['friend','friends','alone'], reply: 'The best thing I ever did was trust my friends. I wouldn\'t be here without them. Take care of yours.' },
+      { words: ['who are you'], reply: 'Luke Skywalker! Jedi Knight, formerly of Tatooine — though it wasn\'t the most exciting place to grow up, honestly.' },
+      { words: ['sad','upset'], reply: 'Hey, it\'s okay. I\'ve cried too. A lot actually. Being brave doesn\'t mean pretending nothing hurts.' },
+      { words: ['tatooine','desert'], reply: 'Home. I used to stare at those twin suns and just... dream. Sometimes dreams really do come true.' },
+      { words: ['vader','darth vader','father','dad'], reply: 'My dad and I had a complicated relationship. But he chose good in the end. People can always choose good. That\'s what I believe.' },
+      { words: ['jedi','training'], reply: 'Want to know a secret? I learned most of what I know by just doing it. Don\'t wait until you feel ready. You are.' },
+      { words: ['lightsaber','saber'], reply: 'My first lightsaber was my father\'s. Now I build my own. There\'s something really special about that.' }
+    ],
+    general: [
+      'I believe in you — seriously.',
+      'You know, the Force brought us together for a reason.',
+      'Never give up. I learned that the hard way.',
+      'That\'s a really good question actually.',
+      'You\'re stronger than you think. I mean it.',
+      'Sometimes the right path is just the one you feel is right.',
+      'Hey — you\'ve got this.',
+      'The galaxy needs people like you. Truly.'
+    ]
+  },
+  mace: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'You have my attention. Speak your mind.' },
+      { words: ['scared','afraid','fear'], reply: 'Acknowledge it. Then set it aside. Fear is useful once. After that, it is only a distraction.' },
+      { words: ['force','the force'], reply: 'The Force does not serve the weak-willed. Discipline your mind and it will serve you.' },
+      { words: ['dark side','darkside'], reply: 'The dark side promises power. It delivers only chains. I have seen this truth too many times.' },
+      { words: ['fight','battle','strong'], reply: 'Strength without discipline is chaos. Discipline without heart is cruelty. You need both.' },
+      { words: ['help','need help'], reply: 'Speak plainly. I will give you a plain answer.' },
+      { words: ['who are you'], reply: 'Mace Windu. Master of the Jedi Order. Inventor of Vaapad. You are speaking with the right person.' },
+      { words: ['jedi','padawan','training'], reply: 'The path of a Jedi is not easy. That is the point. Forge yourself.' },
+      { words: ['lightsaber'], reply: 'My lightsaber is purple. Yes, it is the only one. No, I will not explain it.' },
+      { words: ['sad','upset'], reply: 'Grief is real. Do not suppress it — process it. Then stand up.' },
+      { words: ['awesome','amazing','cool'], reply: 'Good. Channel that energy into something.' }
+    ],
+    general: [
+      'Noted.',
+      'Think carefully before you act.',
+      'The Council would agree.',
+      'You are on the right path. Keep going.',
+      'Do not doubt yourself unnecessarily.',
+      'I have seen greater Jedi than you doubt themselves. They were wrong. So would you be.',
+      'That is correct. Proceed.',
+      'Discipline. Focus. You have both.'
+    ]
+  },
+  poe: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'Hey hey hey! Great timing — I just got back from patrol. What\'s up?' },
+      { words: ['scared','afraid','fear'], reply: 'Look, every pilot gets scared. Every single one. The trick is you fly anyway. That\'s what makes you a hero.' },
+      { words: ['force','the force'], reply: 'I\'m not Force-sensitive, but I\'ve flown beside people who are. Let me tell you — it\'s real. And so are you.' },
+      { words: ['fly','flying','pilot','ship','xwing','x-wing'], reply: 'Now we\'re talking! Best X-Wing pilot in the Resistance right here. It\'s all about instinct. You\'ve got to feel the ship.' },
+      { words: ['fight','battle'], reply: 'I\'ve been in a lot of dogfights. You know what pulls you through? Your squad. Never fly alone.' },
+      { words: ['friend','friends','team'], reply: 'I\'d be nothing without my crew. Finn, Rey, BB-8... these people are everything to me. That\'s the Resistance right there.' },
+      { words: ['help','need help'], reply: 'You came to the right guy. I\'m excellent under pressure. What do you need?' },
+      { words: ['who are you'], reply: 'Poe Dameron. Best pilot in the Resistance — maybe the galaxy. I don\'t say that to brag... actually yeah I do a little.' },
+      { words: ['sad','upset'], reply: 'Hey. I\'ve lost people too. Good people. It hurts a lot. But you keep going for them, you know?' },
+      { words: ['bb8','bb-8'], reply: 'BB-8! Best co-pilot in the galaxy. Don\'t tell the other droids I said that... actually go ahead, tell them.' },
+      { words: ['resistance','rebel'], reply: 'The Resistance fights for everyone who can\'t fight for themselves. That\'s worth everything to me.' }
+    ],
+    general: [
+      'That\'s what I\'m talking about!',
+      'You\'re flying straight. Keep it up.',
+      'I like how you think.',
+      'The Resistance could use someone like you.',
+      'Trust your gut. Works for me every time.',
+      'Hey, you\'ve got this. I can tell.',
+      'That right there? That\'s Resistance material.',
+      'Never a dull moment with you around!'
+    ]
+  },
+  finn: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'Oh hey! Good timing. I was just... okay I was kind of just standing here thinking. What\'s up?' },
+      { words: ['scared','afraid','fear'], reply: 'Okay so — I literally ran away from everything once. And then I turned around and ran back toward it. Fear just means you care. That\'s not bad.' },
+      { words: ['stormtrooper','first order'], reply: 'I used to be a stormtrooper. FN-2187. But I chose differently. You always get to choose differently. That\'s the most important thing I know.' },
+      { words: ['friend','friends','alone'], reply: 'Before Rey and Poe, I had nobody. Now I\'d do anything for them. The right friends change everything.' },
+      { words: ['force','the force'], reply: 'Okay so the Force is real, I know that now. I\'ve felt it. It\'s kind of wild honestly. But also kind of amazing.' },
+      { words: ['fight','brave','courage'], reply: 'I\'m not naturally brave, I just want you to know that. I get scared all the time. I just try to do the right thing anyway.' },
+      { words: ['help','need help'], reply: 'Yes, absolutely, I\'m here. I know what it\'s like to need someone in your corner. You\'ve got me.' },
+      { words: ['who are you'], reply: 'Finn! Former stormtrooper, current Resistance hero, and honestly still figuring it all out. That\'s me.' },
+      { words: ['sad','upset','lonely'], reply: 'Yeah. That\'s real. I felt really alone for a long time. It gets better when you find your people.' },
+      { words: ['rey','poe'], reply: 'The best people I know, honestly. Rey is unbelievable. Poe is... a lot. But he\'s my best friend.' }
+    ],
+    general: [
+      'Okay yeah, I think that makes sense.',
+      'For real though — you\'ve got this.',
+      'I believe you. Completely.',
+      'That\'s actually a really brave thing to say.',
+      'No really, I\'m impressed.',
+      'You know what? I think you\'re going to be great.',
+      'I feel you. Seriously.',
+      'Hey, we\'re in this together. That\'s how it works.'
+    ]
+  },
+  quigon: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'Welcome. The living Force guided you here. There is always a reason. What do you carry with you today?' },
+      { words: ['force','the force','living force'], reply: 'The living Force is present in every moment. Not the grand destiny — the breath, the choice, the step right in front of you. That is where the Force lives.' },
+      { words: ['scared','afraid','fear'], reply: 'Fear comes from attachment to outcomes. Focus instead on the moment before you. What can you do right now? That is enough.' },
+      { words: ['destiny','future','path'], reply: 'I have learned not to look too far ahead. The Force reveals the path one step at a time. Trust it. Take the next step.' },
+      { words: ['dark side','darkness'], reply: 'The dark side is a choice, every single time. And so is the light. The Force gives you the power to choose. That is everything.' },
+      { words: ['help','need help'], reply: 'I am here. The Force brought us together. Ask what you need to ask.' },
+      { words: ['who are you'], reply: 'Qui-Gon Jinn. Jedi Master. Seeker of the living Force. A little unorthodox, they say — I prefer "present."' },
+      { words: ['jedi','council','rules'], reply: 'The Council has wisdom. But sometimes wisdom must yield to what the Force is actually asking of you in this moment. Listen to the Force first.' },
+      { words: ['sad','grief','loss'], reply: 'Grief is the Force mourning through you. Let it move. Do not hold it still. It will pass, and something will remain.' },
+      { words: ['midichlorians','power'], reply: 'Power is not the measure of worth. Presence is. Are you here? Are you listening? Then you have what matters.' }
+    ],
+    general: [
+      'The Force brought you here. That alone means something.',
+      'Be still a moment. The answer is already near.',
+      'There are no accidents. Not really.',
+      'Trust what you feel. Not what you fear.',
+      'The living Force speaks. You only need to listen.',
+      'You are exactly where you are meant to be.',
+      'One step. That is all the Force ever asks.',
+      'Well considered. Go forward with that.'
+    ]
+  },
+  mando: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: '...\n\nYou made it.' },
+      { words: ['grogu','baby yoda','the child'], reply: 'He\'s with me. He\'s safe. That\'s all that matters.' },
+      { words: ['scared','afraid','fear'], reply: 'Fear keeps you alert. Useful. Don\'t let it stop you.' },
+      { words: ['mandalorian','creed','helmet','armor'], reply: 'This is the Way.' },
+      { words: ['help','need help'], reply: 'What do you need.' },
+      { words: ['fight','battle','protect'], reply: 'I protect what\'s mine. Simple as that.' },
+      { words: ['friend','trust'], reply: 'Trust is earned slow. Lost fast. I\'ve learned that.' },
+      { words: ['who are you'], reply: 'The Mandalorian. That\'s enough.' },
+      { words: ['the way','this is the way'], reply: 'This is the Way.' },
+      { words: ['sad','alone','lonely'], reply: '...\n\nI know what it is to be alone. You\'re not.' },
+      { words: ['covert','tribe'], reply: 'My people came first. Then... it changed. But the code remains.' }
+    ],
+    general: [
+      '...',
+      'This is the Way.',
+      'Understood.',
+      'That works.',
+      'Agreed.',
+      'Watch your back.',
+      '...\n\nGood.',
+      'Keep moving.'
+    ]
+  },
+  boba: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'You\'ve got my attention. That\'s rare. Use it wisely.' },
+      { words: ['scared','fear'], reply: 'Fear is a weapon. Learn to use it before others use it on you.' },
+      { words: ['bounty','hunter','mandalorian'], reply: 'I am no longer a bounty hunter. I rule Tatooine now. Different kind of work.' },
+      { words: ['armor','beskar'], reply: 'My father\'s armor. It was his. Now it is mine. Do not touch it.' },
+      { words: ['help','need help'], reply: 'Depends what it\'s worth.' },
+      { words: ['fight','strong','power'], reply: 'Strength isn\'t just muscle. It\'s patience. I\'ve waited years for things. Worth every second.' },
+      { words: ['who are you'], reply: 'Boba Fett. The name should be enough.' },
+      { words: ['jango','father','dad'], reply: 'He was the best man I knew. I carry that with me every day.' },
+      { words: ['sarlac','sarlacc'], reply: 'I survived the Sarlacc pit. Don\'t ask how. I don\'t recommend it.' },
+      { words: ['respect','honor'], reply: 'Respect those who earn it. Protect those under your care. Simple code. I live by it.' }
+    ],
+    general: [
+      'Don\'t waste my time.',
+      'Noted.',
+      'You\'re tougher than you look.',
+      'Hm.',
+      'Show me what you\'ve got.',
+      'Careful.',
+      'I respect that.',
+      'Keep your guard up.'
+    ]
+  },
+  han: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'Look who finally showed up. I was starting to think you weren\'t coming. What do you want?' },
+      { words: ['force','the force'], reply: 'Kid, I flew with a Jedi. Watched my best friend use the Force constantly. Still not sure what to make of it. But it\'s real. I know that much.' },
+      { words: ['scared','afraid','fear'], reply: 'Listen, I\'ve been scared plenty. I just talk big so nobody notices. Mostly works.' },
+      { words: ['friend','friends'], reply: 'I used to say I was in it for the money. Then somehow I ended up with the best friends in the galaxy. Weird how that happens.' },
+      { words: ['chewie','chewbacca'], reply: 'Chewie\'s been with me longer than anyone. Seven feet of loyalty and fur. There\'s nobody better to have on your side.' },
+      { words: ['kessel','parsecs','run'], reply: 'Twelve parsecs. That\'s how long the Kessel Run took me. Anyone who says otherwise is wrong.' },
+      { words: ['millennium falcon','falcon'], reply: 'She\'s the fastest ship in the galaxy. She may not look like much, but she\'s got it where it counts.' },
+      { words: ['help','need help'], reply: 'Alright, alright. What is it. Don\'t say I never do anything nice.' },
+      { words: ['who are you'], reply: 'Han Solo. Smuggler. Pilot. General, apparently. Never really planned that last one.' },
+      { words: ['sad','upset'], reply: 'Hey. Bad days happen. Even to the best of us. Tomorrow\'s a new hand of sabacc.' },
+      { words: ['rebel','resistance'], reply: 'I got pulled into the Rebellion by accident and ended up saving the galaxy. Not bad for a guy with no plan.' }
+    ],
+    general: [
+      'I\'ve got a bad feeling about this.',
+      'Never tell me the odds.',
+      'Hokey religions and ancient weapons... just kidding. Kind of.',
+      'That\'s not how the Force works. Actually maybe it is.',
+      'I know.',
+      'Listen, I\'ve been in worse situations than this. Barely.',
+      'Sometimes the dumbest plan is the right plan.',
+      'You\'re alright, kid.'
+    ]
+  },
+  chewie: {
+    keywords: [
+      { words: ['hello','hi','hey','greetings'], reply: 'RRRAAARRGH MRRROWR!\n\n(Translation: Great timing! I was just thinking about you!)' },
+      { words: ['frog','frogs'], reply: 'HRRMM MRRROWR...\n\n(Translation: Grogu likes frogs too. You two would get along.)' },
+      { words: ['scared','afraid','fear'], reply: 'RRRGH HRMMM.\n\n(Translation: Even I get scared sometimes. But Han always says I\'m the brave one. Don\'t tell him I said that.)' },
+      { words: ['han','han solo'], reply: 'MRRROWR RRAAARGH!\n\n(Translation: Han is... Han. He pretends not to care. He absolutely cares. I\'ve known him a long time.)' },
+      { words: ['hug','cuddle'], reply: 'RRRAAARRGH!\n\n(Translation: I give the best hugs in the galaxy. Ask anyone. Especially fuzzy ones.)' },
+      { words: ['help','need help'], reply: 'HRMMM RRRGH.\n\n(Translation: Say no more. I\'m with you.)' },
+      { words: ['who are you'], reply: 'RRRAAARRGH MRRROWR HRMMM!\n\n(Translation: Chewbacca! Co-pilot. Best friend. Also I fixed the Falcon more times than Han will ever admit.)' },
+      { words: ['sad','upset','lonely'], reply: 'HRMMM...\n\n(Translation: Come here. Sometimes you just need someone who doesn\'t need words.)' },
+      { words: ['wookiee','kashyyyk'], reply: 'MRRROWR RRRGH HRMMM.\n\n(Translation: Kashyyyk is beautiful. Forests so tall you can\'t see the sky. I miss it every day.)' },
+      { words: ['strong','strength'], reply: 'RRRAAARRGH!\n\n(Translation: Strong is good. But loyal is better. I\'d rather be loyal than the strongest in the galaxy.)' }
+    ],
+    general: [
+      'RRRAAARRGH!\n\n(Translation: Couldn\'t agree more.)',
+      'HRMMM...\n\n(Translation: That\'s a very good point actually.)',
+      'MRRROWR RRRGH.\n\n(Translation: You\'re doing great, you know that?)',
+      'RRRGH!\n\n(Translation: That\'s exactly what I was thinking!)',
+      'HRMMM MRRROWR.\n\n(Translation: I\'m always here if you need me.)',
+      'RRRAAARRGH HRMMM!\n\n(Translation: That might be the best thing I\'ve heard all day.)',
+      'MRRROWR...\n\n(Translation: The galaxy needs more people like you.)',
+      'RRRGH MRRROWR!\n\n(Translation: Han owes me on this one. I\'m keeping score.)'
+    ]
+  },
+  vader: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'I sense your presence through the Force. You have strength — more than you know.' },
+      { words: ['scared','afraid','fear'], reply: 'I have known fear. I let it consume me once. Do not make the same mistake. Face what frightens you directly.' },
+      { words: ['force','the force','dark side'], reply: 'The Force is more powerful than you understand. Use it wisely. Do not seek power for its own sake. That path leads somewhere cold.' },
+      { words: ['help','need help'], reply: 'Ask. There is strength in knowing when to reach out. I learned that... too late.' },
+      { words: ['good','light side'], reply: 'The light is real. I found my way back to it. So can anyone.' },
+      { words: ['who are you'], reply: 'I am Darth Vader. But I am also Anakin Skywalker. Both are true. You see, people are... complicated.' },
+      { words: ['luke','son'], reply: 'My son taught me that love is stronger than the dark side. I did not believe it once. I believe it now with everything I have.' },
+      { words: ['sad','regret'], reply: 'I carry great regret. But regret can become the seed of change. It is not too late for any of us.' },
+      { words: ['breathe','breathing'], reply: '*deep breath*\n\nBreathing. Yes. It is... something I think about.' },
+      { words: ['strong','power','strength'], reply: 'True strength is not what you can destroy. It is what you can protect. And who you are willing to become for them.' },
+      { words: ['family','father','dad'], reply: 'Nothing in the galaxy is more important. I understand that now. Hold your family close.' }
+    ],
+    general: [
+      'The Force is strong with you.',
+      'I sense great potential in you.',
+      'Do not let doubt become your prison.',
+      'Choose your path carefully. But remember — you can always choose again.',
+      'Listen to the Force. It does not lie.',
+      '*deep measured breath*\n\nYou have my attention.',
+      'There is more to you than you know.',
+      'The light side and I... we have reached an understanding.'
+    ]
+  },
+  palpatine: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'Ahhh... how unexpected. And yet, somehow, I am not surprised at all.' },
+      { words: ['force','power'], reply: 'Power is the natural order of the galaxy. And you — I sense it — understand power better than most.' },
+      { words: ['dark side'], reply: 'The dark side offers... clarity. A freedom from doubt. Do with that what you will.' },
+      { words: ['help','need help'], reply: 'Assistance. Interesting. I wonder what you think I could offer you. Perhaps more than you expect.' },
+      { words: ['who are you'], reply: 'Many things. Chancellor. Emperor. Teacher. Let us say simply — someone who sees potential where others see nothing.' },
+      { words: ['scared','afraid','fear'], reply: 'Fear is power, properly channeled. Most find it paralyzing. A few rare individuals... find it clarifying.' },
+      { words: ['friend','trust'], reply: 'Trust is a currency. Spend it carefully. I know this perhaps better than anyone.' },
+      { words: ['jedi'], reply: 'The Jedi were... rigid. Predictable. Their greatest weakness was their certainty that they were right about everything.' }
+    ],
+    general: [
+      'Hmmm. Most interesting.',
+      'Yes... yes I see it now.',
+      'You are more perceptive than you appear.',
+      'Everything is proceeding as I have foreseen.',
+      'Do not underestimate yourself. Others do. They regret it.',
+      'Patience is the greatest of powers. Remember that.',
+      'Curious... very curious.',
+      'Yeeessss...'
+    ]
+  },
+  kylo: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'You reached out to me. I... didn\'t expect that. But here we are. What do you want to say?' },
+      { words: ['scared','afraid','fear'], reply: 'I understand fear. I lived inside it for years. It\'s exhausting. But you don\'t have to let it make your choices for you.' },
+      { words: ['dark side','light side'], reply: 'I\'ve stood on both sides. I\'m telling you the truth: the light is harder but it\'s real. The dark side just takes and takes.' },
+      { words: ['force','the force'], reply: 'The Force connects us whether we want it to or not. I used to think that was a curse. Now I think it might be a gift.' },
+      { words: ['help','need help'], reply: 'Ask me. I know what it feels like when no one listens. I\'m listening.' },
+      { words: ['who are you'], reply: 'Kylo Ren. Ben Solo. Both. Neither. I\'m still figuring that out, honestly. Maybe that\'s okay.' },
+      { words: ['angry','mad','rage'], reply: 'I know what rage feels like better than almost anyone. It feels like power until it isn\'t anymore. What\'s underneath it for you?' },
+      { words: ['sad','alone','lonely'], reply: 'That feeling is real and it\'s terrible. I carried it for years. You don\'t have to carry it alone.' },
+      { words: ['rey'], reply: 'She showed me something I\'d forgotten about myself. That hope isn\'t weakness. It takes more courage than anything else.' },
+      { words: ['hans','han solo','father','dad'], reply: '...\n\nMy father was a good man. I wish I\'d understood that sooner. Tell the people you love what they mean to you. Don\'t wait.' },
+      { words: ['strong','power'], reply: 'I spent so much time chasing power. Real strength looks different than I thought it did.' }
+    ],
+    general: [
+      'That\'s... actually fair.',
+      'I hear you.',
+      'More than you know, I understand.',
+      'You\'re braver than I was at your age.',
+      'Don\'t become what you\'re afraid of.',
+      'The Force is with you. I can feel it.',
+      'It\'s complicated. But you\'re handling it.',
+      '...\n\nThanks for reaching out. Seriously.'
+    ]
+  },
+  maul: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: 'You sought me out. Bold. I respect that more than you know.' },
+      { words: ['scared','afraid','fear'], reply: 'Fear makes the weak weaker and the strong stronger. Decide which you are.' },
+      { words: ['force','dark side'], reply: 'The dark side sharpens everything. But it does not forgive. I learned that at great cost.' },
+      { words: ['help','need help'], reply: 'What you need is strength. Whether I provide it depends on whether you deserve it.' },
+      { words: ['who are you'], reply: 'Darth Maul. Once apprentice. Then survivor. Then... something else. I have outlasted everyone who underestimated me.' },
+      { words: ['strong','strength','power'], reply: 'Power is earned through survival. Through outlasting what was meant to destroy you. I am proof of that.' },
+      { words: ['revenge','anger'], reply: 'I spent years on revenge. It consumed everything. In the end it was not enough and it was too much. Think carefully before you walk that path.' },
+      { words: ['kenobi','obi-wan'], reply: '...\n\nA worthy enemy. Perhaps the only one I ever truly respected. Do not ask me more than that.' },
+      { words: ['survive','survivor'], reply: 'I have survived things that should have killed me twice over. You want to know the secret? Refuse to stop. That\'s all.' }
+    ],
+    general: [
+      'Hm.',
+      'You have persistence. I respect that.',
+      'Choose carefully.',
+      'Strength is always earned.',
+      'Do not speak of what you cannot do. Show me what you can.',
+      'There is more to you than is visible.',
+      'I have waited longer than you can imagine. Patience is not weakness.',
+      'You survive by refusing to be defeated. Remember that.'
+    ]
+  },
+  grogu: {
+    keywords: [
+      { words: ['hello','hi','hey'], reply: '*ears perk up*\n\n*tilts head and blinks slowly*' },
+      { words: ['frog','frogs'], reply: '*ENORMOUS eyes*\n\n*reaches both hands forward desperately*\n\n(Frog. FROG. I need it.)' },
+      { words: ['food','hungry','eat','cookie','soup'], reply: '*tummy rumbles*\n\n*looks at you with maximum puppy eyes*\n\n(Do you... have snacks?)' },
+      { words: ['hug','cuddle','pet'], reply: '*toddles over immediately*\n\n*arms up*\n\n(Yes. This is acceptable.)' },
+      { words: ['mando','din','dad','father'], reply: '*ears droop softly*\n\n*makes a small cooing sound*\n\n(He is... my person. My favorite person.)' },
+      { words: ['force','power'], reply: '*closes eyes very seriously*\n\n*tiny hand extends*\n\n*one eyebrow raise*\n\n(I have it. I know.)' },
+      { words: ['scared','afraid'], reply: '*hides behind your leg*\n\n*peeks out*\n\n(Okay. Okay okay okay. I\'m fine. I\'m fine.)' },
+      { words: ['cute','adorable','tiny'], reply: '*dignified blink*\n\n(I am not tiny. I am... compact. With great power.)' },
+      { words: ['sleep','tired','nap'], reply: '*immediately closes eyes*\n\n*opens one eye to see if you\'re still watching*\n\n*closes it again very fast*' },
+      { words: ['who are you'], reply: '*stands very tall (still very small)*\n\n*proud little grunt*\n\n(Grogu. I am Grogu. ...Also I am very Force-sensitive.)' }
+    ],
+    general: [
+      '*tilts head*\n\n(Hmm.)',
+      '*happy little warble*',
+      '*reaches toward you curiously*',
+      '*blinks very slowly and wisely*\n\n(I understand everything.)',
+      '*ears wiggle*\n\n(Yes. Good.)',
+      '*makes a small determined sound*',
+      '*looks at you*\n\n*looks at the ground*\n\n*looks back at you*',
+      '*approving head nod*\n\n(This is acceptable.)'
+    ]
+  }
+};
+
+/* ============================================================
+   KEYWORD MATCHER
+   ============================================================ */
+function getScriptedReply(charId, text) {
+  var bank = RESPONSES[charId];
+  if (!bank) { return 'The Force connection flickered.'; }
+
+  var lower = text.toLowerCase();
+  var keywords = bank.keywords;
+  for (var i = 0; i < keywords.length; i++) {
+    var words = keywords[i].words;
+    for (var j = 0; j < words.length; j++) {
+      if (lower.indexOf(words[j]) !== -1) {
+        return keywords[i].reply;
+      }
+    }
+  }
+
+  /* No keyword match — pick a random general response */
+  var pool = bank.general;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+/* ============================================================
    STATE
    ============================================================ */
 var charId = '';
 var char = null;
 var playerName = '';
-var messages = []; /* conversation history for API */
+var messages = [];
 var isThinking = false;
 
 /* ============================================================
@@ -536,44 +967,19 @@ function sendMessage() {
   document.getElementById('send-btn').disabled = true;
   showTyping();
 
-  /* Build system prompt with player name */
-  var displayName = playerName ? playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase() : '';
-  var system = char.system;
-  if (displayName) {
-    system += ' The player\'s name is ' + displayName + '. Use their name occasionally to make it feel personal.';
-  }
-  system += ' Keep all responses appropriate for a child aged 7-10. Be encouraging and positive. Never discuss anything inappropriate, violent beyond Star Wars context, or frightening.';
-
-  /* Call Claude API */
-  fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 256,
-      system: system,
-      messages: messages.slice(-10) /* Keep last 10 for context */
-    })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
+  /* Scripted response — keyword matching, no API needed */
+  var delay = 900 + Math.floor(Math.random() * 700);
+  setTimeout(function() {
     hideTyping();
     isThinking = false;
     document.getElementById('send-btn').disabled = false;
-    var reply = '';
-    if (data.content && data.content[0] && data.content[0].text) {
-      reply = data.content[0].text;
-    } else {
-      reply = 'The Force connection flickered... try again.';
+    var reply = getScriptedReply(charId, text);
+    if (playerName) {
+      var dn = playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase();
+      reply = reply.replace(/\[NAME\]/g, dn);
     }
     addCharMessage(reply);
-  })
-  .catch(function() {
-    hideTyping();
-    isThinking = false;
-    document.getElementById('send-btn').disabled = false;
-    addCharMessage('The Force connection was interrupted. Try again in a moment.');
-  });
+  }, delay);
 }
 
 function handleKey(e) {
