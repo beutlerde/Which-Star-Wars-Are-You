@@ -561,18 +561,18 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
    IMAGE HELPER — tries .png then .PNG automatically
    ============================================================ */
 function setImgSrc(el, path) {
-  var base = path.replace(/\.[Pp][Nn][Gg]$/,'').replace(/\.[Jj][Pp][Gg]$/,'');
-  var extMatch = path.match(/(\.[Pp][Nn][Gg]|\.[Jj][Pp][Gg])$/);
-  var pri = extMatch ? extMatch[1].toLowerCase() : '.png';
-  var sec = pri === '.png' ? '.PNG' : '.png';
-  el.onerror = function() {
-    el.onerror = function() {
-      el.onerror = null;
-      el.style.visibility = 'hidden';
-    };
-    el.src = base + sec;
-  };
-  el.src = base + pri;
+  if (!path) { el.style.visibility = 'hidden'; return; }
+  var base = path.replace(/\.[Pp][Nn][Gg]$/,'').replace(/\.[Jj][Pp][Ee]?[Gg]$/,'');
+  var exts = ['.png','.PNG','.jpg','.JPG','.jpeg','.JPEG'];
+  var i = 0;
+  function tryNext() {
+    if (i >= exts.length) { el.onerror = null; el.style.visibility = 'hidden'; return; }
+    el.onerror = tryNext;
+    el.src = base + exts[i];
+    i++;
+  }
+  el.style.visibility = 'visible';
+  tryNext();
 }
 
 /* ============================================================

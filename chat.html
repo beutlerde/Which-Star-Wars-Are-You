@@ -369,11 +369,11 @@ function init() {
   /* Set avatar */
   var avatarEl = document.getElementById('hdr-avatar');
   var base = '../../assets/characters/';
-  tryLoadImg(avatarEl, [base+char.img+'.png', base+char.img+'.PNG', './'+char.img+'.png', './'+char.img+'.PNG']);
+  tryLoadImg(avatarEl, [base+char.img+'.png', base+char.img+'.PNG', base+char.img+'.jpg', base+char.img+'.JPG', './'+char.img+'.png', './'+char.img+'.PNG']);
 
   /* Set background */
   var bgEl = document.getElementById('bg-img');
-  tryLoadBg(bgEl, [base+char.img+'.png', base+char.img+'.PNG']);
+  tryLoadBg(bgEl, [base+char.img+'.png', base+char.img+'.PNG', base+char.img+'.jpg', base+char.img+'.JPG']);
 
   /* Send button color */
   var sendBtn = document.getElementById('send-btn');
