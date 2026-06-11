@@ -430,7 +430,7 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
 #force-overlay.active { background:rgba(0,0,8,0.55); }
 
 /* ============================================================
-   YODA FORCE INTERRUPT — full-screen
+   YODA FORCE INTERRUPT — full-screen cinematic
    ============================================================ */
 #yoda-interrupt {
   position:fixed; inset:0; z-index:90;
@@ -450,6 +450,7 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
   transform:translateY(40px);
   transition:opacity 0.7s ease 0.3s, transform 0.7s ease 0.3s;
   pointer-events:none;
+  display:block;
 }
 #yoda-interrupt.active #yoda-interrupt-img {
   opacity:1;
@@ -462,17 +463,18 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
   width:min(84vw,340px);
   text-align:center;
   opacity:0;
-  transition:opacity 0.5s ease;
+  transition:opacity 0.5s ease 0.5s;
+  pointer-events:none;
 }
 #yoda-interrupt.active #yoda-interrupt-bubble {
   opacity:1;
 }
 #yoda-interrupt-quote {
   font-family:'Rajdhani',sans-serif;
-  font-size:clamp(18px,5vw,24px);
+  font-size:clamp(17px,5vw,23px);
   font-weight:600;
   font-style:italic;
-  line-height:1.4;
+  line-height:1.45;
   color:rgba(255,255,255,0.95);
   text-shadow:0 0 30px rgba(0,212,255,0.5), 0 2px 8px rgba(0,0,0,0.9);
   letter-spacing:0.3px;
@@ -485,6 +487,13 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
   text-transform:uppercase;
   margin-top:10px;
 }
+#yoda-interrupt-line {
+  width:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,212,255,0.6),transparent);
+  margin:10px auto 0;
+  transition:width 1s ease 1s;
+}
+#yoda-interrupt.active #yoda-interrupt-line { width:180px; }
 #yoda-interrupt-tap {
   position:absolute;
   bottom:max(env(safe-area-inset-bottom,16px),28px);
@@ -495,21 +504,14 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
   text-transform:uppercase;
   animation:yoda-tap-pulse 1.6s ease-in-out infinite;
   opacity:0;
-  transition:opacity 0.4s ease 1.2s;
+  transition:opacity 0.4s ease 1.4s;
   white-space:nowrap;
+  pointer-events:none;
 }
 #yoda-interrupt.active #yoda-interrupt-tap { opacity:1; }
 @keyframes yoda-tap-pulse {
-  0%,100%{opacity:0.25;} 50%{opacity:0.7;}
+  0%,100%{opacity:0.2;} 50%{opacity:0.7;}
 }
-/* Cyan glow line under quote */
-#yoda-interrupt-line {
-  width:0; height:1px;
-  background:linear-gradient(90deg,transparent,rgba(0,212,255,0.6),transparent);
-  margin:10px auto 0;
-  transition:width 1s ease 0.8s;
-}
-#yoda-interrupt.active #yoda-interrupt-line { width:180px; }
 
 </style>
 </head>
@@ -1157,6 +1159,9 @@ function renderQuestion() {
   if (num === 15 && !dadShown) {
     showDadMessage();
   }
+
+  /* Yoda Force interrupt — fires AFTER Q5, Q10, Q15, Q20, Q25
+     Triggered from advanceQuestion so quiz is paused. No trigger here. */
 }
 
 /* ============================================================
@@ -1216,16 +1221,14 @@ function advanceQuestion() {
     return;
   }
 
-  /* Yoda Force interrupt every 5 questions (after Q5, Q10, Q15, Q20, Q25) */
-  if (currentIndex % 5 === 0 && currentIndex > 0) {
+  /* Yoda Force interrupt after every 5th answered question */
+  if (currentIndex % 5 === 0 && yodaShown.indexOf(currentIndex) === -1) {
+    yodaShown.push(currentIndex);
     var lineIdx = Math.min((currentIndex / 5) - 1, YODA_INTERRUPT_LINES.length - 1);
-    if (yodaShown.indexOf(currentIndex) === -1) {
-      yodaShown.push(currentIndex);
-      showYodaInterrupt(YODA_INTERRUPT_LINES[lineIdx], function() {
-        animateToNext();
-      });
-      return;
-    }
+    showYodaInterrupt(YODA_INTERRUPT_LINES[lineIdx], function() {
+      animateToNext();
+    });
+    return;
   }
 
   animateToNext();
@@ -1301,7 +1304,7 @@ function updateSaberProgress() {
    ============================================================ */
 var YODA_INTERRUPT_LINES = [
   'Beginning well, you are. Strong the Force feels in you today.',
-  'Interesting, your choices are. See much, the Force does, in how you think.',
+  'Interesting, your choices are. See much, the Force does.',
   'Halfway there, you are. Proud of you, I am. Trust what you feel.',
   'Close to the truth, you come. Patient, the Force has been with you.',
   'Almost complete, your journey is. Ready, you will soon be.',
@@ -1346,7 +1349,6 @@ function dismissYodaInterrupt() {
   var el = document.getElementById('yoda-interrupt');
   el.classList.remove('active');
 
-  /* Resume quiz flow after fade-out */
   var cb = yodaInterruptCallback;
   yodaInterruptCallback = null;
   setTimeout(function() {
@@ -1354,7 +1356,7 @@ function dismissYodaInterrupt() {
   }, 500);
 }
 
-/* Legacy small commentary — kept for any other callers */
+/* Legacy small commentary — kept in case needed elsewhere */
 function showYodaCommentary(text) {
   var el = document.getElementById('yoda-commentary');
   if (!el) return;
