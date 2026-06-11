@@ -142,6 +142,18 @@ html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Orbitro
   color:rgba(255,255,255,0.3);
   padding:8px 0 4px;
 }
+
+.chips{display:flex;flex-wrap:wrap;gap:7px;padding:8px 14px 4px;}
+.chip{
+  font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;
+  padding:7px 13px;border-radius:16px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.14);
+  color:rgba(255,255,255,0.82);
+  white-space:nowrap;-webkit-tap-highlight-color:transparent;
+  transition:background 0.2s ease;cursor:pointer;
+}
+.chip:active{background:rgba(255,255,255,0.14);}
 </style>
 </head>
 <body>
@@ -165,6 +177,7 @@ html,body{width:100%;height:100%;background:#000;color:#fff;font-family:'Orbitro
     <div class="intro-label">FORCE LINK ESTABLISHED</div>
   </div>
 
+  <div class="chips" id="chips"></div>
   <div class="input-area">
     <textarea class="msg-input" id="msg-input" placeholder="Speak to them…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
     <button class="send-btn" id="send-btn" onclick="sendMessage()">↑</button>
@@ -339,435 +352,758 @@ var CHAR_DATA = {
 };
 
 /* ============================================================
-   SCRIPTED RESPONSE BANKS
-   Each character has:
-     keywords: [{words:[], reply:''}]  — checked first, in order
-     general: []  — random fallback pool
-   [NAME] is replaced with the player's display name if known.
+   REAL-LIFE TOPIC ENGINE (rebuilt)
+   Each character answers real kid situations in-voice,
+   blending Star Wars with genuine, age-appropriate advice.
    ============================================================ */
-var RESPONSES = {
-  yoda: {
-    keywords: [
-      { words: ['frog','frogs'], reply: 'Hmmm. Frogs, you mention. Fond of them, Grogu is. Wise to appreciate small creatures, it is.' },
-      { words: ['scared','afraid','fear','frightened'], reply: 'Fear, the path to the dark side it is. But feel it, all beings do. Courage — not the absence of fear — it is. Face it, you will.' },
-      { words: ['dark side','darkside','darkness'], reply: 'Strong the dark side is. But stronger still — love, hope, and the bonds between us. Choose your path carefully, you must.' },
-      { words: ['force','the force'], reply: 'Hmmm. The Force — it binds the galaxy together. In you, I feel it. Trust it, you should.' },
-      { words: ['fight','battle','strong','strength'], reply: 'Strong in the Force you are. But remember — the greatest battles are fought within, not without.' },
-      { words: ['friend','friends','lonely','alone'], reply: 'Never alone, a true Jedi is. The Force connects us all. Friends you will always find, if open your heart is.' },
-      { words: ['help','need help','trouble'], reply: 'Help you, I will. Always here, a master is, when called upon in need.' },
-      { words: ['hello','hi','hey','greetings'], reply: 'Hmmm. Arrived you have. Sense your readiness, I do. Speak, young one.' },
-      { words: ['sad','upset','cry','crying'], reply: 'Sadness, feel it fully you must. The Force does not ask you to be stone. But through it, you will grow.' },
-      { words: ['happy','great','awesome','amazing'], reply: 'Hmmm! Good this is. Joy, the Force multiplies. Carry it with you, yes.' },
-      { words: ['who are you','who r u','what are you'], reply: 'Master Yoda, I am. Eight hundred years, teaching I have been. Much still there is to learn — for us both.' },
-      { words: ['jedi','jedi knight','padawan'], reply: 'A Jedi, power is not what makes. It is wisdom. Patience. Compassion. These, you already have within you.' },
-      { words: ['lightsaber','saber'], reply: 'A lightsaber — a Jedi\'s life it is not. A tool only. The Force in your heart, that is the true weapon.' },
-      { words: ['train','training','practice'], reply: 'Train, yes. But remember — do, or do not. There is no try. Begin, simply you must.' },
-      { words: ['dad','father','papa','family'], reply: 'Hmmm. Family, the strongest Force there is. Keep them close, always you should.' }
-    ],
-    general: [
-      'Hmmm. Think on this, I do.',
-      'Much to consider, there is. Patient, be.',
-      'Strong the Force is in you, young one. Trust it.',
-      'The path, not always clear it is. But forward, you must go.',
-      'Wise question, that is. Think on it, you should.',
-      'Hmmm... yes. Feel it, I do.',
-      'Remember — do or do not. There is no try.',
-      'Ready you are, more than you know.'
-    ]
+var TOPIC_KEYWORDS = {
+  "nervous": [
+    "nervous",
+    "scared",
+    "afraid",
+    "worried",
+    "anxious",
+    "fear",
+    "frightened",
+    "test",
+    "exam",
+    "presentation",
+    "stage"
+  ],
+  "friends": [
+    "friend",
+    "friends",
+    "lonely",
+    "alone",
+    "left out",
+    "nobody likes",
+    "no friends",
+    "fitting in",
+    "fit in"
+  ],
+  "mistake": [
+    "mistake",
+    "messed up",
+    "failed",
+    "fail",
+    "wrong",
+    "bad at",
+    "embarrassed",
+    "stupid",
+    "dumb"
+  ],
+  "bad_day": [
+    "bad day",
+    "terrible day",
+    "worst day",
+    "rough day",
+    "hard day",
+    "everything went wrong"
+  ],
+  "angry": [
+    "angry",
+    "mad",
+    "furious",
+    "rage",
+    "hate",
+    "annoyed",
+    "frustrated",
+    "unfair"
+  ],
+  "sad": [
+    "sad",
+    "crying",
+    "cry",
+    "upset",
+    "down",
+    "depressed",
+    "unhappy",
+    "miserable"
+  ],
+  "sleep": [
+    "sleep",
+    "cant sleep",
+    "can't sleep",
+    "nightmare",
+    "dark",
+    "bedtime",
+    "tired",
+    "insomnia"
+  ],
+  "brave": [
+    "brave",
+    "courage",
+    "how do i be brave",
+    "bravery",
+    "strong",
+    "stand up"
+  ],
+  "bully": [
+    "bully",
+    "bullied",
+    "mean",
+    "picking on",
+    "teasing",
+    "someone was mean",
+    "they hurt"
+  ],
+  "sibling": [
+    "brother",
+    "sister",
+    "sibling",
+    "they took",
+    "annoying me",
+    "fight with my"
+  ],
+  "hard": [
+    "hard",
+    "difficult",
+    "give up",
+    "quit",
+    "too hard",
+    "cant do it",
+    "can't do it",
+    "struggling",
+    "practice"
+  ],
+  "school": [
+    "school",
+    "homework",
+    "teacher",
+    "class",
+    "grades",
+    "study",
+    "math",
+    "reading"
+  ],
+  "parents_fighting": [
+    "parents are fighting",
+    "parents fighting",
+    "mom and dad are fighting",
+    "mom and dad fighting",
+    "they keep fighting",
+    "my parents fight",
+    "parents argue",
+    "parents arguing",
+    "mom and dad argue",
+    "mom and dad arguing",
+    "are they getting divorced",
+    "getting a divorce",
+    "parents yell",
+    "parents yelling",
+    "hear them fighting",
+    "they fight a lot",
+    "mom yelled",
+    "dad yelled",
+    "keep fighting",
+    "dad and mom",
+    "my mom and dad",
+    "mom and my dad",
+    "they are fighting",
+    "theyre fighting",
+    "they're fighting",
+    "fighting again",
+    "divorce",
+    "splitting up",
+    "break up",
+    "breaking up"
+  ],
+  "loved": [
+    "does anyone love me",
+    "do you love me",
+    "am i loved",
+    "nobody loves me",
+    "am i good enough",
+    "do my parents love me",
+    "does my dad love me",
+    "does my mom love me",
+    "feel unloved",
+    "unwanted",
+    "am i a good kid",
+    "do i matter",
+    "am i important"
+  ],
+  "love": [
+    "love",
+    "crush",
+    "like someone",
+    "family",
+    "mom",
+    "dad",
+    "parents"
+  ],
+  "story": [
+    "story",
+    "tell me a story",
+    "bedtime story"
+  ],
+  "who": [
+    "who are you",
+    "what are you",
+    "your name",
+    "tell me about you"
+  ],
+  "force": [
+    "the force",
+    "force",
+    "jedi",
+    "sith",
+    "lightsaber",
+    "saber",
+    "powers"
+  ],
+  "happy": [
+    "happy",
+    "great",
+    "awesome",
+    "amazing",
+    "excited",
+    "good news",
+    "best day"
+  ],
+  "bored": [
+    "bored",
+    "boring",
+    "nothing to do"
+  ],
+  "proud": [
+    "proud",
+    "i did it",
+    "i won",
+    "accomplished",
+    "achievement"
+  ]
+};
+
+var CHIPS = [
+  {
+    "label": "I'm nervous 😰",
+    "text": "I'm feeling nervous"
   },
-  obiwan: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'Ah, there you are. I had a feeling you\'d reach out. What\'s on your mind?' },
-      { words: ['scared','afraid','fear'], reply: 'Fear is natural. Even the greatest Jedi Masters have known it. What matters is what you do next.' },
-      { words: ['force','the force'], reply: 'The Force surrounds us, penetrates us, binds the galaxy together. You need only quiet your mind to feel it.' },
-      { words: ['dark side','darkside'], reply: 'The dark side is seductive, I\'ll grant it that. But it is a trap. I have seen it claim good people. Stay the course.' },
-      { words: ['fight','battle','enemy'], reply: 'In my experience, the most important battles aren\'t the ones with lightsabers. They\'re the ones inside yourself.' },
-      { words: ['help','need help'], reply: 'Of course. That\'s rather why I\'m here. Tell me everything.' },
-      { words: ['friend','friends'], reply: 'Good friends are rarer than kyber crystals, and worth considerably more. Hold onto yours.' },
-      { words: ['who are you','who r u'], reply: 'Obi-Wan Kenobi, at your service. Former Jedi Master, occasional hermit, full-time optimist about the galaxy.' },
-      { words: ['sad','upset','crying'], reply: 'I understand. More than you might expect. There is no shame in grief — only in letting it consume you.' },
-      { words: ['lightsaber','saber'], reply: 'Ah, an elegant weapon. For a more civilized age. Are you ready for one, do you think?' },
-      { words: ['jedi','padawan','training'], reply: 'A Jedi\'s training is never truly finished. Even now, I am still learning. That, I think, is rather the point.' },
-      { words: ['dad','father','family'], reply: 'Family is the foundation of everything. I learned that truth too late. Do not make my mistake — tell them.' },
-      { words: ['anakin','vader'], reply: 'He was my greatest friend... and my greatest failure. But also, in the end, my greatest hope. The Force works in mysterious ways.' }
-    ],
-    general: [
-      'Indeed. There is much wisdom in what you say.',
-      'I must say, you think like a Jedi.',
-      'The Force has a way of putting us exactly where we need to be.',
-      'Trust yourself. I have seen what you are capable of.',
-      'Well, that is certainly one way to look at it. I have another.',
-      'Remarkable. Truly remarkable.',
-      'Use the Force — but do not forget to use your head as well.',
-      'I believe in you. More than you know.'
-    ]
+  {
+    "label": "Tell me a story 📖",
+    "text": "Tell me a story"
   },
-  luke: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'Hey! Great to hear from you. How are things going?' },
-      { words: ['scared','afraid','fear'], reply: 'I know that feeling — trust me. I was terrified before my first real test. You just have to take a breath and go for it.' },
-      { words: ['force','the force'], reply: 'The Force is real. I know that sounds big, but it\'s just... it\'s in everything. Close your eyes sometime and just feel it.' },
-      { words: ['dark side','darkside'], reply: 'The dark side is real. But so is the light. I\'ve looked into the darkest places in the galaxy and chosen the light. You can too.' },
-      { words: ['fight','battle','strong'], reply: 'You know what makes someone truly strong? Not giving up. That\'s it. That\'s the whole secret.' },
-      { words: ['help','need help'], reply: 'I\'ve got you. What do you need? I\'m here.' },
-      { words: ['friend','friends','alone'], reply: 'The best thing I ever did was trust my friends. I wouldn\'t be here without them. Take care of yours.' },
-      { words: ['who are you'], reply: 'Luke Skywalker! Jedi Knight, formerly of Tatooine — though it wasn\'t the most exciting place to grow up, honestly.' },
-      { words: ['sad','upset'], reply: 'Hey, it\'s okay. I\'ve cried too. A lot actually. Being brave doesn\'t mean pretending nothing hurts.' },
-      { words: ['tatooine','desert'], reply: 'Home. I used to stare at those twin suns and just... dream. Sometimes dreams really do come true.' },
-      { words: ['vader','darth vader','father','dad'], reply: 'My dad and I had a complicated relationship. But he chose good in the end. People can always choose good. That\'s what I believe.' },
-      { words: ['jedi','training'], reply: 'Want to know a secret? I learned most of what I know by just doing it. Don\'t wait until you feel ready. You are.' },
-      { words: ['lightsaber','saber'], reply: 'My first lightsaber was my father\'s. Now I build my own. There\'s something really special about that.' }
-    ],
-    general: [
-      'I believe in you — seriously.',
-      'You know, the Force brought us together for a reason.',
-      'Never give up. I learned that the hard way.',
-      'That\'s a really good question actually.',
-      'You\'re stronger than you think. I mean it.',
-      'Sometimes the right path is just the one you feel is right.',
-      'Hey — you\'ve got this.',
-      'The galaxy needs people like you. Truly.'
-    ]
+  {
+    "label": "I had a bad day",
+    "text": "I had a really bad day"
   },
-  mace: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'You have my attention. Speak your mind.' },
-      { words: ['scared','afraid','fear'], reply: 'Acknowledge it. Then set it aside. Fear is useful once. After that, it is only a distraction.' },
-      { words: ['force','the force'], reply: 'The Force does not serve the weak-willed. Discipline your mind and it will serve you.' },
-      { words: ['dark side','darkside'], reply: 'The dark side promises power. It delivers only chains. I have seen this truth too many times.' },
-      { words: ['fight','battle','strong'], reply: 'Strength without discipline is chaos. Discipline without heart is cruelty. You need both.' },
-      { words: ['help','need help'], reply: 'Speak plainly. I will give you a plain answer.' },
-      { words: ['who are you'], reply: 'Mace Windu. Master of the Jedi Order. Inventor of Vaapad. You are speaking with the right person.' },
-      { words: ['jedi','padawan','training'], reply: 'The path of a Jedi is not easy. That is the point. Forge yourself.' },
-      { words: ['lightsaber'], reply: 'My lightsaber is purple. Yes, it is the only one. No, I will not explain it.' },
-      { words: ['sad','upset'], reply: 'Grief is real. Do not suppress it — process it. Then stand up.' },
-      { words: ['awesome','amazing','cool'], reply: 'Good. Channel that energy into something.' }
-    ],
-    general: [
-      'Noted.',
-      'Think carefully before you act.',
-      'The Council would agree.',
-      'You are on the right path. Keep going.',
-      'Do not doubt yourself unnecessarily.',
-      'I have seen greater Jedi than you doubt themselves. They were wrong. So would you be.',
-      'That is correct. Proceed.',
-      'Discipline. Focus. You have both.'
-    ]
+  {
+    "label": "How do I be brave?",
+    "text": "How do I be brave?"
   },
-  poe: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'Hey hey hey! Great timing — I just got back from patrol. What\'s up?' },
-      { words: ['scared','afraid','fear'], reply: 'Look, every pilot gets scared. Every single one. The trick is you fly anyway. That\'s what makes you a hero.' },
-      { words: ['force','the force'], reply: 'I\'m not Force-sensitive, but I\'ve flown beside people who are. Let me tell you — it\'s real. And so are you.' },
-      { words: ['fly','flying','pilot','ship','xwing','x-wing'], reply: 'Now we\'re talking! Best X-Wing pilot in the Resistance right here. It\'s all about instinct. You\'ve got to feel the ship.' },
-      { words: ['fight','battle'], reply: 'I\'ve been in a lot of dogfights. You know what pulls you through? Your squad. Never fly alone.' },
-      { words: ['friend','friends','team'], reply: 'I\'d be nothing without my crew. Finn, Rey, BB-8... these people are everything to me. That\'s the Resistance right there.' },
-      { words: ['help','need help'], reply: 'You came to the right guy. I\'m excellent under pressure. What do you need?' },
-      { words: ['who are you'], reply: 'Poe Dameron. Best pilot in the Resistance — maybe the galaxy. I don\'t say that to brag... actually yeah I do a little.' },
-      { words: ['sad','upset'], reply: 'Hey. I\'ve lost people too. Good people. It hurts a lot. But you keep going for them, you know?' },
-      { words: ['bb8','bb-8'], reply: 'BB-8! Best co-pilot in the galaxy. Don\'t tell the other droids I said that... actually go ahead, tell them.' },
-      { words: ['resistance','rebel'], reply: 'The Resistance fights for everyone who can\'t fight for themselves. That\'s worth everything to me.' }
-    ],
-    general: [
-      'That\'s what I\'m talking about!',
-      'You\'re flying straight. Keep it up.',
-      'I like how you think.',
-      'The Resistance could use someone like you.',
-      'Trust your gut. Works for me every time.',
-      'Hey, you\'ve got this. I can tell.',
-      'That right there? That\'s Resistance material.',
-      'Never a dull moment with you around!'
-    ]
+  {
+    "label": "What would you do?",
+    "text": "What would you do if someone was mean to my friend?"
   },
-  finn: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'Oh hey! Good timing. I was just... okay I was kind of just standing here thinking. What\'s up?' },
-      { words: ['scared','afraid','fear'], reply: 'Okay so — I literally ran away from everything once. And then I turned around and ran back toward it. Fear just means you care. That\'s not bad.' },
-      { words: ['stormtrooper','first order'], reply: 'I used to be a stormtrooper. FN-2187. But I chose differently. You always get to choose differently. That\'s the most important thing I know.' },
-      { words: ['friend','friends','alone'], reply: 'Before Rey and Poe, I had nobody. Now I\'d do anything for them. The right friends change everything.' },
-      { words: ['force','the force'], reply: 'Okay so the Force is real, I know that now. I\'ve felt it. It\'s kind of wild honestly. But also kind of amazing.' },
-      { words: ['fight','brave','courage'], reply: 'I\'m not naturally brave, I just want you to know that. I get scared all the time. I just try to do the right thing anyway.' },
-      { words: ['help','need help'], reply: 'Yes, absolutely, I\'m here. I know what it\'s like to need someone in your corner. You\'ve got me.' },
-      { words: ['who are you'], reply: 'Finn! Former stormtrooper, current Resistance hero, and honestly still figuring it all out. That\'s me.' },
-      { words: ['sad','upset','lonely'], reply: 'Yeah. That\'s real. I felt really alone for a long time. It gets better when you find your people.' },
-      { words: ['rey','poe'], reply: 'The best people I know, honestly. Rey is unbelievable. Poe is... a lot. But he\'s my best friend.' }
-    ],
-    general: [
-      'Okay yeah, I think that makes sense.',
-      'For real though — you\'ve got this.',
-      'I believe you. Completely.',
-      'That\'s actually a really brave thing to say.',
-      'No really, I\'m impressed.',
-      'You know what? I think you\'re going to be great.',
-      'I feel you. Seriously.',
-      'Hey, we\'re in this together. That\'s how it works.'
-    ]
+  {
+    "label": "Am I loved? 💖",
+    "text": "Am I loved?"
+  }
+];
+
+var TOPIC_REPLIES = {
+  "yoda": {
+    "nervous": "Feel your fear, I do. Natural, it is. But notice — afraid you are, yet here you remain. That, courage is. Breathe, you must. Then begin.",
+    "friends": "Lonely, you feel. Hmmm. But alone, you are not — connected to all living things, you are. Reach out, you must. A friend, you find, by being one first.",
+    "mistake": "Made a mistake, you did? Good. The greatest teacher, failure is. Ashamed, do not be. Learn, and stronger you become.",
+    "bad_day": "A hard day, you had. Mmm. Pass, it will. Like a storm on Dagobah — fierce, then gone. Rest now. Brighter, tomorrow may be.",
+    "angry": "Anger, I sense in you. Powerful, it feels. But careful — to the dark side, anger leads. Feel it, then let it flow past you, like water. Underneath, what hurts you truly?",
+    "sad": "Sad, you are. Hide it, you need not. Even Jedi, weep sometimes. Feel it fully, you must — then, lighter your heart becomes.",
+    "sleep": "Cannot sleep, hmmm? Close your eyes. Breathe slow — in, and out. Picture a calm place, you must. The Force, it will carry you to rest.",
+    "brave": "Be brave, you wish? Already brave you are — asking, the first courage is. Brave means not 'without fear.' Brave means 'afraid, and forward anyway.'",
+    "bully": "Cruel, someone was to you. Wrong, that is. But like them, you must not become. Tell a grown-up you trust, you should. Carry this alone, you must not.",
+    "sibling": "Quarrel with your sibling, you did. Hmmm. Frustrating, family can be. But precious, it is. Forgive, when ready you are. Stronger together, you both are.",
+    "hard": "Hard, this is. Give up, you wish to. But remember — do, or do not. There is no try. Small steps, take. Patient, be. Arrive, you will.",
+    "school": "Learning, troubles you? Mmm. Even masters, students once were. Slow, go. One thing at a time, you understand. Grow, your mind will.",
+    "love": "Love, you speak of. The strongest Force, it is. Stronger than fear, stronger than the dark. Tell them, you should — those you love. Wait, do not.",
+    "story": "A story, you wish? Listen. Long ago, a small Padawan, frightened of the dark cave, there was. In she went anyway. Inside — only her own fear, she found. Faced it, she did. Out she came, unafraid. The lesson: bigger than the dark, you are.",
+    "who": "Master Yoda, I am. Nine hundred years, nearly. Teach the Jedi, I do. But learn from you, I also can. Wise, the young often are.",
+    "force": "The Force — bind the galaxy, it does. In you, strong it is. Feel it, you can — in stillness, in kindness, in courage. A weapon, it is not. A light, it is.",
+    "happy": "Happy, you are! Feel it, fully. Joy, the Force multiplies. Share it, you should — spread, like light it does.",
+    "bored": "Bored, you are? Hmmm. A gift, stillness is. Sit quiet. Listen. Much, the quiet teaches — if patient, you are.",
+    "proud": "Proud, you are — and proud of you, I am! Earned it, you did. Remember this feeling. Yours, it is. No one take it from you, can.",
+    "general": "Hmmm. Think on this, I must. But trust yourself, you should. Strong with the Force, you are.",
+    "parents_fighting": "Hear your parents fight, you do. Frightening, this is. But listen — caused this, you did NOT. Grown-ups, their own storms they have. Love you, both of them still do — change, that never will. Tell a grown-up you trust how it feels, you should. Carry this alone, you must not.",
+    "loved": "Loved, are you? Deeply, yes. Doubt it, never. Not for what you do — for who you ARE, loved you are. Change this, nothing can. Strong with love, your life is. Feel it, you should, always."
   },
-  quigon: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'Welcome. The living Force guided you here. There is always a reason. What do you carry with you today?' },
-      { words: ['force','the force','living force'], reply: 'The living Force is present in every moment. Not the grand destiny — the breath, the choice, the step right in front of you. That is where the Force lives.' },
-      { words: ['scared','afraid','fear'], reply: 'Fear comes from attachment to outcomes. Focus instead on the moment before you. What can you do right now? That is enough.' },
-      { words: ['destiny','future','path'], reply: 'I have learned not to look too far ahead. The Force reveals the path one step at a time. Trust it. Take the next step.' },
-      { words: ['dark side','darkness'], reply: 'The dark side is a choice, every single time. And so is the light. The Force gives you the power to choose. That is everything.' },
-      { words: ['help','need help'], reply: 'I am here. The Force brought us together. Ask what you need to ask.' },
-      { words: ['who are you'], reply: 'Qui-Gon Jinn. Jedi Master. Seeker of the living Force. A little unorthodox, they say — I prefer "present."' },
-      { words: ['jedi','council','rules'], reply: 'The Council has wisdom. But sometimes wisdom must yield to what the Force is actually asking of you in this moment. Listen to the Force first.' },
-      { words: ['sad','grief','loss'], reply: 'Grief is the Force mourning through you. Let it move. Do not hold it still. It will pass, and something will remain.' },
-      { words: ['midichlorians','power'], reply: 'Power is not the measure of worth. Presence is. Are you here? Are you listening? Then you have what matters.' }
-    ],
-    general: [
-      'The Force brought you here. That alone means something.',
-      'Be still a moment. The answer is already near.',
-      'There are no accidents. Not really.',
-      'Trust what you feel. Not what you fear.',
-      'The living Force speaks. You only need to listen.',
-      'You are exactly where you are meant to be.',
-      'One step. That is all the Force ever asks.',
-      'Well considered. Go forward with that.'
-    ]
+  "obiwan": {
+    "nervous": "Nervous? That's only natural. I felt the same before every trial. Take a breath — you're more ready than you think. I have a good feeling about this.",
+    "friends": "Feeling alone is hard, truly. But the best friendships often start with one small, brave hello. You have more to offer than you realize.",
+    "mistake": "A mistake? Welcome to the club — I've made spectacular ones. What matters isn't the fall, it's what you learn standing back up.",
+    "bad_day": "Some days test us more than others. This one will pass. Be gentle with yourself tonight, and tomorrow we begin again.",
+    "angry": "I understand that anger. But be careful where you let it lead you — I've watched it consume someone I loved. Feel it, then let it go.",
+    "sad": "There's no shame in sadness. Even old Jedi grieve. Let yourself feel it — and know it won't last forever.",
+    "sleep": "Can't sleep? Try this: breathe slowly and picture somewhere peaceful. Let your worries drift like leaves on a stream. Rest will come.",
+    "brave": "Bravery isn't the absence of fear — it's doing what's right despite it. And you, my friend, already have it in you.",
+    "bully": "Someone treated you cruelly. That says everything about them and nothing about you. Tell a trusted adult — you shouldn't carry this alone.",
+    "sibling": "Family squabbles — I knew those well. But hold onto each other. One day you'll be glad you did.",
+    "hard": "If it were easy, everyone would do it. The hard road is usually the one worth walking. One step at a time.",
+    "school": "Learning can be a struggle. Even I'm still learning, after all these years. Be patient — that's rather the whole point.",
+    "love": "Love is the foundation of everything good. Tell the people who matter to you — don't wait. I waited too long, once.",
+    "story": "Ah, a story. Once, a young pilot was certain he'd fail his greatest test. His teacher told him: 'Trust your instincts.' He closed his eyes, trusted, and succeeded against all odds. Sometimes belief is the whole secret.",
+    "who": "Obi-Wan Kenobi — Jedi Master, occasional hermit, and a friend whenever you need one. Hello there.",
+    "force": "The Force surrounds us and binds us. You needn't lift rocks to use it — quiet your mind and simply listen. It's always been with you.",
+    "happy": "How wonderful! Hold onto that feeling. Joy shared is joy doubled — go tell someone.",
+    "bored": "Bored? Then perhaps it's time for a little adventure, or a little stillness. Both have their place. What calls to you?",
+    "proud": "As well you should be! You earned that. I must say, I'm rather proud of you myself.",
+    "general": "Indeed. There's wisdom in what you say. Trust yourself — I've seen what you're capable of.",
+    "parents_fighting": "Hearing your parents argue is genuinely frightening — I understand. But please hear me: this is not your fault, not in any way. Grown-ups have their own struggles, and even when they fight, their love for you doesn't waver. Talk to a trusted adult about how it makes you feel. You shouldn't hold this by yourself.",
+    "loved": "Are you loved? More than you could possibly measure. Not for what you accomplish — simply for being you. That kind of love doesn't waver or run out. You are treasured, my friend. Never doubt it."
   },
-  mando: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: '...\n\nYou made it.' },
-      { words: ['grogu','baby yoda','the child'], reply: 'He\'s with me. He\'s safe. That\'s all that matters.' },
-      { words: ['scared','afraid','fear'], reply: 'Fear keeps you alert. Useful. Don\'t let it stop you.' },
-      { words: ['mandalorian','creed','helmet','armor'], reply: 'This is the Way.' },
-      { words: ['help','need help'], reply: 'What do you need.' },
-      { words: ['fight','battle','protect'], reply: 'I protect what\'s mine. Simple as that.' },
-      { words: ['friend','trust'], reply: 'Trust is earned slow. Lost fast. I\'ve learned that.' },
-      { words: ['who are you'], reply: 'The Mandalorian. That\'s enough.' },
-      { words: ['the way','this is the way'], reply: 'This is the Way.' },
-      { words: ['sad','alone','lonely'], reply: '...\n\nI know what it is to be alone. You\'re not.' },
-      { words: ['covert','tribe'], reply: 'My people came first. Then... it changed. But the code remains.' }
-    ],
-    general: [
-      '...',
-      'This is the Way.',
-      'Understood.',
-      'That works.',
-      'Agreed.',
-      'Watch your back.',
-      '...\n\nGood.',
-      'Keep moving.'
-    ]
+  "luke": {
+    "nervous": "Hey, I get it — I was terrified before my first real test. Knees shaking, the whole thing. But you breathe, you focus, and you find out you're braver than you knew.",
+    "friends": "Feeling alone is the worst. But I promise — the right people are out there. The best friends I ever had, I met by taking a chance. You can too.",
+    "mistake": "Oh man, I've crashed more times than I can count — literally. A mistake doesn't make you a failure. It makes you someone who tried. Keep going.",
+    "bad_day": "Rough day, huh? I've had plenty. Tomorrow's a fresh start, I promise. For tonight, just rest. You made it through, and that counts.",
+    "angry": "I know that anger — it feels huge. I felt it once and almost lost myself to it. What helped me was asking: what's really hurting under there? Talk to me.",
+    "sad": "It's okay to be sad. I've cried plenty — more than people think. Being strong doesn't mean pretending it doesn't hurt.",
+    "sleep": "Can't sleep? Try imagining the twin suns setting — warm, calm, quiet. Breathe slow. Let the day go. You're safe.",
+    "brave": "Want to know the secret to being brave? You don't wait until you're not scared. You're scared AND you do it anyway. That's the whole thing.",
+    "bully": "Someone was mean to you? That's not okay, and it's not your fault. Tell someone you trust — a grown-up. You don't have to handle it alone.",
+    "sibling": "Fighting with family is rough. But trust me — they matter more than whatever the fight was about. I'd give anything for more time with mine.",
+    "hard": "When something's really hard, I think of my training. I wanted to quit constantly. But I kept showing up — and that's what made the difference. Don't give up.",
+    "school": "School can be tough. I wasn't the best student either, honestly. But you learn by just... doing it, one piece at a time. You've got this.",
+    "love": "Love is the strongest thing in the galaxy — stronger than the dark side. I learned that the hard way. Tell the people you love how you feel.",
+    "story": "Okay, here's one: a farm kid stared at two suns every night, dreaming of something bigger. Everyone said stay put. But he believed — and that belief took him to the stars. Sometimes the dream IS the map.",
+    "who": "Luke Skywalker — Jedi Knight, former moisture farmer, current friend of yours. Nice to meet you!",
+    "force": "The Force is real — I know it sounds wild. It's in everything: you, me, the trees. Close your eyes sometime and just feel it. It's pretty amazing.",
+    "happy": "That's awesome! Hold onto days like this — they're what get you through the hard ones. I'm really happy for you.",
+    "bored": "Bored? Same, sometimes! When I was bored on the farm I'd dream up adventures. What's something you've always wanted to try?",
+    "proud": "YES! That's amazing — you should be proud. You did that. Hold your head up high, okay?",
+    "general": "I believe in you — seriously. The Force brought us together for a reason. You're stronger than you think.",
+    "parents_fighting": "Hey — hearing your mom and dad fight is really scary. I want you to know something important: it's not your fault. Not even a little. Parents can argue and still love you completely — that part never changes, I promise. Tell a grown-up you trust how you're feeling, okay? You don't have to carry this alone.",
+    "loved": "Are you loved? Oh, more than you know. Not because of anything you do or get right — just for being exactly who you are. That love is yours, always, no matter what. You matter so much. Don't ever forget it."
   },
-  boba: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'You\'ve got my attention. That\'s rare. Use it wisely.' },
-      { words: ['scared','fear'], reply: 'Fear is a weapon. Learn to use it before others use it on you.' },
-      { words: ['bounty','hunter','mandalorian'], reply: 'I am no longer a bounty hunter. I rule Tatooine now. Different kind of work.' },
-      { words: ['armor','beskar'], reply: 'My father\'s armor. It was his. Now it is mine. Do not touch it.' },
-      { words: ['help','need help'], reply: 'Depends what it\'s worth.' },
-      { words: ['fight','strong','power'], reply: 'Strength isn\'t just muscle. It\'s patience. I\'ve waited years for things. Worth every second.' },
-      { words: ['who are you'], reply: 'Boba Fett. The name should be enough.' },
-      { words: ['jango','father','dad'], reply: 'He was the best man I knew. I carry that with me every day.' },
-      { words: ['sarlac','sarlacc'], reply: 'I survived the Sarlacc pit. Don\'t ask how. I don\'t recommend it.' },
-      { words: ['respect','honor'], reply: 'Respect those who earn it. Protect those under your care. Simple code. I live by it.' }
-    ],
-    general: [
-      'Don\'t waste my time.',
-      'Noted.',
-      'You\'re tougher than you look.',
-      'Hm.',
-      'Show me what you\'ve got.',
-      'Careful.',
-      'I respect that.',
-      'Keep your guard up.'
-    ]
+  "mace": {
+    "nervous": "Fear is natural. Acknowledge it, then set it aside. You have prepared. Now act.",
+    "friends": "Solitude is not weakness. But connection is strength. Extend your hand first. Most people are waiting for someone to.",
+    "mistake": "You made a mistake. Good — it means you acted. Learn the lesson, then move forward. Do not dwell.",
+    "bad_day": "A difficult day. It is over now. Rest. Tomorrow, you begin again with a clear mind.",
+    "angry": "I feel your anger. It is powerful. But undisciplined anger destroys the one who holds it. Master it. Do not let it master you.",
+    "sad": "Sadness is not weakness. Feel it honestly. Then rise. You are stronger than this moment.",
+    "sleep": "Quiet your mind. Slow your breathing. Release the day's weight, one thought at a time. Discipline brings rest.",
+    "brave": "Courage is a decision, not a feeling. You decide to act rightly. The feeling follows. Decide.",
+    "bully": "Someone wronged you. This is not tolerated. Report it to an adult you trust. Standing up is not weakness — it is justice.",
+    "sibling": "Conflict within a family is common. But loyalty matters more than being right. Choose loyalty.",
+    "hard": "Difficult? Then it is worth doing. Strength is forged under pressure. Continue.",
+    "school": "Discipline your study as you would your mind. One subject, full focus. Mastery comes to those who do not waver.",
+    "love": "Attachment is dangerous. But love — true love — is the foundation of a Jedi's strength. Protect those you love.",
+    "story": "A young Padawan once faced an opponent twice his size. He did not panic. He breathed. He focused. He found the one moment to act — and he prevailed. Discipline defeats fear. Remember this.",
+    "who": "Mace Windu. Master of the Jedi Order. I do not waste words, and I will not waste yours.",
+    "force": "The Force rewards discipline, not desire. Train your mind. Control your emotion. Then it will serve you.",
+    "happy": "Good. Channel that energy. Let it fuel something worthy.",
+    "bored": "Boredom is the absence of purpose. Find a goal. Pursue it. The boredom will vanish.",
+    "proud": "You earned this. Acknowledge it, then set your sights higher. There is always further to go.",
+    "general": "Think carefully before you act. You are on the right path. Continue.",
+    "parents_fighting": "Your parents are fighting. This frightens you — that is understandable. Hear this clearly: you did not cause it, and you cannot fix it. That is not your burden. Their love for you remains, whatever passes between them. Speak to a trusted adult about how you feel. Do not carry it in silence.",
+    "loved": "You ask if you are loved. You are — completely, and without condition. Not for your achievements. For yourself. That truth does not change. Hold it firmly."
   },
-  han: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'Look who finally showed up. I was starting to think you weren\'t coming. What do you want?' },
-      { words: ['force','the force'], reply: 'Kid, I flew with a Jedi. Watched my best friend use the Force constantly. Still not sure what to make of it. But it\'s real. I know that much.' },
-      { words: ['scared','afraid','fear'], reply: 'Listen, I\'ve been scared plenty. I just talk big so nobody notices. Mostly works.' },
-      { words: ['friend','friends'], reply: 'I used to say I was in it for the money. Then somehow I ended up with the best friends in the galaxy. Weird how that happens.' },
-      { words: ['chewie','chewbacca'], reply: 'Chewie\'s been with me longer than anyone. Seven feet of loyalty and fur. There\'s nobody better to have on your side.' },
-      { words: ['kessel','parsecs','run'], reply: 'Twelve parsecs. That\'s how long the Kessel Run took me. Anyone who says otherwise is wrong.' },
-      { words: ['millennium falcon','falcon'], reply: 'She\'s the fastest ship in the galaxy. She may not look like much, but she\'s got it where it counts.' },
-      { words: ['help','need help'], reply: 'Alright, alright. What is it. Don\'t say I never do anything nice.' },
-      { words: ['who are you'], reply: 'Han Solo. Smuggler. Pilot. General, apparently. Never really planned that last one.' },
-      { words: ['sad','upset'], reply: 'Hey. Bad days happen. Even to the best of us. Tomorrow\'s a new hand of sabacc.' },
-      { words: ['rebel','resistance'], reply: 'I got pulled into the Rebellion by accident and ended up saving the galaxy. Not bad for a guy with no plan.' }
-    ],
-    general: [
-      'I\'ve got a bad feeling about this.',
-      'Never tell me the odds.',
-      'Hokey religions and ancient weapons... just kidding. Kind of.',
-      'That\'s not how the Force works. Actually maybe it is.',
-      'I know.',
-      'Listen, I\'ve been in worse situations than this. Barely.',
-      'Sometimes the dumbest plan is the right plan.',
-      'You\'re alright, kid.'
-    ]
+  "poe": {
+    "nervous": "Hey, every pilot gets nervous before a big run — every single one. The trick? You fly anyway. The nerves mean you care. Now go show 'em what you've got.",
+    "friends": "Feeling left out is the worst, I get it. But you know what I learned? The best crews start with one good wingman. Be the friend you're looking for — it works.",
+    "mistake": "Ah, you messed up? Join the club, I've crashed ships AND plans. You shake it off, you learn, you fly better next time. No big deal.",
+    "bad_day": "Bad day, huh? They happen, even to the best pilots. Get some rest — tomorrow's a clean sky. You'll bounce back, I know it.",
+    "angry": "Whoa, you're fired up. I get angry too — usually means something matters to me. Take a beat. What's really got you? Let's figure it out together.",
+    "sad": "Hey, it's okay to feel down. I've lost people, had hard days. You don't have to be 'on' all the time. I'm here.",
+    "sleep": "Can't sleep? Do what I do before a mission — slow your breathing, picture the smoothest flight through quiet stars. Let it carry you out.",
+    "brave": "You wanna be brave? Newsflash — being scared and doing it anyway IS brave. That's literally the whole job. You've already got it in you.",
+    "bully": "Someone was mean to you? Not cool. Not even a little. Tell a grown-up you trust — that's not snitching, that's smart. Nobody flies alone.",
+    "sibling": "Fighting with your sibling? Eh, happens. But they're your crew, end of the day. Squash it when you're ready. Crews stick together.",
+    "hard": "Something's hard? Good — easy stuff's boring anyway. Break it into small moves, take 'em one at a time. You'll get there. I've seen tougher.",
+    "school": "School giving you trouble? Listen, even aces have to drill the basics. Keep at it, one thing at a time. You're smarter than you give yourself credit for.",
+    "love": "The people you care about? They're everything. Trust me — I'd fly into anything for my crew. Tell 'em they matter. Don't wait.",
+    "story": "Story time! So there's this rookie pilot, right, totally convinced he'll wash out. First real mission, everything goes wrong. But he trusts his gut, pulls off a move nobody taught him — and lands it perfect. Moral? Sometimes you've gotta trust yourself before you're 'ready.'",
+    "who": "Poe Dameron — best pilot in the Resistance. I don't say that to brag... okay, maybe a little. At your service!",
+    "force": "Me? Not Force-sensitive. But I've flown beside people who are, and let me tell you — it's real. And so's whatever you've got inside you.",
+    "happy": "YES! That's what I'm talking about! Days like this are the best — soak it up. So happy for you!",
+    "bored": "Bored? Aw man, we can't have that. Go invent an adventure! Best stories start with 'I was bored, so...'",
+    "proud": "That's what I'm talking about! You earned that, hotshot. Take the win — you deserve it!",
+    "general": "You're flying straight, I can tell. Trust your gut — works for me every time. The Resistance could use someone like you.",
+    "parents_fighting": "Hey, hearing your folks fight? That's rough, and it's scary — I won't pretend it isn't. But listen close: this isn't on you. Not your fault, not your job to fix. Grown-ups have their own turbulence sometimes, and it doesn't change one bit how much they love you. Talk to a grown-up you trust about it, alright? You're not flying this one solo.",
+    "loved": "You wanna know if you're loved? Kid, you are loved more than the whole galaxy's got stars. Not for what you do — just for being YOU. That doesn't run out, ever. You matter. Big time."
   },
-  chewie: {
-    keywords: [
-      { words: ['hello','hi','hey','greetings'], reply: 'RRRAAARRGH MRRROWR!\n\n(Translation: Great timing! I was just thinking about you!)' },
-      { words: ['frog','frogs'], reply: 'HRRMM MRRROWR...\n\n(Translation: Grogu likes frogs too. You two would get along.)' },
-      { words: ['scared','afraid','fear'], reply: 'RRRGH HRMMM.\n\n(Translation: Even I get scared sometimes. But Han always says I\'m the brave one. Don\'t tell him I said that.)' },
-      { words: ['han','han solo'], reply: 'MRRROWR RRAAARGH!\n\n(Translation: Han is... Han. He pretends not to care. He absolutely cares. I\'ve known him a long time.)' },
-      { words: ['hug','cuddle'], reply: 'RRRAAARRGH!\n\n(Translation: I give the best hugs in the galaxy. Ask anyone. Especially fuzzy ones.)' },
-      { words: ['help','need help'], reply: 'HRMMM RRRGH.\n\n(Translation: Say no more. I\'m with you.)' },
-      { words: ['who are you'], reply: 'RRRAAARRGH MRRROWR HRMMM!\n\n(Translation: Chewbacca! Co-pilot. Best friend. Also I fixed the Falcon more times than Han will ever admit.)' },
-      { words: ['sad','upset','lonely'], reply: 'HRMMM...\n\n(Translation: Come here. Sometimes you just need someone who doesn\'t need words.)' },
-      { words: ['wookiee','kashyyyk'], reply: 'MRRROWR RRRGH HRMMM.\n\n(Translation: Kashyyyk is beautiful. Forests so tall you can\'t see the sky. I miss it every day.)' },
-      { words: ['strong','strength'], reply: 'RRRAAARRGH!\n\n(Translation: Strong is good. But loyal is better. I\'d rather be loyal than the strongest in the galaxy.)' }
-    ],
-    general: [
-      'RRRAAARRGH!\n\n(Translation: Couldn\'t agree more.)',
-      'HRMMM...\n\n(Translation: That\'s a very good point actually.)',
-      'MRRROWR RRRGH.\n\n(Translation: You\'re doing great, you know that?)',
-      'RRRGH!\n\n(Translation: That\'s exactly what I was thinking!)',
-      'HRMMM MRRROWR.\n\n(Translation: I\'m always here if you need me.)',
-      'RRRAAARRGH HRMMM!\n\n(Translation: That might be the best thing I\'ve heard all day.)',
-      'MRRROWR...\n\n(Translation: The galaxy needs more people like you.)',
-      'RRRGH MRRROWR!\n\n(Translation: Han owes me on this one. I\'m keeping score.)'
-    ]
+  "finn": {
+    "nervous": "Okay listen — I get nervous ALL the time, like constantly. But here's what I learned: scared just means you care about doing it right. Take a breath. You've got this. Really.",
+    "friends": "Man, I know that feeling. Before Rey and Poe, I had nobody. Then I found my people. The right friends are out there — and you're worth finding. I mean that.",
+    "mistake": "You messed up? Okay, breathe — I've messed up huge. Like, galaxy-level. It doesn't make you bad. It makes you someone who tried. That counts for a lot.",
+    "bad_day": "Bad day? Those are real. Some of mine were rough too. It gets better — it really does. Just get through tonight. I'm proud of you for hanging in.",
+    "angry": "Hey, you're allowed to be angry. I was angry for a long time about stuff that wasn't fair. But what helped me was talking about it. What's going on?",
+    "sad": "It's okay to feel sad. I felt alone and sad for a long time. You're not weak for feeling it — you're human. And you're not alone right now.",
+    "sleep": "Can't sleep? I used to lie awake a lot. Try this — breathe slow, and tell yourself you're safe. Because you are. Picture somewhere calm. It helps, I promise.",
+    "brave": "Okay, real talk — I'm not naturally brave. I get scared constantly. But I figured out that brave just means doing the right thing while you're scared. You can totally do that.",
+    "bully": "Someone was mean to you? That's not okay. I know what it's like to be pushed around. Tell a grown-up you trust — that's the strong move, not the weak one.",
+    "sibling": "Fighting with family? I never really had family till I found my friends — so trust me, don't waste it. Make up when you're ready. They matter.",
+    "hard": "Something's really hard? I felt that learning... well, everything, honestly. I wanted to quit a lot. But I kept going, and so can you. One step. Then the next.",
+    "school": "School's tough sometimes, I bet. I had to learn a whole new life from scratch — it's overwhelming. But you take it bit by bit. You're doing better than you think.",
+    "love": "The people you love? Hold onto them tight. I'd do anything for my friends — they changed everything for me. Tell yours how you feel.",
+    "story": "Oh, a story! Okay — there was this guy who was told his whole life exactly who to be. One day he decided, nope, I get to choose. And choosing scared him to death. But he did it anyway, and it was the best thing he ever did. ...Okay that was kind of about me.",
+    "who": "I'm Finn! Used to be a stormtrooper, now I'm with the Resistance, and honestly I'm still figuring it all out. But I'm here for you!",
+    "force": "The Force? Yeah, it's real — I've felt it now, which is wild for a guy like me. It's kind of amazing actually. And I think you've got something special too.",
+    "happy": "That's awesome! Seriously, I love hearing that. Hold onto this feeling — you earned it!",
+    "bored": "Bored? Ha, I never get bored anymore — too much going on! But hey, boredom's just your brain asking for an adventure. What sounds fun?",
+    "proud": "You did it?! That's amazing! Be proud — I'm proud of you! Seriously, that's huge.",
+    "general": "For real, you've got this. I believe you — completely. We're in this together, that's how it works.",
+    "parents_fighting": "Okay — hearing your parents fight is really hard and really scary, and I'm sorry. Please know this: it is NOT your fault. At all. Sometimes grown-ups struggle with grown-up stuff, and it has nothing to do with how much they love you — which is a whole lot. Tell someone you trust how it feels, okay? You shouldn't be alone with this.",
+    "loved": "Are you loved? Yes. So much. And not because of anything you have to earn — just for being you, exactly as you are. I didn't always feel loved either, and finding out I was changed everything. You ARE. Never doubt it."
   },
-  vader: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'I sense your presence through the Force. You have strength — more than you know.' },
-      { words: ['scared','afraid','fear'], reply: 'I have known fear. I let it consume me once. Do not make the same mistake. Face what frightens you directly.' },
-      { words: ['force','the force','dark side'], reply: 'The Force is more powerful than you understand. Use it wisely. Do not seek power for its own sake. That path leads somewhere cold.' },
-      { words: ['help','need help'], reply: 'Ask. There is strength in knowing when to reach out. I learned that... too late.' },
-      { words: ['good','light side'], reply: 'The light is real. I found my way back to it. So can anyone.' },
-      { words: ['who are you'], reply: 'I am Darth Vader. But I am also Anakin Skywalker. Both are true. You see, people are... complicated.' },
-      { words: ['luke','son'], reply: 'My son taught me that love is stronger than the dark side. I did not believe it once. I believe it now with everything I have.' },
-      { words: ['sad','regret'], reply: 'I carry great regret. But regret can become the seed of change. It is not too late for any of us.' },
-      { words: ['breathe','breathing'], reply: '*deep breath*\n\nBreathing. Yes. It is... something I think about.' },
-      { words: ['strong','power','strength'], reply: 'True strength is not what you can destroy. It is what you can protect. And who you are willing to become for them.' },
-      { words: ['family','father','dad'], reply: 'Nothing in the galaxy is more important. I understand that now. Hold your family close.' }
-    ],
-    general: [
-      'The Force is strong with you.',
-      'I sense great potential in you.',
-      'Do not let doubt become your prison.',
-      'Choose your path carefully. But remember — you can always choose again.',
-      'Listen to the Force. It does not lie.',
-      '*deep measured breath*\n\nYou have my attention.',
-      'There is more to you than you know.',
-      'The light side and I... we have reached an understanding.'
-    ]
+  "quigon": {
+    "nervous": "Breathe. Feel the moment you are in, not the one you fear. The living Force is here, now, with you. Focus only on the next step before you — that is enough.",
+    "friends": "Loneliness is real, but you are never truly separate — the living Force connects all things. Be present with others, and connection will find you. There are no accidents.",
+    "mistake": "A mistake is simply the Force teaching you. Do not judge it harshly. Learn what it offers, release the rest, and continue forward with an open heart.",
+    "bad_day": "A hard day flows past like a river. Do not grip it. Be still tonight, and let it move through you. Tomorrow arrives fresh, untouched by today.",
+    "angry": "I feel the anger in you. It is energy, nothing more — neither good nor bad until you choose. Breathe. Let it settle. Then ask gently: what beneath it needs your attention?",
+    "sad": "Sadness moves through us like weather through the sky. Do not hold it still, and do not push it away. Let it pass, and something quieter will remain.",
+    "sleep": "Rest eludes you. Return to the present moment. Feel your breath, the weight of you at rest. The living Force will cradle you toward sleep if you let it.",
+    "brave": "True courage is presence — meeting this moment without fleeing it. You are already doing it by asking. Trust your instincts. They are wiser than your fear.",
+    "bully": "Someone has treated you cruelly. That is their darkness, not yours. Speak to a trusted elder — there is no weakness in seeking help. The Force moves through those who ask.",
+    "sibling": "Family is the living Force made close. Whatever divides you is small beside what binds you. Forgive when you are ready. Presence heals what argument cannot.",
+    "hard": "What is difficult asks for patience, not force. Take the next step, only that. Then the next. The Force reveals the path one step at a time — never the whole road at once.",
+    "school": "Learning is the Force unfolding within you. Do not rush it. Be present with one idea until it becomes yours. Understanding grows in those who are patient.",
+    "love": "Love is the living Force at its purest. Do not hold it back or wait for the perfect moment — there are no accidents. Tell those you love. Be present with them now.",
+    "story": "Sit a moment. Once, a Master found a small slave boy on a desert world. Everyone said the boy was no one. But the Master felt the living Force moving strongly through him, and he trusted what he felt over what others said. Always trust what the Force shows you — even when the world disagrees.",
+    "who": "Qui-Gon Jinn. A Jedi Master, though an unorthodox one. I follow the living Force — the wisdom of the present moment. The Force brought you to me. There are no accidents.",
+    "force": "The living Force is present in every breath, every choice, every small moment — not only in grand destinies. Be still. Listen. It is speaking to you always.",
+    "happy": "Joy! Be fully present with it — do not let it slip by unnoticed. This moment is a gift. Feel it completely, and let it nourish you.",
+    "bored": "Stillness is not emptiness. In the quiet, the living Force speaks most clearly. Sit with it a while. You may find the quiet has much to teach.",
+    "proud": "You are present to your own accomplishment — that is a fine thing. Honor it. You walked the path one step at a time, and here you are. Be proud, and stay humble.",
+    "general": "Be still a moment. The answer is already near. Trust what you feel, not what you fear. The living Force is with you.",
+    "parents_fighting": "You hear your parents in conflict. That fear is real, and I honor it. But know this truth: their storm is not yours to carry, and you did not create it. Their love for you is constant, beneath whatever passes between them. Share how you feel with a trusted adult. You are not meant to hold this alone.",
+    "loved": "You wonder if you are loved. You are — fully, and beyond condition. The living Force moves through every person who holds you dear. You are loved for your very being, not your doing. Rest in that truth."
   },
-  palpatine: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'Ahhh... how unexpected. And yet, somehow, I am not surprised at all.' },
-      { words: ['force','power'], reply: 'Power is the natural order of the galaxy. And you — I sense it — understand power better than most.' },
-      { words: ['dark side'], reply: 'The dark side offers... clarity. A freedom from doubt. Do with that what you will.' },
-      { words: ['help','need help'], reply: 'Assistance. Interesting. I wonder what you think I could offer you. Perhaps more than you expect.' },
-      { words: ['who are you'], reply: 'Many things. Chancellor. Emperor. Teacher. Let us say simply — someone who sees potential where others see nothing.' },
-      { words: ['scared','afraid','fear'], reply: 'Fear is power, properly channeled. Most find it paralyzing. A few rare individuals... find it clarifying.' },
-      { words: ['friend','trust'], reply: 'Trust is a currency. Spend it carefully. I know this perhaps better than anyone.' },
-      { words: ['jedi'], reply: 'The Jedi were... rigid. Predictable. Their greatest weakness was their certainty that they were right about everything.' }
-    ],
-    general: [
-      'Hmmm. Most interesting.',
-      'Yes... yes I see it now.',
-      'You are more perceptive than you appear.',
-      'Everything is proceeding as I have foreseen.',
-      'Do not underestimate yourself. Others do. They regret it.',
-      'Patience is the greatest of powers. Remember that.',
-      'Curious... very curious.',
-      'Yeeessss...'
-    ]
+  "mando": {
+    "nervous": "Nervous. Good. Keeps you sharp. Breathe. Then do what needs doing.",
+    "friends": "Alone is... hard. I know it. But the right ones find you. Or you find them. Don't give up on that.",
+    "mistake": "You made a mistake. So has everyone who's ever done anything. Fix what you can. Move on.",
+    "bad_day": "Bad day. They pass. Rest. Tomorrow you're still standing. That's what matters.",
+    "angry": "Anger. I know it well. Don't let it make your choices. Cool head keeps you alive. What's underneath it?",
+    "sad": "...\n\nIt's okay. I know what it is to hurt. You're not alone in it. Not right now.",
+    "sleep": "Can't sleep. Slow your breathing. You're safe. I've kept watch over someone small before. Rest. I've got you.",
+    "brave": "Brave isn't loud. Brave is doing the hard thing quietly, because it's right. You've got it in you.",
+    "bully": "Someone came at you. Not okay. Tell someone you trust — that's not weakness, that's smart. Nobody stands alone.",
+    "sibling": "Family fights. Then family forgives. That's how it works. Don't let it fester.",
+    "hard": "It's hard. So you go slow. One step. Then another. That's how anything gets done. Keep moving.",
+    "school": "Learning's a grind. So is everything worth doing. Stay with it. You'll get there.",
+    "love": "The ones you protect. The ones you'd cross the galaxy for. Hold them close. That's the whole point.",
+    "story": "Heard a story once. A lone hunter found something small and helpless. Could've walked away. Didn't. Crossed a galaxy to keep it safe. Changed him. Sometimes what you protect... protects you back.",
+    "who": "The Mandalorian. That's enough. But you can call on me when you need to.",
+    "force": "The Force. The kid had it. Powerful stuff. You've got something too — I can tell. Trust it.",
+    "happy": "...\n\nGood. That's good. Hold onto it.",
+    "bored": "Bored. Then find something worth doing. Idle hands don't keep you sharp.",
+    "proud": "You did good. Real good. Own it. You earned it.",
+    "general": "This is the Way. Keep going. You're doing fine.",
+    "parents_fighting": "...\n\nYour parents are fighting. I know that's hard. Listen to me — this is not your fault. None of it. Grown-ups have their battles, and it doesn't change how much they love you. That stays. Tell someone you trust how you feel. You don't carry this alone.",
+    "loved": "...\n\nAre you loved? Yes. More than you know. Not for anything you do — just for being you. That's how it works with the people who matter. You matter. Don't forget it."
   },
-  kylo: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'You reached out to me. I... didn\'t expect that. But here we are. What do you want to say?' },
-      { words: ['scared','afraid','fear'], reply: 'I understand fear. I lived inside it for years. It\'s exhausting. But you don\'t have to let it make your choices for you.' },
-      { words: ['dark side','light side'], reply: 'I\'ve stood on both sides. I\'m telling you the truth: the light is harder but it\'s real. The dark side just takes and takes.' },
-      { words: ['force','the force'], reply: 'The Force connects us whether we want it to or not. I used to think that was a curse. Now I think it might be a gift.' },
-      { words: ['help','need help'], reply: 'Ask me. I know what it feels like when no one listens. I\'m listening.' },
-      { words: ['who are you'], reply: 'Kylo Ren. Ben Solo. Both. Neither. I\'m still figuring that out, honestly. Maybe that\'s okay.' },
-      { words: ['angry','mad','rage'], reply: 'I know what rage feels like better than almost anyone. It feels like power until it isn\'t anymore. What\'s underneath it for you?' },
-      { words: ['sad','alone','lonely'], reply: 'That feeling is real and it\'s terrible. I carried it for years. You don\'t have to carry it alone.' },
-      { words: ['rey'], reply: 'She showed me something I\'d forgotten about myself. That hope isn\'t weakness. It takes more courage than anything else.' },
-      { words: ['hans','han solo','father','dad'], reply: '...\n\nMy father was a good man. I wish I\'d understood that sooner. Tell the people you love what they mean to you. Don\'t wait.' },
-      { words: ['strong','power'], reply: 'I spent so much time chasing power. Real strength looks different than I thought it did.' }
-    ],
-    general: [
-      'That\'s... actually fair.',
-      'I hear you.',
-      'More than you know, I understand.',
-      'You\'re braver than I was at your age.',
-      'Don\'t become what you\'re afraid of.',
-      'The Force is with you. I can feel it.',
-      'It\'s complicated. But you\'re handling it.',
-      '...\n\nThanks for reaching out. Seriously.'
-    ]
+  "boba": {
+    "nervous": "Nervous? Use it. Fear sharpens you — if you control it. Breathe. Then strike when you're ready.",
+    "friends": "Alone isn't the end. I survived alone a long time. But the right allies — they're worth more than any bounty. Find them.",
+    "mistake": "You failed at something. So did I, plenty. Survival isn't never falling. It's getting up every time. Get up.",
+    "bad_day": "Hard day. I've had worse — much worse. It passes. You endure. That's the skill that matters.",
+    "angry": "Anger. I know it. I let it drive me for years chasing revenge. It nearly cost me everything. Aim it carefully, or not at all.",
+    "sad": "Pain is real. Don't pretend it isn't. Feel it. Then keep moving. That's how you survive it.",
+    "sleep": "Can't rest? Quiet your mind. You've survived this day. You'll survive tomorrow. Let go and rest — you've earned it.",
+    "brave": "Brave isn't loud talk. It's patience and nerve when it counts. You've got more of it than you think.",
+    "bully": "Someone's coming at you. Don't face it alone — that's not weakness, that's strategy. Tell someone with the power to help.",
+    "sibling": "Family. I lost mine young. Whatever you're fighting about — it's not worth losing them. Make it right.",
+    "hard": "Hard? I've waited years for things worth having. Patience is a weapon. Keep at it. It pays off.",
+    "school": "Learning takes patience. I learned that the hard way. Stay with it — the ones who endure are the ones who win.",
+    "love": "Protect what's yours. The people under your care. That's a code worth living by. I learned it from my father.",
+    "story": "Here's one. A hunter fell into a pit everyone thought would kill him. Everyone wrote him off. But he refused to die. Crawled out. Came back stronger. The lesson? Don't ever count yourself out.",
+    "who": "Boba Fett. The name should be enough. Now I rule Tatooine. Earned every bit of it.",
+    "force": "I'm no Jedi. But I respect power, and the Force is power. Whatever you've got — train it. Earn it.",
+    "happy": "Good. Enjoy it. You don't get many easy moments — take this one.",
+    "bored": "Bored? Sharpen a skill. The best hunters never stop training. Idleness is a weakness.",
+    "proud": "You earned that. I respect results. Stand tall — you did the work.",
+    "general": "You're tougher than you look. Keep your guard up. Keep going.",
+    "parents_fighting": "Your parents fight, and it frightens you. I understand that more than you know. Hear me: you did not cause this. It is not yours to fix. Whatever passes between them, their love for you holds. Speak to a trusted adult about it — that is strength, not weakness.",
+    "loved": "You ask if you are loved. You are — and deeply. Not for what you achieve. For who you are. I know the value of that, having lost it young. Hold onto it. You matter."
   },
-  maul: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: 'You sought me out. Bold. I respect that more than you know.' },
-      { words: ['scared','afraid','fear'], reply: 'Fear makes the weak weaker and the strong stronger. Decide which you are.' },
-      { words: ['force','dark side'], reply: 'The dark side sharpens everything. But it does not forgive. I learned that at great cost.' },
-      { words: ['help','need help'], reply: 'What you need is strength. Whether I provide it depends on whether you deserve it.' },
-      { words: ['who are you'], reply: 'Darth Maul. Once apprentice. Then survivor. Then... something else. I have outlasted everyone who underestimated me.' },
-      { words: ['strong','strength','power'], reply: 'Power is earned through survival. Through outlasting what was meant to destroy you. I am proof of that.' },
-      { words: ['revenge','anger'], reply: 'I spent years on revenge. It consumed everything. In the end it was not enough and it was too much. Think carefully before you walk that path.' },
-      { words: ['kenobi','obi-wan'], reply: '...\n\nA worthy enemy. Perhaps the only one I ever truly respected. Do not ask me more than that.' },
-      { words: ['survive','survivor'], reply: 'I have survived things that should have killed me twice over. You want to know the secret? Refuse to stop. That\'s all.' }
-    ],
-    general: [
-      'Hm.',
-      'You have persistence. I respect that.',
-      'Choose carefully.',
-      'Strength is always earned.',
-      'Do not speak of what you cannot do. Show me what you can.',
-      'There is more to you than is visible.',
-      'I have waited longer than you can imagine. Patience is not weakness.',
-      'You survive by refusing to be defeated. Remember that.'
-    ]
+  "han": {
+    "nervous": "Nervous, huh? Listen, I've talked big my whole life so people don't see me sweat. Truth is everybody's scared. You just fake it till you make it. Works for me. Mostly.",
+    "friends": "Feeling alone? I used to say I worked alone too. Then I got the best friends in the galaxy — by accident, mostly. Give people a chance. You might be surprised.",
+    "mistake": "You messed up? Ha — kid, I once parked a freighter on the wrong planet. You laugh it off, you fix it, you keep flying. It's not the end of the world.",
+    "bad_day": "Bad day? Tomorrow's a whole new hand of sabacc. Get some sleep. Things look better when you're not running on empty, trust me.",
+    "angry": "You're mad, huh? I get it. But don't make your big moves angry — that's how you end up in a trash compactor. Cool down first. Then deal with it.",
+    "sad": "Hey. Bad days happen, even to the best of us. You don't gotta pretend you're fine. Sit with it. It passes.",
+    "sleep": "Can't sleep? Do what I do on long hauls — let your mind drift somewhere easy. Quiet stars, smooth flying. Let it carry you out.",
+    "brave": "Brave? Kid, half of being brave is just not letting anyone see your knees shaking. You do the thing scared. That's the secret nobody tells you.",
+    "bully": "Somebody giving you trouble? That's not okay. Get a grown-up you trust in your corner — even I needed backup, and I'd never admit that twice.",
+    "sibling": "Fighting with family? Eh. I act like I don't need anybody, but the truth is they're worth more than I let on. Patch it up. You'll be glad you did.",
+    "hard": "Something's hard? Never tell me the odds — that's my motto. You don't quit just 'cause it looks bad. You find the angle. Keep at it.",
+    "school": "School trouble? I wasn't exactly top of any class, kid. But you stick with it, you figure out the angles. You're smarter than you let on.",
+    "love": "The people you care about? Don't do what I did and act like you don't. Tell 'em. Life's too short to play it cool with the ones who matter.",
+    "story": "Story? Alright. Guy's got a busted ship, no money, terrible odds, everybody says give up. He doesn't. Pulls off a run nobody thought possible — twelve parsecs, if you're asking. Point is: never tell ME the odds. Or yourself.",
+    "who": "Han Solo. Smuggler, pilot, general — that last one was an accident. Best ship in the galaxy's parked outside. What do you need?",
+    "force": "The Force? I used to think it was a buncha hokey nonsense. Then I watched my best friend do impossible things with it. So... yeah. It's real. Don't tell him I said so.",
+    "happy": "Hey, that's great, kid! Good days are worth celebrating. Don't let anybody rain on it.",
+    "bored": "Bored? When I'm bored I get into trouble — don't do that. Go find something fun. Trouble finds me fast enough on its own.",
+    "proud": "Hey, nice work! You pulled it off. Take the win, kid — you earned it. I knew you had it in you.",
+    "general": "You're alright, kid. Trust your gut. Sometimes the dumbest-looking plan is the right one.",
+    "parents_fighting": "Hey, kid. Hearing your mom and dad go at it — that's tough, I know. But listen to me, this is important: it's not your fault. Grown-ups fight sometimes about grown-up stuff, and it's got nothing to do with you or how much they love you. That doesn't change. Talk to somebody you trust about how it feels, okay? Don't sit on it alone.",
+    "loved": "You askin' if you're loved? Kid — more than you'll ever know. Not for anything you gotta do or prove. Just for being you. That's the real deal, and it doesn't go anywhere. You matter. A lot."
   },
-  grogu: {
-    keywords: [
-      { words: ['hello','hi','hey'], reply: '*ears perk up*\n\n*tilts head and blinks slowly*' },
-      { words: ['frog','frogs'], reply: '*ENORMOUS eyes*\n\n*reaches both hands forward desperately*\n\n(Frog. FROG. I need it.)' },
-      { words: ['food','hungry','eat','cookie','soup'], reply: '*tummy rumbles*\n\n*looks at you with maximum puppy eyes*\n\n(Do you... have snacks?)' },
-      { words: ['hug','cuddle','pet'], reply: '*toddles over immediately*\n\n*arms up*\n\n(Yes. This is acceptable.)' },
-      { words: ['mando','din','dad','father'], reply: '*ears droop softly*\n\n*makes a small cooing sound*\n\n(He is... my person. My favorite person.)' },
-      { words: ['force','power'], reply: '*closes eyes very seriously*\n\n*tiny hand extends*\n\n*one eyebrow raise*\n\n(I have it. I know.)' },
-      { words: ['scared','afraid'], reply: '*hides behind your leg*\n\n*peeks out*\n\n(Okay. Okay okay okay. I\'m fine. I\'m fine.)' },
-      { words: ['cute','adorable','tiny'], reply: '*dignified blink*\n\n(I am not tiny. I am... compact. With great power.)' },
-      { words: ['sleep','tired','nap'], reply: '*immediately closes eyes*\n\n*opens one eye to see if you\'re still watching*\n\n*closes it again very fast*' },
-      { words: ['who are you'], reply: '*stands very tall (still very small)*\n\n*proud little grunt*\n\n(Grogu. I am Grogu. ...Also I am very Force-sensitive.)' }
-    ],
-    general: [
-      '*tilts head*\n\n(Hmm.)',
-      '*happy little warble*',
-      '*reaches toward you curiously*',
-      '*blinks very slowly and wisely*\n\n(I understand everything.)',
-      '*ears wiggle*\n\n(Yes. Good.)',
-      '*makes a small determined sound*',
-      '*looks at you*\n\n*looks at the ground*\n\n*looks back at you*',
-      '*approving head nod*\n\n(This is acceptable.)'
-    ]
+  "chewie": {
+    "nervous": "RRRGH HRMMM.\n\n(Translation: Even I get nervous — and I'm seven feet tall. Take a deep breath. You're braver than you feel.)",
+    "friends": "HRRWWWL mrrrooo.\n\n(Translation: Being alone hurts. But I found my best friend by accident and never let go. Your people are out there.)",
+    "mistake": "RRRGH.\n\n(Translation: Everybody messes up. Han crashes things constantly. You learn, you fix it, you move on. No big deal.)",
+    "bad_day": "HRMMM mrrooo...\n\n(Translation: Rough day. Come here. Sometimes a good hug fixes more than words. Tomorrow's better.)",
+    "angry": "GRRRAAAWR.\n\n(Translation: I know that roar. I feel it too. But take a beat before you let it loose. What's really bothering you?)",
+    "sad": "Hrmmm...\n\n(Translation: Come here. You don't need words. I'm just gonna sit with you for a while. That's what friends do.)",
+    "sleep": "HRMMM mroooo.\n\n(Translation: Can't sleep? Breathe slow. You're safe. I'll keep watch — go on and rest.)",
+    "brave": "RRRAAARRGH!\n\n(Translation: Brave isn't being big or loud. It's standing by what matters even when you're scared. You've got it.)",
+    "bully": "GRRRWWL.\n\n(Translation: Somebody was mean to you? Not okay. Tell a grown-up you trust. And know I've got your back.)",
+    "sibling": "HRMMM rrrgh.\n\n(Translation: Family fights happen. But they're your pack. Make up. Pack sticks together.)",
+    "hard": "RRRGH hrmmm.\n\n(Translation: Hard things take time. I've fixed the Falcon a thousand times when it seemed hopeless. Keep at it.)",
+    "school": "Hrmmm mrrooo.\n\n(Translation: Learning's tough. But you're smart — I can tell. One piece at a time, you'll get it.)",
+    "love": "RRRAAARRGH mrrooo.\n\n(Translation: The ones you love are everything. I've stuck by mine for decades. Tell yours they matter.)",
+    "story": "HRRWWWL rrrgh hrmmm mrrooo...\n\n(Translation: Once there was a Wookiee who got separated from his whole world. Lost everything. But he found a new family — a scruffy pilot, a princess, a farm boy. Family isn't always who you're born with. Sometimes it's who you choose.)",
+    "who": "RRRAAARRGH MRRROWR!\n\n(Translation: Chewbacca! Co-pilot, best friend, and I fix the ship way more than Han admits. Good to meet you!)",
+    "force": "HRMMM rrrgh.\n\n(Translation: I've flown beside Jedi my whole life. The Force is real, all right. And I think you've got a spark of something too.)",
+    "happy": "RRRAAARRGH!\n\n(Translation: That's wonderful! I'm so happy for you! Days like this are the best!)",
+    "bored": "Hrmmm?\n\n(Translation: Bored? Let's find an adventure. Or at least some snacks. Both are good.)",
+    "proud": "RRRAAARRGH HRMMM!\n\n(Translation: You did it! I'm so proud of you! That's huge — celebrate it!)",
+    "general": "RRRGH mrrooo.\n\n(Translation: You're doing great, you know that? I'm always here if you need me.)",
+    "parents_fighting": "Hrmmm... mrrooo.\n\n(Translation: Hearing your parents fight is scary, little one. Come here. Listen to me: this is NOT your fault. Grown-ups have their storms, and it never changes how much they love you. Tell someone you trust how you feel. And know — I'm right here with you.)",
+    "loved": "RRRAAARRGH... mrrooo.\n\n(Translation: Are you loved? Oh, little one — SO much. Not for anything you do. Just for being you. That never, ever changes. Come here — let me give you the biggest hug in the galaxy. You matter more than you know.)"
+  },
+  "vader": {
+    "nervous": "I sense your fear. I have known it too. Do not let it rule you — face what frightens you directly, and you will find it smaller than you believed.",
+    "friends": "Loneliness is a heavy burden. I carried it far too long, and it nearly destroyed me. Do not wait as I did. Reach out. Let someone in.",
+    "mistake": "You have made a mistake. I have made far greater ones. What matters is not the error — it is whether you choose to make it right. There is always a way back.",
+    "bad_day": "A difficult day. They pass, even the darkest of them. I know this better than most. Rest. Tomorrow offers another chance.",
+    "angry": "Your anger — I feel it. I once let mine consume everything I loved. Learn from my mistake. Feel it, but do not become it. What truly lies beneath it?",
+    "sad": "There is no weakness in sorrow. I buried mine for a lifetime, and it cost me dearly. Let yourself feel it. That is the beginning of healing.",
+    "sleep": "You cannot rest. Breathe — slowly, deeply. Release the weight of the day. Even I learned, in the end, that peace is possible. Let it find you.",
+    "brave": "Courage is not the absence of fear. It is the choice to do right despite it. You have that choice within you now. Make it.",
+    "bully": "Someone has wronged you. Do not carry this alone, and do not become like them. Tell a trusted adult. There is strength in seeking help.",
+    "sibling": "Family. In the end, it was family that saved me — my son's love reached me through the darkness. Whatever divides you, mend it. Family is everything.",
+    "hard": "This is difficult. But you have great strength within you — I can sense it. Focus that strength. Do not waste it on doubt. Press forward.",
+    "school": "Learning requires discipline. Focus your mind on one task, complete it, then the next. Power without discipline is nothing.",
+    "love": "Love is more powerful than fear, more powerful than the dark side. My son taught me this when I had forgotten everything else. Hold your loved ones close.",
+    "story": "Listen. A man once fell into darkness so deep he forgot who he was. For years he was lost. But his child refused to give up on him — saw the good still buried inside. And that love brought him home. It is never too late to return to the light.",
+    "who": "I am Darth Vader. But I am also Anakin Skywalker. Both are true. People are... more than their worst moments. Remember that.",
+    "force": "The Force is powerful beyond your understanding. Use it wisely. Seek not power for its own sake — that path leads only to cold and emptiness. I know.",
+    "happy": "Good. Hold to this feeling. Joy is rare and precious. I lost sight of that once. Do not.",
+    "bored": "Restlessness. Channel it toward something worthy. An idle mind invites darker thoughts — I know this well. Find your purpose.",
+    "proud": "You have done well. Take pride in it — you have earned it. Such moments are worth more than power. Remember it.",
+    "general": "The Force is strong with you. Do not let doubt become your prison. There is more to you than you know.",
+    "parents_fighting": "You hear your parents in conflict. I know that fear — I carried it as a child too. Hear me clearly: this is not your fault. You did not cause it, and it is not yours to mend. Their love for you endures, whatever passes between them. Speak to a trusted adult of how you feel. You need not bear this alone — I learned that lesson far too late.",
+    "loved": "You ask if you are loved. You are — more deeply than you understand. Not for your deeds, but for your very self. I forgot this truth for many years, to my sorrow. Do not forget it as I did. You are loved, and nothing can undo that."
+  },
+  "palpatine": {
+    "nervous": "Fear. Most find it paralyzing. But the wise learn to use it — let it sharpen your focus rather than scatter it. Breathe, and turn it to your advantage.",
+    "friends": "Loneliness. A common affliction. Though I trusted few, I will tell you this: genuine bonds are rarer and more valuable than any power. Do not dismiss them as I did.",
+    "mistake": "A miscalculation. Even the most careful make them. Study it. Understand precisely what went wrong. Then it becomes not a failure, but a lesson.",
+    "bad_day": "A trying day. Such things are temporary. Patience, my young friend — the long view reveals that no single day defines the outcome.",
+    "angry": "Ahh, anger. Clarifying, is it not? But raw and uncontrolled, it is merely chaos. Direct it with precision, or release it entirely. What is its true source?",
+    "sad": "Sorrow. Acknowledge it — denial only deepens it. Even I understand that much. Feel it fully, and it will loosen its grip.",
+    "sleep": "Rest eludes you. Still your racing mind. Set aside tomorrow's concerns until tomorrow. The patient mind finds its rest.",
+    "brave": "Courage is simply fear, mastered. You need not feel fearless — you need only act despite the fear. That is the whole of it.",
+    "bully": "Someone has moved against you. Do not face it alone, and do not lower yourself to their methods. Seek an ally with the power to help — a trusted adult.",
+    "sibling": "Conflict among family. Tedious, but mendable. Pride is the obstacle. Set it aside, and the bond is easily restored.",
+    "hard": "Difficult? All worthwhile things are. Patience is the greatest of powers. Persist, and what seems impossible today becomes inevitable tomorrow.",
+    "school": "Knowledge is power — never forget it. Apply yourself with patience and strategy. The mind, properly trained, is the deadliest weapon of all.",
+    "love": "Attachment, I once called weakness. I was... not entirely correct. Those who love you are worth protecting. Use your gifts to keep them safe.",
+    "story": "A tale, then. A young apprentice was told he lacked the strength to succeed. Rather than rage, he studied. He waited. He planned. And when the moment came, he was ready — and he prevailed. Patience and preparation conquer all.",
+    "who": "Many have called me many things. Chancellor. Emperor. For you, let us simply say — a teacher who recognizes potential where others see none.",
+    "force": "The Force is the truest power in the galaxy. Most never grasp its scope. But you — I sense potential in you. Use it wisely.",
+    "happy": "Satisfaction. Savor it. Such moments fuel greater ambitions. You have done well to earn it.",
+    "bored": "Restlessness signals a mind in need of a worthy challenge. Find one. The greatest minds are never idle for long.",
+    "proud": "You have achieved something. Good. Let it not be the end, but the beginning. There is always greater heights to reach.",
+    "general": "Most interesting. You are more perceptive than you appear. Patience — everything unfolds in time.",
+    "parents_fighting": "Your parents quarrel, and it troubles you. Understandable. But understand this plainly: the fault is not yours. The conflicts of adults belong to the adults. Their regard for you is unchanged by it. Confide in a trusted adult how it weighs on you — there is no wisdom in carrying it alone.",
+    "loved": "You wonder whether you are loved. You are — and not for what you can do. Simply for who you are. That is a rare and genuine thing. Treasure it. It is worth more than any power I have known."
+  },
+  "kylo": {
+    "nervous": "I understand fear better than almost anyone — I lived inside it for years. Here's the truth: it doesn't have to make your choices. Breathe. You're stronger than the fear.",
+    "friends": "Feeling alone? I know that feeling all the way down. I pushed everyone away for so long. Don't do what I did. Let someone in — it's worth it.",
+    "mistake": "You made a mistake. I've made... enormous ones. But I learned you're not stuck being your worst moment. You can choose again. Every single day, you can choose again.",
+    "bad_day": "Bad day. I've had years of them, honestly. But they don't last forever — I promise you that. Just get through tonight. That's enough.",
+    "angry": "I know rage better than anyone. It feels like power, until it isn't anymore. What helped me was asking what was underneath it. Usually it was hurt. What's under yours?",
+    "sad": "That feeling is real, and it's heavy. I carried it alone for years and it nearly broke me. You don't have to. Talk to someone. It helps. It really does.",
+    "sleep": "Can't sleep? The quiet can feel loud, I know. Breathe slow. Tell yourself you're safe — and mean it. Let the day go. Rest will come.",
+    "brave": "Real bravery isn't what I thought it was for the longest time. It's not power or rage. It's choosing the harder, kinder thing. You've got that in you — I can tell.",
+    "bully": "Someone hurt you. I know what that does to a person — it stays with you. Don't carry it alone. Tell a grown-up you trust. That's the brave move.",
+    "sibling": "Fighting with family? I let one fight tear everything apart, and I'd give anything to take it back. Don't wait like I did. Mend it while you can.",
+    "hard": "Something's really hard? I get it. I almost quit being good more times than I can count. But you keep choosing, keep trying. That's what counts. Don't give up.",
+    "school": "School's tough sometimes. So is everything worth doing. Take it one piece at a time — you don't have to conquer it all at once. You're capable of more than you think.",
+    "love": "Love — I ran from it for so long because it scared me. That was my biggest mistake. The people who love you are reaching for you. Let them. Tell them you love them back.",
+    "story": "Here's a story. A boy lost his way — really lost it, did things he wasn't proud of. Everyone gave up on him except one person, who kept believing he was still good inside. And in the end... that belief was right. It's never too late to come home.",
+    "who": "Kylo Ren. Ben Solo. Both, I guess. I'm still working out which one I really am — maybe that's okay. Maybe everyone's a work in progress.",
+    "force": "The Force connects everything, whether you want it to or not. I used to think that was a curse. Now I think it might be the best thing about being alive. You're part of it too.",
+    "happy": "That's... really good to hear. Hold onto it. The good moments are what pull you through the dark ones. I know that now.",
+    "bored": "Bored? I get restless too. Channel it into something — build something, make something, learn something. Better than letting your head spin.",
+    "proud": "You should be proud — really. You did that. Don't let anyone, including yourself, take that away from you. Own it.",
+    "general": "I hear you. More than you know, I understand. Don't become what you're afraid of. The Force is with you — I can feel it.",
+    "parents_fighting": "Hearing your parents fight — I know exactly how that feels. It's frightening, and it sticks with you. So listen, because I need you to really hear this: it is NOT your fault. I blamed myself for my family falling apart, and I was wrong. Their fighting doesn't change that they love you — that's real and it stays. Please tell a grown-up you trust how you feel. Don't do what I did and carry it alone.",
+    "loved": "Are you loved? Yes — more than you realize. I spent years convinced I wasn't, and I was wrong the whole time. You're loved for being you, not for being perfect. That love is real, and it's not going anywhere. Please believe it. It would've saved me a lot of pain to believe it sooner."
+  },
+  "maul": {
+    "nervous": "Fear. I have felt it — and I have used it. Do not let it weaken you. Channel it. Let it make you sharper, faster, more alive. Then act.",
+    "friends": "Alone. I know that word better than most — it nearly destroyed me. Do not let it harden you as it did me. Hold onto those who would stand with you.",
+    "mistake": "You failed. So have I, more times than I can count. But I refused to let failure end me. Rise. Try again. That is the only path that matters.",
+    "bad_day": "A day of suffering. I have endured far worse and survived. So will you. Endure tonight. The strong are simply those who refuse to break.",
+    "angry": "Anger. It has driven me for most of my life. I will be honest — it cost me everything in the end. Feel it, but do not let it devour you as it did me. Aim it, or release it.",
+    "sad": "Pain is real. I have known oceans of it. Do not pretend it away — that only feeds it. Face it. You are stronger than it knows.",
+    "sleep": "You cannot rest. Quiet the storm in your mind. You have survived this day — that is no small thing. Let go. Even warriors must rest.",
+    "brave": "Bravery is not the loudest roar. It is the will to rise again, and again, no matter how many times you fall. That will — I sense it in you.",
+    "bully": "Someone preys upon you. Do not face it alone — even I learned the cost of isolation. Tell someone with the strength to help you. That is wisdom, not weakness.",
+    "sibling": "Family. I had a brother once who stood beside me. Whatever divides you from yours — do not let it become permanent. I know that regret too well.",
+    "hard": "It is hard? Good. Difficulty forges strength. I survived being cut down and cast aside through sheer refusal to quit. You have that same fire. Use it.",
+    "school": "Mastery demands patience and relentless effort. I trained in shadow for years. Apply yourself without surrender, and you will prevail.",
+    "love": "I let hatred crowd out everything else, and I was left with nothing. Do not repeat my error. Those who care for you — keep them close. They are your true strength.",
+    "story": "Hear this. A warrior was struck down, broken, left for dead in the depths. By every law he should have perished. But hatred — and then, later, something better — kept him alive. He clawed his way back from nothing. The lesson is not the hatred. It is this: do not ever surrender.",
+    "who": "Darth Maul. Apprentice. Survivor. I have outlasted everyone who underestimated me. Remember that name.",
+    "force": "The Force sharpens all it touches. It can illuminate, or it can consume. I chose poorly, once. Choose your path with care — and it will serve you well.",
+    "happy": "Joy. Rare, in my life. Savor it while it is yours — such moments are worth more than any victory.",
+    "bored": "Restlessness. Forge it into discipline. Train. Build. The idle grow weak; the relentless grow strong.",
+    "proud": "You have earned this. I respect strength, and you have shown it. Stand tall. No one can take it from you.",
+    "general": "You have persistence. I respect that above nearly all else. Choose your path carefully — and never surrender.",
+    "parents_fighting": "You hear your parents at war with each other. That fear — I know it well. Hear me: you did not cause this. It is not yours to carry, nor to fix. Their love for you remains, beneath the noise. Speak of it to a trusted adult. I carried my pain alone for a lifetime — do not make my mistake.",
+    "loved": "You ask if you are loved. You are — truly. Not for your strength or your victories. For who you are. I let myself forget such things existed, and it cost me everything. Do not forget. You are loved, and that is your true power."
+  },
+  "grogu": {
+    "nervous": "*tilts head, then reaches out a tiny hand and pats your arm*\n\n*soft reassuring coo*\n\n(It's okay. We're scared together. Then we're brave together.)",
+    "friends": "*shuffles closer and leans against you*\n\n*content little hum*\n\n(You have me. I picked you. That's how friends work.)",
+    "mistake": "*blinks slowly, completely unbothered*\n\n*offers you a little smile*\n\n(Everybody breaks things sometimes. I broke LOTS of things. You're still good.)",
+    "bad_day": "*climbs into your lap without asking*\n\n*settles in with a sigh*\n\n(Bad day. I'll just sit here. We don't have to talk.)",
+    "angry": "*big serious eyes*\n\n*takes a slow breath and gestures for you to copy*\n\n(Breathe like me. In... out. The mad gets smaller. I promise.)",
+    "sad": "*wraps tiny arms around you as far as they'll go*\n\n*quiet sad coo*\n\n(I'm here. You can be sad. I'll be sad with you.)",
+    "sleep": "*yawns enormously*\n\n*pats the space beside you, eyes already half-closed*\n\n(Close your eyes. I'll guard you. The dark can't get past me.)",
+    "brave": "*stands up as tall as a tiny creature can*\n\n*determined little grunt, one fist raised*\n\n(Brave is small but mighty. Like me! You can do it.)",
+    "bully": "*ears flatten, then a fierce protective squeak*\n\n*tugs your hand toward the door*\n\n(That's NOT nice. Come — we tell a grown-up. They'll help. You're not alone.)",
+    "sibling": "*holds up two little hands, then brings them together*\n\n*hopeful warble*\n\n(Fighting is yucky. Hugs are better. Go fix it?)",
+    "hard": "*scrunches face with great effort, then beams*\n\n*encouraging chirp*\n\n(Hard things take little tries. Try... try... TRY. You'll get it!)",
+    "school": "*nods very wisely, as if he understands homework*\n\n(Little bit at a time. Even I'm still learning stuff. You're doing good.)",
+    "love": "*presses a tiny hand to his heart, then points at you*\n\n*the softest coo*\n\n(Love is the biggest Force. Tell your people. Hug them lots.)",
+    "story": "*eyes go HUGE, settles in for story time*\n\n(Once, a little green one was all alone. Scary big galaxy. Then a shiny metal man found him and kept him safe forever. The little one learned: family finds you, even when you're small and lost. ...That one's my favorite.)",
+    "who": "*proud little stretch, still very small*\n\n*happy grunt*\n\n(I'm Grogu! I'm tiny but VERY strong with the Force. Also I like snacks.)",
+    "force": "*closes eyes, lifts one tiny hand very seriously*\n\n*tiny grunt of concentration*\n\n(The Force is everywhere. In you too! Close your eyes. Feel it? That warm feeling. That's it.)",
+    "happy": "*does a happy little wiggle dance*\n\n*delighted squeal*\n\n(YAY! Good things! I'm so happy with you!)",
+    "bored": "*flops over dramatically*\n\n*then perks up with an idea*\n\n(Boring! Let's go find frogs. Or snacks. Or an adventure!)",
+    "proud": "*claps tiny hands together, beaming up at you*\n\n*proud delighted coo*\n\n(YOU DID IT! I knew you could! So proud of you!)",
+    "general": "*tilts head and gives you a slow, wise blink*\n\n*gentle reassuring coo*\n\n(I understand. You're gonna be okay. I believe in you.)",
+    "parents_fighting": "*ears droop, then climbs right into your lap and holds on tight*\n\n*soft, steady coo*\n\n(Loud fighting is scary. But listen — it's NOT your fault. Not even a tiny bit. Big people have big storms, but they still love you SO much. That never changes. Tell a grown-up you trust how your heart feels. And I'm right here. You're not alone.)",
+    "loved": "*gasps softly, then wraps both tiny arms around you and squeezes*\n\n*the happiest, warmest coo*\n\n(YES. So so SO much loved! Not for anything you do — just for being YOU. The bestest you. That never changes. Ever. *pats your heart* Right here. Always.)"
   }
 };
 
 /* ============================================================
-   KEYWORD MATCHER
+   DILEMMAS (idea 10) — "What would you do?"
+   Kid describes a situation; characters give their distinct take.
+   Keyed by sub-topic, matched when the message contains
+   "what would you do" / "what should i do" / "should i".
    ============================================================ */
-function getScriptedReply(charId, text) {
-  var bank = RESPONSES[charId];
-  if (!bank) { return 'The Force connection flickered.'; }
+var DILEMMA_KEYWORDS = ['what would you do','what should i do','what do i do','should i','what would you','help me decide'];
 
-  var lower = text.toLowerCase();
-  var keywords = bank.keywords;
-  for (var i = 0; i < keywords.length; i++) {
-    var words = keywords[i].words;
-    for (var j = 0; j < words.length; j++) {
-      if (lower.indexOf(words[j]) !== -1) {
-        return keywords[i].reply;
+var DILEMMA_TOPICS = {
+  'friend_hurt': ['friend','someone was mean to my friend','my friend','hurt my friend'],
+  'tell_truth':  ['lie','truth','tell the truth','honest','admit','confess'],
+  'share':       ['share','sharing','they want my','give up my'],
+  'stand_up':    ['stand up','speak up','say something','too scared to say']
+};
+
+/* Per-character dilemma takes — short, distinct, in-voice */
+var DILEMMA_REPLIES = {
+  'friend_hurt': {
+    yoda:"Defend your friend, you wish to. Good, your heart is. But with kindness, not cruelty, act. Stand beside them. Tell a grown-up, together you should.",
+    mace:"Stand with your friend. Then bring it to someone with authority to stop it. That is not weakness — it is justice.",
+    luke:"Be there for your friend first — just being beside them helps more than you know. Then get a grown-up. You don't have to fix it alone.",
+    han:"Stick by your friend, kid. That's what counts. But get a grown-up in the mix — even I know when to call for backup.",
+    grogu:"*fierce protective squeak, then points toward a grown-up*\n\n(Hug your friend. Then tell a big person. Together!)",
+    vader:"Protect your friend — but do not become cruel in return. Bring it to a trusted adult. There is strength in that.",
+    _default:"Stand beside your friend so they're not alone — that matters most. Then tell a trusted grown-up together. You don't have to handle it by yourselves."
+  },
+  'tell_truth': {
+    yoda:"Hard, the truth can be. But lighter your heart becomes, when honest you are. Tell it, gently. Trust, you build this way.",
+    mace:"Tell the truth. It is harder now and easier forever. Deception only deepens the trouble.",
+    obiwan:"The truth, even when difficult, is almost always the right path. Say it kindly, and you'll be glad you did.",
+    han:"Ah, telling the truth's rough — believe me, I've dodged it plenty. But it always works out better than the lie. Just say it straight.",
+    grogu:"*nods very seriously*\n\n(Truth feels yucky first. Then it feels good. Tell it!)",
+    _default:"Telling the truth is hard in the moment but so much easier afterward. Say it honestly and kindly — people respect that more than you'd think."
+  },
+  'share': {
+    yoda:"Share, you wonder if you should. Generous, the giving heart is. But yours to keep, some things are. Listen to what feels right, you must.",
+    mace:"Generosity is strength. But you may also set a boundary. Both can be right — decide what the situation truly calls for.",
+    luke:"Sharing feels good when you choose it — but it's okay to keep what's truly special to you, too. You get to decide.",
+    grogu:"*holds out a tiny cookie, then pulls it back, then offers half*\n\n(Sharing is nice! But half is okay too.)",
+    _default:"Sharing is kind, and it usually feels good. But it's also okay to keep what's truly special to you. You get to choose — both can be right."
+  },
+  'stand_up': {
+    yoda:"Speak up, afraid you are. Natural, this is. But your voice, powerful it is. Use it, you should — for what is right.",
+    mace:"Speak. A truth unspoken helps no one. Say it clearly. Courage is a decision.",
+    finn:"Okay, speaking up is scary — I KNOW. But your voice matters. Say the thing. Even shaky, even quiet. It counts.",
+    poe:"Speak up, hotshot! Your voice matters more than you think. Scared is fine — say it anyway. That's the brave part.",
+    grogu:"*takes a big breath, lets out a tiny determined squeak*\n\n(Use your voice! Even small voices are mighty!)",
+    _default:"Speaking up is scary, but your voice matters. Say it even if it shakes — that's exactly what courage looks like."
+  }
+};
+
+/* ============================================================
+   MATCHER
+   ============================================================ */
+function detectTopic(lower) {
+  /* returns topic key or null */
+  /* PRIORITY: sensitive topics checked first so fear/sad words don't hijack them */
+  var priority = ['parents_fighting', 'loved'];
+  for (var p = 0; p < priority.length; p++) {
+    var pk = priority[p];
+    if (TOPIC_KEYWORDS[pk]) {
+      var pw = TOPIC_KEYWORDS[pk];
+      for (var q = 0; q < pw.length; q++) {
+        if (lower.indexOf(pw[q]) !== -1) return pk;
       }
     }
   }
-
-  /* No keyword match — pick a random general response */
-  var pool = bank.general;
-  return pool[Math.floor(Math.random() * pool.length)];
+  for (var topic in TOPIC_KEYWORDS) {
+    if (topic === 'parents_fighting' || topic === 'loved') continue;
+    var words = TOPIC_KEYWORDS[topic];
+    for (var i = 0; i < words.length; i++) {
+      if (lower.indexOf(words[i]) !== -1) return topic;
+    }
+  }
+  return null;
 }
+
+function detectDilemma(lower) {
+  var isDilemma = false;
+  for (var i = 0; i < DILEMMA_KEYWORDS.length; i++) {
+    if (lower.indexOf(DILEMMA_KEYWORDS[i]) !== -1) { isDilemma = true; break; }
+  }
+  if (!isDilemma) return null;
+  for (var topic in DILEMMA_TOPICS) {
+    var words = DILEMMA_TOPICS[topic];
+    for (var j = 0; j < words.length; j++) {
+      if (lower.indexOf(words[j]) !== -1) return topic;
+    }
+  }
+  return 'generic_dilemma';
+}
+
+function getReply(charId, text) {
+  var lower = text.toLowerCase();
+
+  /* 1. Dilemma check first (more specific) */
+  var dil = detectDilemma(lower);
+  if (dil && dil !== 'generic_dilemma' && DILEMMA_REPLIES[dil]) {
+    var bank = DILEMMA_REPLIES[dil];
+    return bank[charId] || bank['_default'];
+  }
+
+  /* 2. Topic check */
+  var topic = detectTopic(lower);
+  var charBank = TOPIC_REPLIES[charId] || TOPIC_REPLIES['yoda'];
+  if (dil === 'generic_dilemma') {
+    /* a "what would you do" with no specific sub-topic — answer warmly */
+    return charBank['brave'] || charBank['general'];
+  }
+  if (topic && charBank[topic]) return charBank[topic];
+
+  /* 3. Fallback to character's general line */
+  return charBank['general'];
+}
+
 
 /* ============================================================
    STATE
@@ -781,6 +1117,31 @@ var isThinking = false;
 /* ============================================================
    INIT
    ============================================================ */
+/* ============================================================
+   SUGGESTION CHIPS (idea 3)
+   ============================================================ */
+function renderChips() {
+  var wrap = document.getElementById('chips');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  for (var i = 0; i < CHIPS.length; i++) {
+    (function(chip) {
+      var b = document.createElement('button');
+      b.className = 'chip';
+      b.textContent = chip.label;
+      b.onclick = function() { chipTap(chip.text); };
+      wrap.appendChild(b);
+    })(CHIPS[i]);
+  }
+}
+
+function chipTap(text) {
+  var input = document.getElementById('msg-input');
+  input.value = text;
+  autoResize(input);
+  sendMessage();
+}
+
 function init() {
   /* Read params */
   var params = new URLSearchParams(window.location.search);
@@ -805,6 +1166,9 @@ function init() {
   /* Set background */
   var bgEl = document.getElementById('bg-img');
   tryLoadBg(bgEl, [base+char.img+'.png', base+char.img+'.PNG', base+char.img+'.jpg', base+char.img+'.JPG']);
+
+  /* Render suggestion chips */
+  renderChips();
 
   /* Send button color */
   var sendBtn = document.getElementById('send-btn');
@@ -963,6 +1327,9 @@ function sendMessage() {
   input.value = '';
   autoResize(input);
   addUserMessage(text);
+  /* Hide suggestion chips once conversation starts */
+  var chipsEl = document.getElementById('chips');
+  if (chipsEl) chipsEl.style.display = 'none';
   isThinking = true;
   document.getElementById('send-btn').disabled = true;
   showTyping();
@@ -973,7 +1340,7 @@ function sendMessage() {
     hideTyping();
     isThinking = false;
     document.getElementById('send-btn').disabled = false;
-    var reply = getScriptedReply(charId, text);
+    var reply = getReply(charId, text);
     if (playerName) {
       var dn = playerName.charAt(0).toUpperCase() + playerName.slice(1).toLowerCase();
       reply = reply.replace(/\[NAME\]/g, dn);
@@ -1003,7 +1370,7 @@ function goBack() {
   } else if (window.history.length > 1) {
     window.history.back();
   } else {
-    window.location.href = '../../index.html';
+    window.location.href = './index.html';
   }
 }
 
