@@ -799,7 +799,7 @@ function init() {
 
   /* Set avatar */
   var avatarEl = document.getElementById('hdr-avatar');
-  var base = '../../assets/characters/';
+  var base = './assets/characters/';
   tryLoadImg(avatarEl, [base+char.img+'.png', base+char.img+'.PNG', base+char.img+'.jpg', base+char.img+'.JPG', './'+char.img+'.png', './'+char.img+'.PNG']);
 
   /* Set background */
@@ -875,8 +875,8 @@ function addCharMessage(text) {
   var ava = document.createElement('div');
   ava.className = 'msg-avatar';
   var img = document.createElement('img');
-  img.src = '../../assets/characters/' + char.img + '.png';
-  img.onerror = function() { this.src = '../../assets/characters/' + char.img + '.PNG'; };
+  img.src = './assets/characters/' + char.img + '.png';
+  img.onerror = function() { this.src = './assets/characters/' + char.img + '.PNG'; };
   ava.appendChild(img);
 
   var bubble = document.createElement('div');
@@ -921,8 +921,8 @@ function showTyping() {
   var ava = document.createElement('div');
   ava.className = 'msg-avatar';
   var img = document.createElement('img');
-  img.src = '../../assets/characters/' + char.img + '.png';
-  img.onerror = function() { this.src = '../../assets/characters/' + char.img + '.PNG'; };
+  img.src = './assets/characters/' + char.img + '.png';
+  img.onerror = function() { this.src = './assets/characters/' + char.img + '.PNG'; };
   ava.appendChild(img);
 
   var typing = document.createElement('div');
