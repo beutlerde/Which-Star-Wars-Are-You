@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>Imperial Intelligence · Vader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#060408; --bg-1:#0C080F; --bg-2:#14101A; --bg-3:#1E1828;
+    --sith:#9B4DCA; --sith-l:#C084FC; --sith-d:#5B21B6;
+    --sith-g:rgba(155,77,202,0.45); --sith-g2:rgba(155,77,202,0.16);
+    --imp:#DC2626; --imp-d:#7F1D1D; --imp-g:rgba(220,38,38,0.35);
+    --amber:#F59E0B;
+    --ink-1:rgba(240,235,248,0.97); --ink-2:rgba(240,235,248,0.65); --ink-3:rgba(240,235,248,0.38);
+    --hr:rgba(240,235,248,0.08); --hr-s:rgba(155,77,202,0.22);
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;} html,body{overflow-x:hidden;}
+  body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--ink-1);-webkit-font-smoothing:antialiased;min-height:100vh;}
+  button{font:inherit;cursor:pointer;border:0;background:0;color:inherit;}
+
+  .atmo{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 60% at 30% 0%,rgba(155,77,202,0.14),transparent 65%),radial-gradient(ellipse 60% 50% at 70% 100%,rgba(220,38,38,0.08),transparent 65%),var(--bg-1);}
+  .stars{position:fixed;inset:0;z-index:1;pointer-events:none;background-image:radial-gradient(.8px .8px at 15% 20%,rgba(255,255,255,.6),transparent),radial-gradient(.8px .8px at 32% 71%,rgba(192,132,252,.5),transparent),radial-gradient(1px 1px at 48% 35%,rgba(255,255,255,.7),transparent),radial-gradient(.8px .8px at 65% 88%,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 81% 22%,rgba(192,132,252,.6),transparent),radial-gradient(.8px .8px at 93% 68%,rgba(255,255,255,.5),transparent),radial-gradient(.8px .8px at 8% 82%,rgba(255,255,255,.6),transparent),radial-gradient(1px 1px at 38% 12%,rgba(255,255,255,.7),transparent),radial-gradient(.8px .8px at 55% 58%,rgba(192,132,252,.5),transparent),radial-gradient(.8px .8px at 72% 44%,rgba(255,255,255,.6),transparent);animation:st 7s ease-in-out infinite alternate;}
+  @keyframes st{0%{opacity:.5;}100%{opacity:1;}}
+  .dark-scan{position:fixed;left:0;right:0;height:200px;z-index:2;pointer-events:none;background:linear-gradient(180deg,transparent 0%,rgba(155,77,202,0.04) 50%,transparent 100%);animation:ds 18s linear infinite;}
+  @keyframes ds{0%{top:-200px;}100%{top:100vh;}}
+  .crt{position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0px,transparent 2px,rgba(155,77,202,0.02) 3px,transparent 4px);}
+
+  .hud{position:sticky;top:0;z-index:30;background:rgba(6,4,8,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(155,77,202,0.30);padding:11px 16px;display:flex;align-items:center;justify-content:space-between;}
+  .hud-l{display:flex;gap:10px;align-items:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--sith-l);}
+  .hud-cog{width:14px;height:14px;border:1.5px solid var(--sith);border-radius:50%;position:relative;flex-shrink:0;}
+  .hud-cog::after{content:'';position:absolute;inset:2px;background:var(--sith);border-radius:50%;opacity:0.6;}
+  .hud-dot{width:5px;height:5px;border-radius:50%;background:var(--sith-l);box-shadow:0 0 6px var(--sith-g);animation:blink 2s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+  .hud-r{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--imp);text-shadow:0 0 8px var(--imp-g);}
+
+  .hero{position:relative;z-index:10;height:100vh;height:100dvh;overflow:hidden;}
+  .corner{position:absolute;z-index:6;width:22px;height:22px;border:2px solid var(--sith);box-shadow:0 0 10px var(--sith-g);}
+  .tl{top:58px;left:14px;border-right:none;border-bottom:none;} .tr{top:58px;right:14px;border-left:none;border-bottom:none;}
+  .bl{bottom:14px;left:14px;border-right:none;border-top:none;} .br{bottom:14px;right:14px;border-left:none;border-top:none;}
+
+  .status{position:absolute;top:70px;left:14px;right:14px;z-index:6;display:flex;gap:8px;flex-wrap:wrap;opacity:0;animation:fi .6s ease-out .5s forwards;}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:3px 9px;border-radius:2px;}
+  .tag-s{background:rgba(155,77,202,0.14);border:1px solid rgba(155,77,202,0.45);color:var(--sith-l);}
+  .tag-r{background:rgba(220,38,38,0.12);border:1px solid rgba(220,38,38,0.40);color:var(--imp);}
+
+  .hero-img{position:absolute;inset:0;z-index:1;}
+  .hero-img::before{content:'';position:absolute;top:0;left:0;right:0;height:22%;background:linear-gradient(180deg,var(--bg) 0%,transparent 100%);z-index:2;}
+  .hero-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:48%;background:linear-gradient(180deg,transparent 0%,rgba(6,4,8,0.78) 45%,var(--bg) 100%);z-index:2;}
+  .hero-img img{width:100%;height:100%;object-fit:contain;object-position:center 25%;display:block;filter:brightness(1.1) contrast(1.05) saturate(1.2);animation:vi 2.2s cubic-bezier(.2,.8,.2,1) .2s both;}
+  @keyframes vi{from{opacity:0;transform:scale(1.08);filter:brightness(1.1) blur(12px);}to{opacity:1;transform:scale(1);filter:brightness(1.1) blur(0);}}
+
+  .hero-glow{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 55% 70% at 50% 35%,rgba(155,77,202,0.28) 0%,rgba(91,33,182,0.12) 40%,transparent 70%);filter:blur(32px);animation:vg 4s ease-in-out infinite alternate;}
+  @keyframes vg{0%{opacity:.6;}100%{opacity:1.0;}}
+  .hero-red{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 40% 30% at 50% 80%,rgba(220,38,38,0.10),transparent 70%);filter:blur(20px);}
+
+  .hero-bottom{position:absolute;bottom:80px;left:0;right:0;z-index:4;text-align:center;padding:0 20px;}
+  .greeting{font-family:'JetBrains Mono',monospace;font-size:clamp(11px,3.2vw,14px);letter-spacing:0.14em;text-transform:uppercase;color:var(--sith-l);text-shadow:0 0 16px var(--sith-g);margin-bottom:8px;opacity:0;animation:fi 1.2s ease-out 2.0s forwards;}
+  .greeting::before{content:'> ';color:rgba(155,77,202,0.45);}
+  .name{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(56px,17vw,92px);line-height:.92;letter-spacing:0.04em;text-transform:uppercase;color:white;text-shadow:0 0 24px rgba(155,77,202,0.70),0 0 48px rgba(155,77,202,0.35),0 3px 0 rgba(0,0,0,0.7);margin-bottom:10px;position:relative;opacity:0;animation:ni .6s steps(3) 2.3s forwards;}
+  .name::before{content:attr(data-name);position:absolute;inset:0;color:rgba(220,38,38,0.30);transform:translate(2px,0);z-index:-1;}
+  .name::after{content:attr(data-name);position:absolute;inset:0;color:rgba(155,77,202,0.28);transform:translate(-2px,0);z-index:-1;}
+  @keyframes ni{0%{opacity:0;transform:translateY(18px) scale(.97);filter:blur(6px);}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}}
+  .desig{font-family:'JetBrains Mono',monospace;font-size:clamp(9px,2.8vw,11px);letter-spacing:0.26em;text-transform:uppercase;color:var(--sith-l);text-shadow:0 0 10px var(--sith-g);opacity:0;animation:fi 1.2s ease-out 2.8s forwards;}
+  .desig::before{content:'// ';color:var(--ink-3);}
+
+  .scroll-cue{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:7px;opacity:0;animation:fi 1s ease-out 3.6s forwards;}
+  .cue-t{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:0.38em;text-transform:uppercase;color:var(--ink-3);}
+  .cue-l{width:1px;height:22px;background:linear-gradient(180deg,var(--sith-l),transparent);animation:cp 2.4s ease-in-out infinite;}
+  @keyframes cp{0%,100%{opacity:.3;transform:scaleY(.6);}50%{opacity:1;transform:scaleY(1);}}
+
+  .panel{margin:0 14px 12px;padding:18px 18px 16px;background:rgba(12,8,15,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(155,77,202,0.20);position:relative;opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .panel.visible{opacity:1;transform:translateY(0);}
+  .panel:first-of-type{margin-top:80px;}
+  .panel::after{content:'';position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border:1px solid var(--sith);border-left:none;border-top:none;}
+  .p-tl{position:absolute;top:-1px;left:-1px;width:8px;height:8px;border:1px solid var(--sith);border-right:none;border-bottom:none;}
+  .ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(155,77,202,0.18);}
+  .pt{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--sith-l);text-shadow:0 0 8px var(--sith-g);display:flex;align-items:center;gap:7px;}
+  .pt::before{content:'';width:10px;height:1px;background:var(--sith-l);box-shadow:0 0 5px var(--sith-g);}
+  .pi{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--ink-3);letter-spacing:0.12em;}
+  .p-str{font-family:'Orbitron',sans-serif;font-weight:700;font-size:20px;text-transform:uppercase;text-shadow:0 0 12px rgba(155,77,202,0.30);margin-bottom:12px;}
+  .p-body{font-family:'Rajdhani',sans-serif;font-weight:400;font-size:17px;line-height:1.55;color:var(--ink-1);}
+  .p-body+.p-body{margin-top:9px;}
+
+  .panel.rp{border-color:rgba(220,38,38,0.25);}
+  .panel.rp .pt{color:var(--imp);text-shadow:0 0 8px var(--imp-g);}
+  .panel.rp .pt::before{background:var(--imp);}
+  .panel.rp::after{border-color:var(--imp);}
+  .panel.rp .p-tl{border-color:var(--imp);}
+  .panel.rp .ph{border-bottom-color:rgba(220,38,38,0.20);}
+  .q-text{font-family:'Orbitron',sans-serif;font-weight:500;font-size:17px;line-height:1.35;text-transform:uppercase;text-shadow:0 0 14px var(--sith-g);text-align:center;color:white;padding:14px 0 8px;}
+  .q-attr{font-family:'JetBrains Mono',monospace;font-size:9px;text-align:center;letter-spacing:0.22em;text-transform:uppercase;color:var(--sith-l);}
+
+  .bars{display:flex;flex-direction:column;gap:11px;}
+  .bar{display:grid;grid-template-columns:100px 1fr 38px;gap:10px;align-items:center;}
+  .bar-n{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-2);}
+  .bar-track{height:7px;background:rgba(155,77,202,0.10);border:1px solid rgba(155,77,202,0.25);overflow:hidden;}
+  .bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--sith-d),var(--sith));box-shadow:0 0 8px var(--sith-g);transition:width 1.4s cubic-bezier(.2,.8,.2,1) .15s;}
+  .panel.visible .bar-fill{width:var(--w);}
+  .bar-v{font-family:'Orbitron',monospace;font-weight:700;font-size:12px;color:var(--sith-l);text-align:right;text-shadow:0 0 8px var(--sith-g);}
+
+  .twin{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(155,77,202,0.06);border:1px solid rgba(155,77,202,0.20);}
+  .twin-icon{width:44px;height:44px;background:rgba(155,77,202,0.14);border:1px solid var(--sith);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .twin-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px;}
+  .twin-name{font-family:'Orbitron',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:0.03em;}
+
+  .redemption{margin-top:14px;padding:14px 16px;background:rgba(155,77,202,0.08);border-left:3px solid var(--sith-l);border-radius:4px;}
+  .redemption p{font-family:'Rajdhani',sans-serif;font-size:16px;line-height:1.5;color:var(--ink-2);font-style:italic;}
+
+  .actions{padding:18px 14px 60px;display:flex;flex-direction:column;gap:10px;opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
+  .actions.visible{opacity:1;transform:translateY(0);}
+  .btn{padding:16px 20px;font-family:'Orbitron',sans-serif;font-weight:700;font-size:10px;letter-spacing:0.22em;text-transform:uppercase;text-align:center;transition:all .25s ease;-webkit-tap-highlight-color:transparent;}
+  .btn-p{background:var(--sith-l);color:var(--bg);box-shadow:0 0 20px var(--sith-g);}
+  .btn-s{background:transparent;color:var(--imp);border:1px solid rgba(220,38,38,0.4);}
+  .btn-g{background:transparent;color:var(--ink-3);font-size:9px;padding:12px;letter-spacing:0.2em;}
+
+  .footer{padding:12px 14px 32px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);line-height:1.8;}
+  .footer em{color:var(--sith-l);font-style:normal;text-shadow:0 0 8px var(--sith-g);}
+
+  @keyframes fi{from{opacity:0;}to{opacity:1;}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+</style>
+</head>
+<body>
+<div class="atmo"></div><div class="stars"></div><div class="dark-scan"></div><div class="crt"></div>
+<main>
+  <div class="hud">
+    <div class="hud-l"><div class="hud-cog"></div><div class="hud-dot"></div><span>IMPERIAL INTELLIGENCE</span><span style="color:var(--ink-3)">//&nbsp;INQUISITOR&nbsp;FILE</span></div>
+    <div class="hud-r">CLASSIFIED</div>
+  </div>
+
+  <section class="hero">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="status">
+      <span class="tag tag-s" id="status1">DARK SIDE DETECTED</span>
+      <span class="tag tag-r" id="status2">THREAT LEVEL: SUPREME</span>
+    </div>
+    <div class="hero-img">
+      <div class="hero-glow"></div><div class="hero-red"></div>
+      <img id="hero-img" alt="Darth Vader" loading="eager" decoding="async">
+    </div>
+    <div class="hero-bottom">
+      <p class="greeting">SUBJECT IDENTIFIED: GUAPO_001</p>
+      <h1 class="name" id="q-name">VADER</h1>
+      <p class="desig" id="q-desig">THE FALLEN KNIGHT // REDEEMED</p>
+    </div>
+    <div class="scroll-cue"><span class="cue-t">Scroll</span><span class="cue-l"></span></div>
+  </section>
+
+  <div class="panel">
+    <div class="p-tl"></div>
+    <div class="ph"><span class="pt">FORCE PROFILE</span><span class="pi">FILE.001</span></div>
+    <div class="p-str" id="p-strength">Focus &amp; Discipline</div>
+    <p class="p-body" id="p-body1">When you decide to do something, nothing can stop you. You have incredible discipline and focus — the kind that gets things done. You finish what you start.</p>
+    <p class="p-body" id="p-body2">Like Vader, you carry great power. And like Vader, in the very end, that power was used for love. Your strength is only as great as what you choose to use it for.</p>
+    <div class="redemption"><p>Every day, you get to choose your path. Choose love. ✦</p></div>
+  </div>
+
+  <div class="panel rp">
+    <div class="p-tl"></div>
+    <div class="ph"><span class="pt">RECORDED TRANSMISSION</span><span class="pi">FILE.002</span></div>
+    <p class="q-text" id="q-text">"I find your lack of faith<br>disturbing."</p>
+    <p class="q-attr" id="q-attr">— Darth Vader // Imperial Command</p>
+  </div>
+
+  <div class="panel">
+    <div class="p-tl"></div>
+    <div class="ph"><span class="pt">TACTICAL DOCTRINE</span><span class="pi">FILE.003</span></div>
+    <div class="p-str" id="p-doctrine" style="font-size:17px;margin:0;">Channeling your focus toward what — and who — you love.</div>
+  </div>
+
+  <div class="panel">
+    <div class="p-tl"></div>
+    <div class="ph"><span class="pt">FORCE SENSITIVITY SCAN</span><span class="pi">FILE.004</span></div>
+    <div class="bars" id="stats-bars">
+      <div class="bar"><span class="bar-n">FOCUS</span><div class="bar-track"><div class="bar-fill" style="--w:98%"></div></div><span class="bar-v">098</span></div>
+      <div class="bar"><span class="bar-n">DISCIPLINE</span><div class="bar-track"><div class="bar-fill" style="--w:96%"></div></div><span class="bar-v">096</span></div>
+      <div class="bar"><span class="bar-n">COURAGE</span><div class="bar-track"><div class="bar-fill" style="--w:90%"></div></div><span class="bar-v">090</span></div>
+      <div class="bar"><span class="bar-n">LOYALTY</span><div class="bar-track"><div class="bar-fill" style="--w:85%"></div></div><span class="bar-v">085</span></div>
+      <div class="bar"><span class="bar-n">PATIENCE</span><div class="bar-track"><div class="bar-fill" style="--w:55%"></div></div><span class="bar-v">055</span></div>
+      <div class="bar"><span class="bar-n">AGGRESSION</span><div class="bar-track"><div class="bar-fill" style="--w:80%"></div></div><span class="bar-v">080</span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="p-tl"></div>
+    <div class="ph"><span class="pt">FORCE BOND DETECTED</span><span class="pi">FILE.005</span></div>
+    <div class="twin">
+      <div class="twin-icon" id="twin-icon">⭐</div>
+      <div><div class="twin-lbl" id="twin-lbl">LIGHT SIDE TWIN</div><div class="twin-name" id="twin-name">LUKE SKYWALKER</div></div>
+    </div>
+  </div>
+  <section class="chapter" id="midi-section">
+    <div class="ch-div"><span class="ch-line"></span><span class="ch-num">MIDICHLORIAN ANALYSIS</span><span class="ch-line"></span></div>
+    <div class="stat-eng">
+      <div class="stat-row">
+        <span class="stat-n">MIDICHLORIAN COUNT</span>
+        <span class="stat-v" id="midi-count">—</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-n">FORCE CLASSIFICATION</span>
+        <span class="stat-v" id="midi-class" style="font-size:13px;letter-spacing:0.1em;">—</span>
+      </div>
+    </div>
+  </section>
+
+
+  <div class="actions">
+    <button class="btn btn-p">▶ OPEN NEW FILE</button>
+    <button class="btn btn-s">↺ RESTART SCAN</button>
+    <button class="btn btn-s" id="chat-btn" onclick="goToChat()">⚡ SPEAK WITH THIS CHARACTER</button>
+    <button class="btn btn-g">// TRANSMIT RESULT</button>
+  </div>
+  <div class="footer">IMPERIAL INTELLIGENCE // CLASSIFIED FILE<br><em>CHOOSE YOUR PATH</em> // THE FORCE IS WITH YOU // GUAPO</div>
+</main>
+<script>
+  // Image loaded by char-router
+  var io=new IntersectionObserver(function(entries){entries.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.1});
+  document.querySelectorAll('.panel,.actions').forEach(function(el){io.observe(el);});
+</script>
+
+<script id="char-router">
+var IMPERIAL_CHARS = {"vader": {"name": "VADER", "img": "vader", "title": "THE FALLEN KNIGHT // REDEEMED", "status1": "DARK SIDE DETECTED", "status2": "THREAT LEVEL: SUPREME", "strength": "Focus & Discipline", "body1": "When you decide to do something, nothing can stop you. You have incredible discipline and focus — the kind that gets things done.", "body2": "Like Vader, you carry great power. And like Vader, in the very end, that power was used for love.", "redemption": "Every day, you get to choose your path. Choose love. ✦", "quote": "\"I find your lack of faith disturbing.\"", "quote_attr": "— Darth Vader // Imperial Command", "doctrine": "Channeling your focus toward what — and who — you love.", "stats": [["FOCUS", 98], ["DISCIPLINE", 96], ["COURAGE", 90], ["LOYALTY", 85], ["PATIENCE", 55], ["AGGRESSION", 80]], "twin_icon": "⭐", "twin_name": "LUKE SKYWALKER", "twin_label": "LIGHT SIDE TWIN"}, "palpatine": {"name": "PALPATINE", "img": "palpatine", "title": "THE EMPEROR // MASTER STRATEGIST", "status1": "DARK SIDE DETECTED", "status2": "POWER LEVEL: MAXIMUM", "strength": "Strategy & Vision", "body1": "You think ten steps ahead of everyone else. You see patterns others miss. You understand how the game is really played.", "body2": "Like Palpatine, your greatest power is your mind. The question is: what will you build with it? The galaxy is waiting.", "redemption": "Great intelligence is a gift. Use it to lift others up. ✦", "quote": "\"Everything is proceeding as I have foreseen.\"", "quote_attr": "— Emperor Palpatine // Death Star II", "doctrine": "Turning your vision into reality through patience.", "stats": [["STRATEGY", 99], ["INTELLIGENCE", 98], ["PATIENCE", 95], ["POWER", 92], ["LOYALTY", 40], ["AGGRESSION", 70]], "twin_icon": "⚡", "twin_name": "DARTH VADER", "twin_label": "DARK SIDE LINK"}, "kylo": {"name": "KYLO REN", "img": "kylo", "title": "THE CONFLICTED // BEN SOLO", "status1": "DARK SIDE DETECTED", "status2": "CONFLICT LEVEL: HIGH", "strength": "Passion & Power", "body1": "You feel everything deeply — that intensity is both your greatest strength and your hardest challenge. You care more than anyone knows.", "body2": "Like Kylo Ren, the conflict inside you is not a weakness — it is proof that you care deeply about what matters.", "redemption": "Your feelings make you powerful. Channel them toward the light. ✦", "quote": "\"I know what I have to do. I don't know if I have the strength.\"", "quote_attr": "— Kylo Ren // Starkiller Base", "doctrine": "Turning inner conflict into inner strength.", "stats": [["PASSION", 98], ["POWER", 93], ["INTENSITY", 96], ["COURAGE", 85], ["PATIENCE", 42], ["AGGRESSION", 78]], "twin_icon": "🌟", "twin_name": "REY", "twin_label": "FORCE BOND DETECTED"}, "maul": {"name": "DARTH MAUL", "img": "maul", "title": "THE WARRIOR // TWICE SURVIVING", "status1": "DARK SIDE DETECTED", "status2": "COMBAT LEVEL: ELITE", "strength": "Relentless Drive", "body1": "You are unstoppable. Knocked down, you get back up. Failed once, you come back stronger. Your drive is unlike anything anyone has ever seen.", "body2": "Like Maul, your will to keep going is your most terrifying quality. Nothing keeps you down. Nothing ever will.", "redemption": "Point that relentless energy at something worthy of it. ✦", "quote": "\"At last we will reveal ourselves to the Jedi.\"", "quote_attr": "— Darth Maul // Naboo", "doctrine": "Never stopping. Never giving up.", "stats": [["DRIVE", 99], ["AGILITY", 97], ["POWER", 92], ["FOCUS", 88], ["PATIENCE", 50], ["AGGRESSION", 92]], "twin_icon": "🔴", "twin_name": "SAVAGE OPPRESS", "twin_label": "DARK SIDE LINK"}};
+(function(){
+  var p=new URLSearchParams(window.location.search);
+  var id=p.get('character')||'vader';
+  var d=IMPERIAL_CHARS[id]||IMPERIAL_CHARS.vader;
+  var repo='https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+  var names=[d.img,d.img[0].toUpperCase()+d.img.slice(1),d.img.toUpperCase()];
+  var exts=['png','PNG','jpg','JPG','jpeg','JPEG'];
+  var cands=[];
+  for(var _ni=0;_ni<names.length;_ni++){for(var _ei=0;_ei<exts.length;_ei++){cands.push((typeof repo!=="undefined"?repo:base)+names[_ni]+'.'+exts[_ei]);}}var i=0;
+  function tryNext(){if(i>=cands.length)return;var t=new Image();t.onload = function(){var img=document.getElementById('hero-img');img.src=cands[i-1];img.style.opacity='1';};t.onerror = function(){i++;tryNext();};t.src=cands[i++];}
+  tryNext();
+  function set(id,val){var el=document.getElementById(id);if(el)el.innerHTML=val;};
+  set('q-name',d.name);
+  set('q-desig','// '+d.title);
+  set('status1',d.status1);
+  set('status2',d.status2);
+  set('p-strength',d.strength);
+  set('p-body1',d.body1);
+  set('p-body2',d.body2);
+  set('p-redemption',d.redemption);
+  set('q-text',d.quote);
+  set('q-attr',d.quote_attr);
+  set('p-doctrine',d.doctrine);
+  set('twin-icon',d.twin_icon);
+  set('twin-name',d.twin_name);
+  set('twin-lbl',d.twin_label);
+  var sb=document.getElementById('stats-bars');
+  if(sb){
+    sb.innerHTML='';
+    d.stats.forEach(function(pair){var lbl=pair[0];var val=pair[1];
+      sb.innerHTML+='<div class="bar"><span class="bar-n">' + lbl + '</span><div class="bar-track"><div class="bar-fill" style="--w:' + val + '%"></div></div><span class="bar-v">' + String(val).padStart(3,'0') + '</span></div>';
+    });
+  }
+})();
+
+  
+
+  /* ============================================================
+     CHARACTER LOADER — reads ?character= param, updates screen
+     Screen type: imperial
+     ============================================================ */
+  var CHAR_DATA = {"yoda": {"name": "YODA", "desig": "JEDI ORDER REG: 7726 // GRAND MASTER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Wisdom &amp; Patience", "strength_body": "You think before you act. You notice things others miss. When everyone else is rushing around, you stay calm and see the bigger picture.", "strength_body2": "Like Yoda, you trust that the right answer comes to those who listen. Your mind is your lightsaber. Your patience is your shield.", "quote": "\"Do or do not.<br>There is no try.\"", "quote_attr": "— MASTER YODA // DAGOBAH SYSTEM", "doctrine": "Slowing down when others speed up.", "twin_emoji": "🧙", "twin_name": "OBI-WAN KENOBI", "twin_desc": "A wise soul who chose the path of the teacher.", "bars": [95, 95, 85, 70, 60, 15], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"], "midi": 17700}, "obiwan": {"name": "OBI-WAN", "desig": "JEDI ORDER REG: 7725 // JEDI MASTER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Wisdom &amp; Calm", "strength_body": "You are the steady hand when everything is chaos. You think clearly under pressure and always find the right words at the right moment.", "strength_body2": "Like Obi-Wan, you are the person others turn to when they need grounding. Your calm is your greatest power.", "quote": "\"Hello there.\"", "quote_attr": "— OBI-WAN KENOBI // FIRST CONTACT", "doctrine": "Being the calm in someone else's storm.", "twin_emoji": "⭐", "twin_name": "LUKE SKYWALKER", "twin_desc": "The student who became the legend.", "bars": [92, 90, 88, 85, 75, 20], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"], "midi": 13400}, "luke": {"name": "LUKE", "desig": "JEDI ORDER REG: 7730 // JEDI KNIGHT", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Hope &amp; Courage", "strength_body": "You believe in people even when they stop believing in themselves. You see potential where others see failure, and you act on it.", "strength_body2": "Like Luke, you have faced fear and chosen hope anyway. That is the rarest kind of strength in the galaxy.", "quote": "\"I am a Jedi, like my father before me.\"", "quote_attr": "— LUKE SKYWALKER // DEATH STAR II", "doctrine": "Believing in people who have given up on themselves.", "twin_emoji": "🌟", "twin_name": "LEIA ORGANA", "twin_desc": "The other half of the galaxy's hope.", "bars": [80, 72, 90, 88, 92, 35], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"], "midi": 14500}, "mace": {"name": "MACE WINDU", "desig": "JEDI ORDER REG: 7720 // JEDI MASTER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Discipline &amp; Power", "strength_body": "You have standards, and you hold them — for yourself above all. When you commit to something, it's done. No excuses, no shortcuts.", "strength_body2": "Like Mace Windu, your strength comes from discipline so deep it becomes second nature. You are the person the room notices when they walk in.", "quote": "\"I sense a plot to destroy the Jedi.\"", "quote_attr": "— MACE WINDU // JEDI COUNCIL", "doctrine": "Holding the line when everyone else flinches.", "twin_emoji": "🔮", "twin_name": "YODA", "twin_desc": "The master who saw what no one else could.", "bars": [85, 78, 70, 88, 95, 65], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"], "midi": 12000}, "poe": {"name": "POE DAMERON", "desig": "RESISTANCE REG: R-7742 // COMMANDER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Boldness &amp; Heart", "strength_body": "You fly toward the problem, not away from it. You inspire everyone around you just by showing up — the energy you bring changes the room.", "strength_body2": "Like Poe, you were born to lead from the front. Your confidence is not arrogance — it's the certainty that things can be better, and you are going to make them that way.", "quote": "\"That's one hell of a pilot.\"", "quote_attr": "— POE DAMERON // T-70 X-WING", "doctrine": "Flying into the impossible with a smile.", "twin_emoji": "🚀", "twin_name": "FINN", "twin_desc": "The partner who matched your heart.", "bars": [70, 55, 80, 85, 97, 45], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"], "midi": 2100}, "finn": {"name": "FINN", "desig": "RESISTANCE REG: R-7743 // SOLDIER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Bravery &amp; Heart", "strength_body": "You chose to be a hero when no one expected it of you. You were told who you were supposed to be — and you decided differently.", "strength_body2": "Like Finn, your courage is not the absence of fear. It is doing the right thing anyway, even when everything inside you says run.", "quote": "\"I was raised to fight. But I'll die as a free man.\"", "quote_attr": "— FINN // RESISTANCE FIGHTER", "doctrine": "Choosing who you are instead of who you were told to be.", "twin_emoji": "🚀", "twin_name": "POE DAMERON", "twin_desc": "The pilot who became your best friend.", "bars": [65, 60, 92, 88, 90, 40], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"], "midi": 6000}, "quigon": {"name": "QUI-GON JINN", "desig": "JEDI ORDER REG: 7715 // JEDI MASTER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Trust &amp; Serenity", "strength_body": "You trust the flow of things. You do not force outcomes — you listen for what the moment needs and meet it with complete presence.", "strength_body2": "Like Qui-Gon, you have a deeper calm than most people ever find. The Force works through those who are still enough to hear it.", "quote": "\"Feel, don't think. Trust your instincts.\"", "quote_attr": "— QUI-GON JINN // JEDI MASTER", "doctrine": "Being still enough to hear what the universe is saying.", "twin_emoji": "🌱", "twin_name": "OBI-WAN KENOBI", "twin_desc": "The student who carried your legacy forward.", "bars": [95, 97, 85, 80, 78, 15], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"], "midi": 13000}, "mando": {"name": "MANDO", "desig": "GUILD REG: MND-7741 // MANDALORIAN", "greeting": "BOUNTY SCAN: GUAPO_001", "strength_title": "Independence &amp; Honor", "strength_body": "You walk your own path. You don't need anyone's approval to know who you are. You have your own code — and you keep it, no matter what.", "strength_body2": "Like Mando, your loyalty runs deep once it's earned. Quiet on the outside, fierce on the inside. You protect what matters to you with everything you have.", "quote": "\"I can bring you in warm, or I can bring you in cold.\"", "quote_attr": "— DIN DJARIN // THE MANDALORIAN", "doctrine": "Walking your own path when others follow the crowd.", "twin_emoji": "🐣", "twin_name": "GROGU", "twin_desc": "The one you'd cross the galaxy to protect.", "bars": [72, 80, 70, 95, 92, 45], "bar_labels": ["LOYALTY", "HONOR", "COURAGE", "INDEPENDENCE", "WISDOM", "AGGRESSION"], "midi": 3200}, "boba": {"name": "BOBA FETT", "desig": "GUILD REG: BF-4477 // MASTER HUNTER", "greeting": "BOUNTY SCAN: GUAPO_001", "strength_title": "Precision &amp; Self-Reliance", "strength_body": "You don't need a crowd. You don't need applause. You know what you're worth, and you prove it through results — not words.", "strength_body2": "Like Boba Fett, your power comes from complete self-reliance. You are the most dangerous thing in the room, and everyone can feel it without you saying a word.", "quote": "\"He's no good to me dead.\"", "quote_attr": "— BOBA FETT // CLOUD CITY", "doctrine": "Proving your worth through results, not words.", "twin_emoji": "🪖", "twin_name": "THE MANDALORIAN", "twin_desc": "Another warrior who walks alone.", "bars": [75, 85, 40, 65, 88, 70], "bar_labels": ["PRECISION", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"], "midi": 2900}, "han": {"name": "HAN SOLO", "desig": "REBEL REG: HS-7739 // GENERAL", "greeting": "BOUNTY SCAN: GUAPO_001", "strength_title": "Instinct &amp; Charm", "strength_body": "You trust your gut, and your gut is usually right. You talk your way in, fly your way out, and make it look effortless.", "strength_body2": "Like Han, you act like you don't care about anything — then you show up at exactly the right moment for the people who matter to you.", "quote": "\"Never tell me the odds.\"", "quote_attr": "— HAN SOLO // ASTEROID FIELD", "doctrine": "Showing up when it matters most — even when you pretended you wouldn't.", "twin_emoji": "🐻", "twin_name": "CHEWBACCA", "twin_desc": "The partner who never doubted you.", "bars": [65, 50, 75, 80, 88, 55], "bar_labels": ["INSTINCT", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "AGGRESSION"], "midi": 1700}, "chewie": {"name": "CHEWBACCA", "desig": "REBEL REG: CW-7738 // CO-PILOT", "greeting": "BOUNTY SCAN: GUAPO_001", "strength_title": "Loyalty &amp; Strength", "strength_body": "You are the most reliable person in any room. When you commit to someone, it's forever. Your strength is not just physical — it's the kind of loyalty that never breaks.", "strength_body2": "Like Chewie, you are a gentle giant. Enormous heart, fierce protector, devoted friend. The people around you are lucky to have you.", "quote": "\"RRRAAARRGH!\"", "quote_attr": "— CHEWBACCA // ALWAYS", "doctrine": "Being the one person everyone can count on, no matter what.", "twin_emoji": "🎯", "twin_name": "HAN SOLO", "twin_desc": "The pilot who needed you more than he'll ever admit.", "bars": [60, 70, 85, 97, 88, 55], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "STRENGTH", "AGGRESSION"], "midi": 3100}, "vader": {"name": "VADER", "desig": "THE FALLEN KNIGHT // REDEEMED", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Focus &amp; Discipline", "strength_body": "When you decide to do something, nothing can stop you. You have incredible discipline and focus — the kind that gets things done. You finish what you start.", "strength_body2": "Like Vader, you carry great power. And like Vader, in the very end, that power was used for love. Your strength is only as great as what you choose to use it for.", "quote": "\"I find your lack of faith disturbing.\"", "quote_attr": "— DARTH VADER // IMPERIAL COMMAND", "doctrine": "Channeling your focus toward what — and who — you love.", "twin_emoji": "⭐", "twin_name": "LUKE SKYWALKER", "twin_desc": "The light that brought you back.", "bars": [88, 70, 55, 85, 90, 80], "bar_labels": ["FOCUS", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "DISCIPLINE"], "midi": 20000}, "palpatine": {"name": "PALPATINE", "desig": "FILE: DARTH SIDIOUS // CLASSIFIED", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Strategy &amp; Vision", "strength_body": "You see moves others cannot imagine. You think in systems, in long arcs, in outcomes that take years to unfold. No one outplans you.", "strength_body2": "Like Palpatine, your greatest power is your mind. The question — and it is the most important question — is what you choose to use that power for.", "quote": "\"Everything is proceeding as I have foreseen.\"", "quote_attr": "— EMPEROR PALPATINE // DEATH STAR II", "doctrine": "Using your vision to build something — not to control it.", "twin_emoji": "🌩️", "twin_name": "DARTH VADER", "twin_desc": "Power without wisdom is just destruction.", "bars": [97, 90, 30, 50, 75, 85], "bar_labels": ["STRATEGY", "PATIENCE", "EMPATHY", "LOYALTY", "POWER", "AGGRESSION"], "midi": 20000}, "kylo": {"name": "KYLO REN", "desig": "FILE: BEN SOLO // PATH-WALKER", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Intensity &amp; Passion", "strength_body": "You feel everything deeply. You don't do things halfway. When you care about something, you care about it completely — and that intensity is a superpower.", "strength_body2": "Like Kylo Ren — like Ben Solo — your greatest battle is with yourself. And the fact that you keep fighting it means the good side is winning.", "quote": "\"I know what I have to do. I don't know if I have the strength to do it.\"", "quote_attr": "— KYLO REN // STARKILLER BASE", "doctrine": "Letting the people who love you reach through the darkness.", "twin_emoji": "⭐", "twin_name": "REY", "twin_desc": "The one who saw who you really were.", "bars": [65, 45, 62, 70, 88, 80], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "COURAGE", "INTENSITY"], "midi": 12700}, "maul": {"name": "DARTH MAUL", "desig": "FILE: MAUL // FORMER SITH LORD", "greeting": "SUBJECT IDENTIFIED: GUAPO_001", "strength_title": "Intensity &amp; Endurance", "strength_body": "You are relentless. When you commit to something, you see it through to the end — no matter what it costs. You have survived things that would have broken anyone else.", "strength_body2": "Like Maul, your greatest strength is your refusal to quit. That same fire, pointed at something worth fighting for, makes you unstoppable.", "quote": "\"At last we will reveal ourselves to the Jedi.\"", "quote_attr": "— DARTH MAUL // NABOO", "doctrine": "Pointing your relentlessness toward something worthy of it.", "twin_emoji": "🔥", "twin_name": "SAVAGE OPRESS", "twin_desc": "The one who stood beside you.", "bars": [55, 50, 35, 60, 95, 90], "bar_labels": ["WISDOM", "PATIENCE", "EMPATHY", "LOYALTY", "ENDURANCE", "AGGRESSION"], "midi": 12000}, "grogu": {"name": "GROGU", "desig": "THE CURIOUS INNOCENT // FORCE ADEPT", "greeting": "THE FORCE SHOWS YOU…", "strength_title": "Curiosity &amp; A Pure Heart", "strength_body": "You see wonder in everything. You ask the best questions. You experience the world with open eyes and an open heart — and that is a rare and powerful gift.", "strength_body2": "Like Grogu, you have a quiet kind of power that surprises everyone. Your kindness and curiosity might just be your greatest strength of all.", "quote": "\"The Force is strong in this one. Very strong.\"", "quote_attr": "— THE ARMORER", "doctrine": "Loving big and staying curious.", "twin_emoji": "🪖", "twin_name": "DIN DJARIN", "twin_desc": "The one who crossed the galaxy just for you.", "bars": [99, 98, 97, 95, 72, 2], "bar_labels": ["EMPATHY", "CURIOSITY", "FORCE SENSE", "LOYALTY", "COURAGE", "AGGRESSION"], "midi": "UNCLASSIFIED"}};
+
+  function loadCharacter() {
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get('character') || 'vader';
+    var c = CHAR_DATA[id];
+    if (!c) return;
+
+    // Name
+    var nameEl = document.querySelector('.name');
+    if (nameEl) {
+      nameEl.textContent = c.name;
+      nameEl.setAttribute('data-name', c.name);
+    }
+
+    // Greeting
+    var greetEl = document.querySelector('.greeting');
+    if (greetEl) greetEl.setAttribute('data-text', c.greeting);
+
+    // Designation
+    var desigEl = document.querySelector('.desig');
+    if (desigEl) desigEl.textContent = c.desig;
+
+    // Strength title (first heading)
+    var titles = document.querySelectorAll('.p-str');
+    if (titles[0]) titles[0].innerHTML = c.strength_title;
+
+    // Strength body paragraphs
+    var bodies = document.querySelectorAll('.p-body');
+    if (bodies[0]) bodies[0].textContent = c.strength_body;
+    if (bodies[1]) bodies[1].textContent = c.strength_body2;
+
+    // Quote
+    var qt = document.querySelector('.q-text');
+    if (qt) qt.innerHTML = c.quote;
+    var qa = document.querySelector('.q-attr');
+    if (qa) qa.textContent = c.quote_attr;
+
+    // Doctrine (second heading of same type)
+    if (titles[1]) titles[1].textContent = c.doctrine;
+    else if (titles[2]) titles[2].textContent = c.doctrine;
+
+    // Force twin
+    var twinName = document.querySelector('.twin-name');
+    if (twinName) twinName.textContent = c.twin_name;
+    
+    var twinIcon = document.querySelector('.twin-icon');
+    if (twinIcon) twinIcon.textContent = c.twin_emoji;
+    var twinLbl = document.querySelector('.twin-lbl');
+    if (twinLbl) twinLbl.textContent = 'FORCE BOND DETECTED';
+
+    // Stats / bars
+    var bNames = document.querySelectorAll('.bar-n');
+    var bVals  = document.querySelectorAll('.bar-v');
+    var bFills = document.querySelectorAll(".bar-fill");
+    c.bar_labels.forEach(function(label, i){
+      if (bNames[i]) bNames[i].textContent = label;
+      if (bVals[i])  bVals[i].textContent  = String(c.bars[i]).padStart(2,'0');
+      if (bFills[i]) {
+        bFills[i].style.setProperty('--w', c.bars[i] + '%');
+        // If already visible, animate immediately
+        if (bFills[i].parentElement.closest('.panel.visible, .section.visible, .chapter.visible')) {
+          bFills[i].style.width = c.bars[i] + '%';
+        }
+      }
+    });
+
+    // Image — smart loader
+    var img = document.getElementById('hero-img');
+    if (img) {
+      var base = 'https://raw.githubusercontent.com/beutlerde/Which-Star-Wars-Are-You/main/assets/characters/';
+      var names = [id, id.charAt(0).toUpperCase()+id.slice(1), id.toUpperCase()];
+      var exts=['png','PNG','jpg','JPG','jpeg','JPEG'];
+      var cands = [];
+      for(var _ni=0;_ni<names.length;_ni++){for(var _ei=0;_ei<exts.length;_ei++){cands.push((typeof repo!=="undefined"?repo:base)+names[_ni]+'.'+exts[_ei]);}}var ci = 0;
+      function tryNext() {
+        if (ci >= cands.length) return;
+        var t = new Image();
+        t.onload = function() { img.src = cands[ci-1]; img.style.opacity = '1'; };
+        t.onerror = function() { ci++; tryNext(); };
+        t.src = cands[ci++];
+      }
+      tryNext();
+    }
+
+    // Page title
+    document.title = 'Force Vision · ' + c.name;
+  }
+
+
+  function renderMidi(c) {
+    var midiEl = document.getElementById('midi-count');
+    var classEl = document.getElementById('midi-class');
+    if (!midiEl || !classEl) return;
+    var count = c.midi;
+    if (!count || count === 'UNCLASSIFIED') {
+      midiEl.textContent = '???';
+      classEl.textContent = 'BEYOND MEASUREMENT';
+    } else {
+      midiEl.textContent = count.toLocaleString();
+      var cls = '';
+      if (count >= 20000) cls = 'CHOSEN ONE TIER';
+      else if (count >= 15000) cls = 'GRAND MASTER TIER';
+      else if (count >= 12000) cls = 'JEDI MASTER TIER';
+      else if (count >= 8000) cls = 'JEDI KNIGHT TIER';
+      else if (count >= 4000) cls = 'FORCE SENSITIVE';
+      else cls = 'TRACE SENSITIVITY';
+      classEl.textContent = cls;
+    }
+  }
+
+  loadCharacter();
+  var _cd=CHAR_DATA[new URLSearchParams(window.location.search).get("character")||"yoda"];if(_cd)renderMidi(_cd);
+
+  function openNewHolocron() {
+    window.location.href = '../../index.html';
+  }
+  function goToChat() {
+    var params = new URLSearchParams(window.location.search);
+    var charId = params.get('character') || 'yoda';
+    var name = params.get('name') || '';
+    var url = '../../chat.html?character=' + charId + '&back=' + encodeURIComponent(window.location.href);
+    if (name) url += '&name=' + encodeURIComponent(name);
+    window.location.href = url;
+  }
+</script>
+</body>
+</html>
