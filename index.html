@@ -1933,10 +1933,12 @@ function dismissWelcomeBack() {
 
 function welcomeChooseQuiz() {
   dismissWelcomeBack();
-  /* Trigger Tatooine directly after dismiss */
+  /* Go straight to the quiz — skip ceremony (returning player already has a name) */
   setTimeout(function() {
-    bladeThenLaunch('tatooine');
-  }, 500);
+    fadeTransition(function() {
+      window.location.href = './quiz.html';
+    });
+  }, 450);
 }
 
 function welcomeChooseCeremony() {
@@ -2096,18 +2098,6 @@ function toggleAudio() {
 
 window.addEventListener('load', init);
 window.addEventListener('resize', function() { layout(); });
-</script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./sw.js').then(function(reg) {
-      console.log('SW registered:', reg.scope);
-    }).catch(function(err) {
-      console.log('SW registration failed:', err);
-    });
-  });
-}
 </script>
 </body>
 </html>
