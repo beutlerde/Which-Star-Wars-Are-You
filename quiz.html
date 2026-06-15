@@ -186,13 +186,15 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
    ============================================================ */
 #screen-question {
   justify-content:flex-start;
-  padding-top: max(env(safe-area-inset-top,8px),52px);
+  padding-top: max(env(safe-area-inset-top,8px),60px);
+  gap: 0;
 }
 
 /* HUD — top strip */
 .q-hud {
   width:100%; display:flex; align-items:center; gap:10px;
-  margin-bottom:12px; flex-shrink:0;
+  margin-bottom:14px; flex-shrink:0;
+  padding-left: 48px; /* clear fixed home button */
 }
 .q-num {
   font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
@@ -231,6 +233,9 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
   width:100%; flex:1;
   display:flex; flex-direction:column; gap:14px;
   transition:opacity 0.25s ease, transform 0.25s ease;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 16px;
 }
 
 /* Question image */
@@ -262,22 +267,24 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
 }
 
 /* Answer buttons */
-.q-answers { width:100%; display:flex; flex-direction:column; gap:8px; }
+.q-answers { width:100%; display:flex; flex-direction:column; gap:10px; }
 .q-answer {
   width:100%; text-align:left; padding:14px 16px;
   background:rgba(8,12,24,0.7);
   border:1px solid rgba(0,212,255,0.12);
   border-radius:8px;
-  font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:500;
+  font-family:'Rajdhani',sans-serif; font-size:clamp(14px,3.8vw,16px); font-weight:500;
   color:rgba(255,255,255,0.82); letter-spacing:0.3px;
   transition:all 0.15s ease;
-  display:flex; align-items:center; gap:12px;
+  display:flex; align-items:flex-start; gap:12px;
   min-height:52px;
+  line-height:1.4;
 }
 .q-answer:active { transform:scale(0.99); }
 .q-answer-letter {
   font-family:'Orbitron',monospace; font-size:10px; font-weight:700;
   color:rgba(0,212,255,0.5); min-width:16px; letter-spacing:1px;
+  flex-shrink:0; margin-top:2px;
 }
 .q-answer.selected {
   background:rgba(0,212,255,0.12);
@@ -1535,6 +1542,25 @@ function checkUnlock() {
   /* Assemble title button */
   assembleBtn('start-btn', 'start-btn-rect');
 })();
+
+/* ============================================================
+   BFCACHE — force title screen when navigating back to this page
+   (prevents stale mid-quiz state after returning from result screen)
+   ============================================================ */
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) {
+    /* Page was restored from back/forward cache — reset to title */
+    currentIndex = 0;
+    sessionQuestions = [];
+    selectedAnswer = null;
+    answers = [];
+    showScreen('screen-title');
+    showHomeBtn(false);
+    /* Re-hide the back button */
+    var backBtn = document.getElementById('q-back-btn');
+    if (backBtn) backBtn.classList.remove('visible');
+  }
+});
 
 </script>
 </body>
