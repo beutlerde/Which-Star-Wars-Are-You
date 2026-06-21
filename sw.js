@@ -4,7 +4,7 @@
    Bump the version number to force all devices to reload.
    ============================================================ */
 
-var CACHE_NAME = 'star-wars-v6';
+var CACHE_NAME = 'star-wars-v7';
 
 /* Core shell — always cached */
 var CORE_FILES = [
