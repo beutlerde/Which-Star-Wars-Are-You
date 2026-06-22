@@ -418,8 +418,8 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
 
 .saber-blade-track {
   width:5px; border-radius:3px 3px 0 0;
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.12);
+  background:transparent;
+  border:none;
   overflow:hidden; position:relative;
   margin-bottom:-1px; flex-shrink:0;
 }
@@ -507,12 +507,14 @@ button { font:inherit; cursor:pointer; border:0; background:0; color:inherit; -w
   font-size:9px; letter-spacing:4px;
   color:rgba(255,255,255,0.3);
   text-transform:uppercase;
-  animation:yoda-tap-pulse 1.6s ease-in-out infinite;
   opacity:0;
   transition:opacity 0.4s ease 1.2s;
   white-space:nowrap;
 }
-#yoda-interrupt.active #yoda-interrupt-tap { opacity:1; }
+#yoda-interrupt.active #yoda-interrupt-tap {
+  opacity:1;
+  animation:yoda-tap-pulse 1.6s ease-in-out infinite;
+}
 @keyframes yoda-tap-pulse {
   0%,100%{opacity:0.25;} 50%{opacity:0.7;}
 }
